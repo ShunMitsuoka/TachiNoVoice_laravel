@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id()->comment('評価id');
             $table->unsignedBigInteger('opinion_id')->comment('意見id');
             $table->unsignedBigInteger('user_id')->comment('ユーザーid');
-            $table->string('evaluation', 255)->comment('評価');
+            $table->boolean('evaluation')->comment('評価');
             $table->timestamps();
         });
     }

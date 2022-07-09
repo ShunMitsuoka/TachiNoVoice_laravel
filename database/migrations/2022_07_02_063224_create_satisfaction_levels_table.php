@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('satisfaction_levels', function (Blueprint $table) {
             $table->id()->comment('満足度id');
             $table->unsignedBigInteger('policy_id')->comment('方針id');
+            $table->unsignedBigInteger('user_id')->comment('ユーザーid');
             $table->unsignedTinyInteger('satisfaction_level')->comment('満足度');
             $table->text('impressions')->comment('感想');
             $table->timestamps();

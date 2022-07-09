@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('participation_conditions', function (Blueprint $table) {
+        Schema::create('core_participation_conditions', function (Blueprint $table) {
             $table->id()->comment('条件設定id');
             $table->unsignedBigInteger('village_id')->comment('ビレッジid');
-            $table->unsignedTinyInteger('member_roll')->comment('メンバー権限');
             $table->unsignedBigInteger('member_capacity')->comment('定員');
             $table->datetime('recruitment_start')->comment('募集開始');
             $table->datetime('recruitment_end')->comment('募集終了');
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('participation_conditions');
+        Schema::dropIfExists('core_participation_conditions');
     }
 };

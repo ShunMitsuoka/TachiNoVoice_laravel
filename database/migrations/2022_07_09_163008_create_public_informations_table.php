@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('core_members', function (Blueprint $table) {
-            $table->id()->comment('コアメンバーid');
-            $table->unsignedBigInteger('user_id')->comment('ユーザーid');
+        Schema::create('public_informations', function (Blueprint $table) {
+            $table->id()->comment('コアメンバー情報開示id');
             $table->unsignedBigInteger('village_id')->comment('ビレッジid');
+            $table->boolean('nickname_flg')->comment('ニックネーム表示フラグ');
+            $table->boolean('gender_flg')->comment('性別表示フラグ');
+            $table->boolean('age_flg')->comment('年齢表示フラグ');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('core_members');
+        Schema::dropIfExists('public_informations');
     }
 };

@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('host', function (Blueprint $table) {
-            $table->id()->comment('ホストid');
-            $table->unsignedBigInteger('user_id')->comment('ユーザーid');
+        Schema::create('member_confirm_village_notices', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('village_notice_id')->comment('ヴィレッジニュースid');
             $table->unsignedBigInteger('village_id')->comment('ヴィレッジid');
-            $table->timestamps();
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('host');
+        Schema::dropIfExists('member_confirm_village_notices');
     }
 };

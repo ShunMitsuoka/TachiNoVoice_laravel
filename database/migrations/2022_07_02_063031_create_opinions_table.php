@@ -16,12 +16,11 @@ return new class extends Migration
         Schema::create('options', function (Blueprint $table) {
             $table->id()->comment('意見id');
             $table->unsignedBigInteger('topic_id')->comment('問題id');
-            $table->string('title', 255)->comment('タイトル');
-            $table->string('content', 255)->comment('内容');
             $table->unsignedBigInteger('user_id')->comment('ユーザーid');
             $table->unsignedBigInteger('category_id')->comment('カテゴリーid');
             $table->text('opinion')->comment('意見');
             $table->timestamps();
+            $table->boolean('deleted_flg')->default(0);
         });
     }
 

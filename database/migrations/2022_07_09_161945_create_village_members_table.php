@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('villages', function (Blueprint $table) {
-            $table->id()->comment('ビレッジid');
-            $table->unsignedBigInteger('phase_id')->comment('フェーズid');
+        Schema::create('village_members', function (Blueprint $table) {
+            $table->id()->comment('ヴィレッジメンバーid');
+            $table->unsignedBigInteger('user_id')->comment('ユーザーid');
+            $table->unsignedBigInteger('village_id')->comment('ヴィレッジid');
+            $table->unsignedTiniyInteger('role_id')->comment('権限id');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('villages');
+        Schema::dropIfExists('village_members');
     }
 };

@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('notices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('class')->comment('分類');
-            $table->unsignedBigInteger('topic_id')->comment('問題id');
-            $table->unsignedBigInteger('user_id')->comment('ユーザーid');
+            $table->unsignedTinyInteger('type')->comment('お知らせ種別');
+            $table->string('title', 255)->unique()->unique()->comment('タイトル');
+            $table->text('content')->unique()->comment('内容');
             $table->timestamps();
             $table->boolean('deleted_flg')->default(0);
         });

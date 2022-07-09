@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('topics', function (Blueprint $table) {
             $table->id()->comment('問題id');
-            $table->unsignedBigInteger('village_id')->comment('ビレッジid');
-            $table->unsignedBigInteger('topic_id')->comment('問題id');
-            $table->unsignedBigInteger('user_id')->comment('ユーザーid');
-            $table->unsignedBigInteger('category_id')->comment('カテゴリーid');
-            $table->text('opinion')->comment('意見');
+            $table->unsignedBigInteger('village_id')->comment('ヴィレッジid');
+            $table->string('title', 255)->unique()->comment('タイトル');
+            $table->text('content')->comment('内容');
+            $table->text('note')->comment('注意書き');
             $table->timestamps();
+            $table->boolean('deleted_flg')->default(0);
         });
     }
 
