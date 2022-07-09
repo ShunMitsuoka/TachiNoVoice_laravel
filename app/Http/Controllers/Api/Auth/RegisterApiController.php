@@ -18,7 +18,6 @@ class RegisterApiController extends BaseApiController
             'password' => Hash::make($request->password),
             'gender'    => $request->gender,
             'address'    => 'test',
-            'last_login_dt'    => '2020-01-01',
             'date_of_birth' => $request->birthyear . '-' . $request->birthmonth . '-' . $request->birthday,
         ]);
 

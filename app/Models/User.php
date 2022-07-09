@@ -26,8 +26,8 @@ class User extends Authenticatable
         'nickname',
         'gender',
         'address',
-        'last_login_dt',
         'date_of_birth',
+        'deleted_flg',
     ];
 
     /**
