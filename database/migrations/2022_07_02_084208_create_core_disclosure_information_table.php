@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('participation_conditions', function (Blueprint $table) {
+        Schema::create('core_disclosure_informations', function (Blueprint $table) {
             $table->id()->comment('コアメンバー情報開示id');
             $table->unsignedBigInteger('village_id')->comment('ビレッジid');
             $table->boolean('view_nick_name_flg')->comment('ニックネーム表示フラグ');

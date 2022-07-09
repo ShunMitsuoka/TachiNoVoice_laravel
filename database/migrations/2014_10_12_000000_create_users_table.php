@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('gender')->comment('性別');
             $table->string('address', 255)->comment('住所');
             $table->datetime('last_login_dt')->comment('最終ログイン日時');
+            $table->date('date_of_birth')->comment('生年月日');
             $table->timestamps();
             $table->boolean('deleted_flg')->default(0);
         });
