@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id()->comment('ヴィレッジメンバーid');
             $table->unsignedBigInteger('user_id')->comment('ユーザーid');
             $table->unsignedBigInteger('village_id')->comment('ヴィレッジid');
-            $table->unsignedTiniyInteger('role_id')->comment('権限id');
+            $table->unsignedTinyInteger('role_id')->comment('権限id');
             $table->timestamps();
         });
     }
