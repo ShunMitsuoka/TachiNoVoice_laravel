@@ -1,5 +1,4 @@
 <?php
-
 namespace Packages\Infrastructure\Repositories;
 
 use Exception;

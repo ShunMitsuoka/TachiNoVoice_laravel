@@ -1,13 +1,18 @@
 <?php
+namespace Packages\Infrastructure\Repositories;
 
-namespace Packages\Domain\Interfaces\Repositories;
-
+use Exception;
+use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Models\User\Host;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Village;
 
-interface HostRepositoryInterface 
+class HostRepository implements HostRepositoryInterface 
 {
-    public function get(int $user_id) : Host;
-    public function save(Member $member, Village $village) : Host;
+    public function get(int $user_id) : Host{
+        throw new Exception("Error Processing Request", 1);
+    }
+    public function save(Member $member, Village $village) : Host{
+        throw new Exception("Error Processing Request", 1);
+    }
 }
