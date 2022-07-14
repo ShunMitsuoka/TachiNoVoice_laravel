@@ -20,22 +20,22 @@ class Topic
         $this->note = $note;
     }
 
-    public function getId():int{
+    public function id():int{
         if(is_null($this->id)){
             throw new \Exception('IDが存在しません。');
         }
-        return $this->id->getId();
+        return $this->id->id();
     }
 
-    public function getTitle():string{
+    public function title():string{
         return $this->title;
     }
 
-    public function getContent():string{
+    public function content():string{
         return $this->content;
     }
 
-    public function getNote():string{
+    public function note():string{
         return $this->note;
     }
 

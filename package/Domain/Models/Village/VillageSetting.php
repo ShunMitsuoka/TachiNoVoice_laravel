@@ -11,7 +11,7 @@ class VillageSetting
         $this->core_member_limit = $core_member_limit;
     }
 
-    public function getCoreMemberLimit() : int{
+    public function coreMemberLimit() : int{
         return $this->core_member_limit;
     }
 

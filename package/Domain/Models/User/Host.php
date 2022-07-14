@@ -1,42 +1,24 @@
 <?php
 namespace Packages\Domain\Models\User;
 
-use Packages\Domain\Models\Topic\Topic;
-use Packages\Domain\Models\Topic\TopicId;
+use Carbon\Carbon;
 use Packages\Domain\Models\Village\Village;
-use Packages\Domain\Models\Village\VillageSetting;
+use Packages\Domain\Services\VillageService;
 
 class Host extends Member
 {
-
-    /**
-     * ビレッジを作成する
-     */
-    public function makeVillage():Village
-    {
-        return new Village(null);
-    }
-    /**
-     * ビレッジに問いを設定する。
-     */
-    public function setVillageTopic(
+    protected Village $village;
+    function __construct(
+        MemberId $id,
+        string $name,
+        string $nickname,
+        ?string $email,
+        int $gender,
+        Carbon $date_of_birth,
         Village $village,
-        string $title,
-        ?string $content,
-        ?string $note,
-    ){
-        $village->setTopic(
-            new Topic(null, $title, $content, $note)
-        );
-    }
-
-    /**
-     * ビレッジの設定を行う。
-     */
-    public function setVillageSetting(
-        Village $village,
-        int $core_member_limit,
-    ){
-        $village->setSetting(new VillageSetting($core_member_limit));
+        VillageService  $village_service
+    ) {
+        parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth, $village_service);
+        $this->village = $village;
     }
 }
