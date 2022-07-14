@@ -67,19 +67,6 @@ class Member
     }
 
     /**
-     * ビレッジを作成する
-     */
-    public function makeVillage(
-        VillagePhase $phase,
-        Topic $topic,
-        VillageSetting $setting,
-        VillageMemberRequirement $requirement,
-        VillagePublicInformation $public_information
-    ):Village
-    {
-        return new Village(null, $phase, $topic, $setting, $requirement, $public_information);
-    }
-    /**
      * ビレッジに問いを作成する。
      */
     public function makeVillageTopic(
@@ -118,7 +105,14 @@ class Member
     /**
      * ビレッジを登録する
      */
-    public function registerVillage(Village $village) : bool{
+    public function registerVillage(
+        Topic $topic,
+        VillageSetting $setting,
+        VillageMemberRequirement $requirement,
+        VillagePublicInformation $public_information
+    ) : ?Village{
+        $init_phase = new VillagePhase(0);
+        $village = new Village(null, $init_phase, $topic, $setting, $requirement, $public_information);
         return $this->village_service->registerVillage($this, $village);
     }
 

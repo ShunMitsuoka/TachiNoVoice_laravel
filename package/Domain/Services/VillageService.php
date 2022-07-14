@@ -1,6 +1,7 @@
 <?php
 namespace Packages\Domain\Services;
 
+use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Member;
@@ -22,14 +23,17 @@ class VillageService{
     /**
      * ビレッジを登録する
      */
-    public function registerVillage(Member $register_member, Village $village) : bool{
+    public function registerVillage(Member $register_member, Village $village) : ?Village{
+        DB::beginTransaction();
         try {
             $registered_village = $this->village_repository->save($village);
             $this->host_repository->save($register_member, $registered_village);
-            return true;
+            DB::commit();
+            return $registered_village;
         } catch (\Throwable $th) {
+            DB::rollback();
             logs()->error($th->getMessage());
         }
-        return false;
+        return null;
     }
 }
