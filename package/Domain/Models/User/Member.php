@@ -2,6 +2,7 @@
 namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
+use Exception;
 use Packages\Domain\Models\Topic\Topic;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Village;
@@ -118,6 +119,13 @@ class Member
         $init_phase = VillagePhase::getInitPhase($by_manual_flg, $by_limit_flg, $by_date_flg, $border_date);
         $village = new Village(null, $init_phase, $topic, $setting, $requirement, $public_information);
         return $this->village_service->registerVillage($this, $village);
+    }
+
+    /**
+     * ビレッジに参加する
+     */
+    public function joinVillage(Village $village):bool {
+        throw new Exception("Error Processing Request", 1);
     }
 
 }
