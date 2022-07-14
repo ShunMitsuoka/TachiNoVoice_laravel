@@ -2,6 +2,7 @@
 namespace Packages\Domain\Models\Village;
 
 use Packages\Domain\Models\Topic\Topic;
+use Packages\Domain\Models\Village\Phase\VillagePhase;
 
 class Village
 {

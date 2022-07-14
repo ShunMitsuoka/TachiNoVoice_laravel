@@ -3,9 +3,9 @@ namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
 use Packages\Domain\Models\Topic\Topic;
+use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageMemberRequirement;
-use Packages\Domain\Models\Village\VillagePhase;
 use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
 use Packages\Domain\Services\VillageService;
@@ -109,9 +109,13 @@ class Member
         Topic $topic,
         VillageSetting $setting,
         VillageMemberRequirement $requirement,
-        VillagePublicInformation $public_information
+        VillagePublicInformation $public_information,
+        bool $by_manual_flg,
+        bool $by_limit_flg,
+        bool $by_date_flg,
+        ?Carbon $border_date,
     ) : ?Village{
-        $init_phase = new VillagePhase(0);
+        $init_phase = VillagePhase::getInitPhase($by_manual_flg, $by_limit_flg, $by_date_flg, $border_date);
         $village = new Village(null, $init_phase, $topic, $setting, $requirement, $public_information);
         return $this->village_service->registerVillage($this, $village);
     }

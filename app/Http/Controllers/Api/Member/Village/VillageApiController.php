@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Member\Village;
 
 use App\Http\Controllers\API\BaseApiController;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Models\User\Host;
@@ -41,7 +42,17 @@ class VillageApiController extends BaseApiController
         $setting = $this->host->makeVillageSetting($request->core_member_limit);
         $requirement = $this->host->makeVillageMemberRequirement($request->requirement);
         $public_info = $this->host->makeVillagePublicInformation($request->nickname_flg, $request->gender_flg, $request->age_flg);
-        $village = $this->host->registerVillage($topic, $setting, $requirement, $public_info);
+        // ビレッジ登録
+        $village = $this->host->registerVillage(
+            $topic, 
+            $setting, 
+            $requirement, 
+            $public_info,
+            $request->by_manual_flg,
+            $request->by_limit_flg,
+            $request->by_date_flg,
+            new Carbon($request->border_date)
+        );
         if(!is_null($village)){
             $this->makeSuccessResponse([]);
         }else{
