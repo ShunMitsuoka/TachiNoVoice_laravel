@@ -11,21 +11,25 @@ class RegisterApiController extends BaseApiController
 {
     public function register(Request $request)
     {
-        $user = User::create([
-            'user_name' => $request->name,
-            'nickname' => $request->nickname,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'gender'    => $request->gender,
-            'address'    => 'test',
-            'date_of_birth' => $request->birthyear . '-' . $request->birthmonth . '-' . $request->birthday,
-        ]);
-
-        $accessToken = $user->createToken('authToken')->accessToken;
-
-        return $this->makeSuccessResponse([
-            'user' => $user,
-            'accessToken' => $accessToken
-        ]);
+        try {
+            $user = User::create([
+                'user_name' => $request->name,
+                'nickname' => $request->nickname,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'gender'    => $request->gender,
+                'address'    => 'test',
+                'date_of_birth' => $request->birthyear . '-' . $request->birthmonth . '-' . $request->birthday,
+            ]);
+    
+            $accessToken = $user->createToken('authToken')->accessToken;
+    
+            return $this->makeSuccessResponse([
+                'user' => $user,
+                'accessToken' => $accessToken
+            ]);
+        } catch (\Throwable $th) {
+            return $this->makeErrorResponse([]);
+        }
     }
 }

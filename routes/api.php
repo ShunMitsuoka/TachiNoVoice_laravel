@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterApiController;
 use App\Http\Controllers\API\Auth\LoginApiController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +15,13 @@ use App\Http\Controllers\API\Auth\LoginApiController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+use App\Http\Controllers\Api\Member\Village\VillageApiController;
+
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::apiResource('/member/village', VillageApiController::class);
+    //省略
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
