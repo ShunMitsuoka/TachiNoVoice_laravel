@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('notices', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedTinyInteger('type')->comment('お知らせ種別');
-            $table->string('title', 255)->unique()->unique()->comment('タイトル');
-            $table->text('content')->unique()->comment('内容');
+        Schema::create('topics', function (Blueprint $table) {
+            $table->id()->comment('問題id');
+            $table->unsignedBigInteger('village_id')->comment('ビレッジid');
+            $table->string('title', 255)->comment('タイトル');
+            $table->text('content')->nullable()->comment('内容');
+            $table->text('note')->nullable()->comment('注意書き');
             $table->timestamps();
             $table->boolean('deleted_flg')->default(0);
         });
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notices');
+        Schema::dropIfExists('topics');
     }
 };

@@ -11,7 +11,6 @@ class Village extends Model
     protected $table = 'villages';
     public $timestamps = true;
     protected $fillable = [
-        'user_id',
-        'village_id',
+        'phase_id',
     ];
 }

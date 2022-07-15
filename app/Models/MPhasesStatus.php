@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Evaluation extends Model
+class MPhasesStatus extends Model
 {
     use HasFactory;
-    protected $table = 'evaluations';
-    public $timestamps = true;
+    protected $table = 'm_phases_statuses';
+    public $timestamps = false;
     protected $fillable = [
-        'opinion_id',
-        'user_id',
-        'evaluation',
-        'created_at',
+        'status_name',
         'deleted_flg',
     ];
 }

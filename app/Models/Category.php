@@ -9,11 +9,8 @@ class Category extends Model
 {
     use HasFactory;
     protected $table = 'categories';
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable = [
-        'opinion_id',
         'category_name',
-        'created_at',
-        'deleted_flg',
     ];
 }

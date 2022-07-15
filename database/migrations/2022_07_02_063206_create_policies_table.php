@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('policies', function (Blueprint $table) {
             $table->id()->comment('方針id');
+            $table->unsignedBigInteger('category_id')->nullable()->comment('カテゴリーid');
             $table->string('policy', 255)->comment('方針');
             $table->timestamps();
         });

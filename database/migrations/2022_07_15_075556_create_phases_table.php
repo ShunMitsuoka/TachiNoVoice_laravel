@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('m_phases', function (Blueprint $table) {
+        Schema::create('phases', function (Blueprint $table) {
             $table->id()->comment('フェーズid');
-            $table->string('phase_name', 255)->comment('フェーズ名');
-            $table->boolean('deleted_flg')->default(0);
+            $table->unsignedBigInteger('village_id')->comment('ビレッジid');
+            $table->unsignedTiniyInteger('m_phase_id')->comment('フェーズマスタid');
+            $table->unsignedTiniyInteger('m_phase_status_id')->comment('フェーズステータスマスタid');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_phases');
+        Schema::dropIfExists('phases');
     }
 };

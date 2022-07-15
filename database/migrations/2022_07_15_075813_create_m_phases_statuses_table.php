@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('member_confirm_village_notices', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('village_notice_id')->comment('ヴィレッジニュースid');
-            $table->unsignedBigInteger('village_id')->comment('ヴィレッジid');
+        Schema::create('m_phases_statuses', function (Blueprint $table) {
+            $table->id()->comment('フェーズステータスマスタid');
+            $table->string('status_name', 255)->comment('ステータス名');
+            $table->boolean('deleted_flg')->default(0);
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('member_confirm_village_notices');
+        Schema::dropIfExists('m_phases_statuses');
     }
 };

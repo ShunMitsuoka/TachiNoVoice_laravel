@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PublicInformation extends Model
+class MemberConfirmVillageNotice extends Model
 {
     use HasFactory;
-    protected $table = 'public_informations';
-    public $timestamps = true;
+    protected $table = 'member_confirm_village_notices';
+    public $timestamps = false;
     protected $fillable = [
         'village_id',
-        'nickname_flg',
-        'gender_flg',
-        'age_flg',
+        'user_id',
     ];
 }

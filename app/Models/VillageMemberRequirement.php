@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PublicInformation extends Model
+class VillageMemberRequirement extends Model
 {
     use HasFactory;
-    protected $table = 'public_informations';
+    protected $table = 'village_member_requirements';
     public $timestamps = true;
     protected $fillable = [
         'village_id',
-        'nickname_flg',
-        'gender_flg',
-        'age_flg',
+        'requirement',
     ];
 }

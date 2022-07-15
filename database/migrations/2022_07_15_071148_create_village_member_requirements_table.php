@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('village_members', function (Blueprint $table) {
-            $table->id()->comment('ヴィレッジメンバーid');
-            $table->unsignedBigInteger('user_id')->comment('ユーザーid');
-            $table->unsignedBigInteger('village_id')->comment('ヴィレッジid');
-            $table->unsignedTiniyInteger('role_id')->comment('権限id');
+        Schema::create('village_member_requirements', function (Blueprint $table) {
+            $table->id()->comment('ビレッジメンバー条件設定id');
+            $table->unsignedBigInteger('village_id')->comment('ビレッジid');
+            $table->text('requirement')->nullable()->comment('条件');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('village_members');
+        Schema::dropIfExists('village_member_requirements');
     }
 };

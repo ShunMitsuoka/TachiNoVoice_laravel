@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('host', function (Blueprint $table) {
-            $table->id()->comment('ホストid');
+        Schema::create('satisfaction_levels', function (Blueprint $table) {
+            $table->id()->comment('満足度id');
             $table->unsignedBigInteger('user_id')->comment('ユーザーid');
-            $table->unsignedBigInteger('village_id')->comment('ヴィレッジid');
+            $table->unsignedBigInteger('policy_id')->comment('方針id');
+            $table->unsignedTinyInteger('satisfaction_level')->comment('満足度');
+            $table->text('comment')->nullable()->comment('感想');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('host');
+        Schema::dropIfExists('satisfaction_levels');
     }
 };

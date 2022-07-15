@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id()->comment('意見id');
             $table->unsignedBigInteger('topic_id')->comment('問題id');
             $table->unsignedBigInteger('user_id')->comment('ユーザーid');
-            $table->unsignedBigInteger('category_id')->comment('カテゴリーid');
+            $table->unsignedBigInteger('category_id')->nullable()->comment('カテゴリーid');
             $table->text('opinion')->comment('意見');
             $table->timestamps();
             $table->boolean('deleted_flg')->default(0);
