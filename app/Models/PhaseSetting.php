@@ -10,6 +10,16 @@ class PhaseSetting extends Model
     use HasFactory;
     protected $table = 'phase_settings';
     public $timestamps = true;
+
+    /**
+     * 日付を変形する属性
+     *
+     * @var array
+     */
+    protected $dates = [
+        'border_date',
+    ];
+
     protected $fillable = [
         'phase_id',
         'end_flg',

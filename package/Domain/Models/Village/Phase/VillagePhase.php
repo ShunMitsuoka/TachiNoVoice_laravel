@@ -60,6 +60,25 @@ class VillagePhase
         return $this->phase_setting;
     }
 
+    public function isEndPhase() : bool{
+        return $this->phase_setting->isEndPhase();
+    }
+
+    public function byManual() : bool{
+        return $this->phase_setting->byManual();
+    }
+
+    public function byLimit() : bool{
+        return $this->phase_setting->byLimit();
+    }
+
+    public function byDate() : bool{
+        return $this->phase_setting->byDate();
+    }
+    public function borderDate() : Carbon{
+        return $this->phase_setting->borderDate();
+    }
+
     /**
      * ビレッジ初期フェーズ作成
      */

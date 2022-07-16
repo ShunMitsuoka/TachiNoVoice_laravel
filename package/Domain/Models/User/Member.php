@@ -26,7 +26,7 @@ class Member
         ?MemberId $id,
         string $name,
         string $nickname,
-        ?string $email,
+        string $email,
         int $gender,
         Carbon $date_of_birth,
         VillageService  $village_service,

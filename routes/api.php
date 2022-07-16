@@ -31,3 +31,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/auth/register', [RegisterApiController::class, 'register']);
 // ログイン
 Route::post('/auth/login', [LoginApiController::class, 'Login']);
+
+// ログイン後
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('/village', VillageApiController::class);
+});
