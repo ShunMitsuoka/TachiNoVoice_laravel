@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('content')->nullable()->comment('内容');
             $table->text('note')->nullable()->comment('注意書き');
             $table->timestamps();
+            $table->boolean('deleted_flg')->default(0);
         });
     }
 

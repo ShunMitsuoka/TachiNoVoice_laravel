@@ -14,5 +14,6 @@ class Village extends Model
         'title',
         'content',
         'note',
+        'deleted_flg',
     ];
 }
