@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('phases', function (Blueprint $table) {
             $table->id()->comment('フェーズid');
             $table->unsignedBigInteger('village_id')->comment('ビレッジid');
-            $table->unsignedTiniyInteger('m_phase_id')->comment('フェーズマスタid');
-            $table->unsignedTiniyInteger('m_phase_status_id')->comment('フェーズステータスマスタid');
+            $table->unsignedTinyInteger('m_phase_id')->comment('フェーズマスタid');
+            $table->unsignedTinyInteger('m_phase_status_id')->comment('フェーズステータスマスタid');
             $table->timestamps();
         });
     }
