@@ -3,8 +3,8 @@ namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
 use Exception;
-use Packages\Domain\Models\Topic\Topic;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
+use Packages\Domain\Models\Village\Topic\Topic;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageMemberRequirement;
 use Packages\Domain\Models\Village\VillagePublicInformation;
@@ -75,7 +75,7 @@ class Member
         ?string $content,
         ?string $note,
     ) : Topic{
-        return new Topic(null, $title, $content, $note);
+        return new Topic($title, $content, $note);
     }
 
     /**

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('options', function (Blueprint $table) {
             $table->id()->comment('意見id');
-            $table->unsignedBigInteger('topic_id')->comment('問題id');
+            $table->unsignedBigInteger('village_id')->comment('ビレッジid');
             $table->unsignedBigInteger('user_id')->comment('ユーザーid');
             $table->unsignedBigInteger('category_id')->nullable()->comment('カテゴリーid');
             $table->text('opinion')->comment('意見');

@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('villages', function (Blueprint $table) {
             $table->id()->comment('ビレッジid');
-            $table->unsignedTiniyInteger('phase_id')->comment('フェーズid');
+            $table->string('title', 255)->comment('タイトル');
+            $table->text('content')->nullable()->comment('内容');
+            $table->text('note')->nullable()->comment('注意書き');
             $table->timestamps();
         });
     }

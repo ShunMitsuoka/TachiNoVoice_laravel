@@ -11,7 +11,7 @@ class Opinion extends Model
     protected $table = 'opinions';
     public $timestamps = true;
     protected $fillable = [
-        'topic_id',
+        'village_id',
         'user_id',
         'category_id',
         'opinion',

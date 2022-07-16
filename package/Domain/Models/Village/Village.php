@@ -1,8 +1,9 @@
 <?php
 namespace Packages\Domain\Models\Village;
 
-use Packages\Domain\Models\Topic\Topic;
+
 use Packages\Domain\Models\Village\Phase\VillagePhase;
+use Packages\Domain\Models\Village\Topic\Topic;
 
 class Village
 {
@@ -36,6 +37,14 @@ class Village
         }
         return $this->id->id();
     }
+
+    public function setId(int $id){
+        if(!is_null($this->id)){
+            throw new \Exception('IDが既に存在しています。');
+        }
+        $this->id = new VillageId($id);
+    }
+
     public function phase() : VillagePhase{
         return $this->phase;
     }
