@@ -4,6 +4,7 @@ namespace Packages\Domain\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
+use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 use Packages\Domain\Models\Village\Topic\Topic;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageMemberRequirement;
@@ -99,6 +100,23 @@ class Member
         return new VillagePublicInformation($nickname_flg, $gender_flg, $age_flg);
     }
 
+    public function makeVillagePhaseStartSetting(
+        bool $by_limit_flg,
+        bool $by_date_flg,
+        bool $by_instant_flg,
+        ?Carbon $border_date,
+    ){
+        return new VillagePhaseSetting(false, true, $by_limit_flg, $by_date_flg, $by_instant_flg, $border_date);
+    }
+
+    public function makeVillagePhaseEndSetting(
+        bool $by_limit_flg,
+        bool $by_date_flg,
+        ?Carbon $border_date,
+    ){
+        return new VillagePhaseSetting(true, true, $by_limit_flg, $by_date_flg, false, $border_date);
+    }
+
     /**
      * ビレッジを登録する
      */
@@ -108,13 +126,13 @@ class Member
         VillageSetting $setting,
         VillageMemberRequirement $requirement,
         VillagePublicInformation $public_information,
-        bool $by_manual_flg,
-        bool $by_limit_flg,
-        bool $by_date_flg,
-        bool $by_instant_flg,
-        ?Carbon $border_date,
+        VillagePhaseSetting $phase_start_setting,
+        VillagePhaseSetting $phase_end_setting
     ) : ?Village{
-        $init_phase = VillagePhase::getInitPhase($by_manual_flg, $by_limit_flg, $by_date_flg, $by_instant_flg, $border_date);
+        $init_phase = VillagePhase::getInitPhase(
+            $phase_start_setting,
+            $phase_end_setting
+        );
         $village = new Village(null, $init_phase, $topic, $setting, $requirement, $public_information);
         return $village_service->registerVillage($this, $village);
     }

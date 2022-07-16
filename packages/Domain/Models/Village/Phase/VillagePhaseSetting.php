@@ -11,7 +11,7 @@ class VillagePhaseSetting
     private bool $by_limit_flg;
     private bool $by_date_flg;
     private bool $by_instant_flg;
-    private Carbon $border_date;
+    private ?Carbon $border_date;
 
     function __construct(
         bool $end_flg,
@@ -49,7 +49,7 @@ class VillagePhaseSetting
         return $this->by_instant_flg;
     }
 
-    public function borderDate() : Carbon{
+    public function borderDate() : ?Carbon{
         return $this->border_date;
     }
 }

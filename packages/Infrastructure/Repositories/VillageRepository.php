@@ -48,35 +48,41 @@ class VillageRepository implements VillageRepositoryInterface
                 'age_flg' => $village->publicInformation()->isAgePublic(),
             ]);
 
-            $phase = ModelPhase::create([
+            $created_phase = ModelPhase::create([
                 'village_id' => $village->id(),
                 'm_phase_id' => $village->phase()->phase(),
                 'm_phase_status_id' => $village->phase()->phaseStatus(),
             ]);
-
-            $phase_setting = ModelPhaseSetting::create([
-                'phase_id' => $phase->id,
-                'end_flg' => $village->phase()->isEndPhase(),
-                'by_manual_flg' => $village->phase()->byManual(),
-                'by_limit_flg' => $village->phase()->byLimit(),
-                'by_date_flg' => $village->phase()->byDate(),
-                'border_date' => $village->phase()->borderDate(),
+            $created_phase_start_setting = null;
+            if($village->phase()->existsPhaseStartSetting()){
+                $created_phase_start_setting = ModelPhaseSetting::create([
+                    'phase_id' => $created_phase->id,
+                    'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
+                    'by_manual_flg' => $village->phase()->phaseStartSetting()->byManual(),
+                    'by_limit_flg' => $village->phase()->phaseStartSetting()->byLimit(),
+                    'by_date_flg' => $village->phase()->phaseStartSetting()->byDate(),
+                    'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
+                ]);
+            }
+            $created_phase_end_setting = ModelPhaseSetting::create([
+                'phase_id' => $created_phase->id,
+                'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
+                'by_manual_flg' => $village->phase()->phaseEndSetting()->byManual(),
+                'by_limit_flg' => $village->phase()->phaseEndSetting()->byLimit(),
+                'by_date_flg' => $village->phase()->phaseEndSetting()->byDate(),
+                'border_date' => $village->phase()->phaseEndSetting()->borderDate(),
             ]);
+
             DB::commit();
+
             return new Village(
                 new VillageId($created_village->id), 
                 new VillagePhase(
-                    new VillagePhaseId($phase->id),
-                    $phase->m_phase_id,
-                    $phase->m_phase_status_id,
-                    new VillagePhaseSetting(
-                        $phase_setting->end_flg,
-                        $phase_setting->by_manual_flg,
-                        $phase_setting->by_limit_flg,
-                        $phase_setting->by_date_flg,
-                        $phase_setting->by_instant_flg,
-                        $phase_setting->border_date,
-                    )
+                    new VillagePhaseId($created_phase->id),
+                    $created_phase->m_phase_id,
+                    $created_phase->m_phase_status_id,
+                    $village->phase()->phaseStartSetting(),
+                    $village->phase()->phaseEndSetting()
                 ), 
                 new Topic(
                     $created_village->title,

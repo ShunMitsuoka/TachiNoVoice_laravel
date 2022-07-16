@@ -5,10 +5,11 @@ use Carbon\Carbon;
 
 class VillagePhase
 {
-    private VillagePhaseId $id;
+    private ?VillagePhaseId $id;
     private int $phase;
     private int $phase_status;
-    private VillagePhaseSetting $phase_setting;
+    private VillagePhaseSetting $phase_start_setting;
+    private VillagePhaseSetting $phase_end_setting;
 
     /**
      * フェーズ1:ビレッジメンバー募集
@@ -32,12 +33,14 @@ class VillagePhase
         ?VillagePhaseId $id,
         int $phase,
         int $phase_status,
-        VillagePhaseSetting $phase_setting,
+        ?VillagePhaseSetting $phase_start_setting,
+        ?VillagePhaseSetting $phase_end_setting,
     ) {
         $this->id = $id;
         $this->phase = $phase;
         $this->phase_status = $phase_status;
-        $this->phase_setting = $phase_setting;
+        $this->phase_start_setting = $phase_start_setting;
+        $this->phase_end_setting = $phase_end_setting;
     }
 
     public function id() : int
@@ -55,45 +58,37 @@ class VillagePhase
     public function phaseStatus() : int{
         return $this->phase_status;
     }
+
+    public function existsPhaseStartSetting() : bool{
+        return !is_null($this->phase_start_setting);
+    }
+
+    public function existsPhaseEndSetting() : bool{
+        return !is_null($this->phase_end_setting);
+    }
     
-    public function phaseSetting() : VillagePhaseSetting{
-        return $this->phase_setting;
+    
+    public function phaseStartSetting() : ?VillagePhaseSetting{
+        return $this->phase_start_setting;
     }
 
-    public function isEndPhase() : bool{
-        return $this->phase_setting->isEndPhase();
-    }
-
-    public function byManual() : bool{
-        return $this->phase_setting->byManual();
-    }
-
-    public function byLimit() : bool{
-        return $this->phase_setting->byLimit();
-    }
-
-    public function byDate() : bool{
-        return $this->phase_setting->byDate();
-    }
-    public function borderDate() : Carbon{
-        return $this->phase_setting->borderDate();
+    public function phaseEndSetting() : ?VillagePhaseSetting{
+        return $this->phase_end_setting;
     }
 
     /**
      * ビレッジ初期フェーズ作成
      */
     static function getInitPhase(
-        bool $by_manual_flg,
-        bool $by_limit_flg,
-        bool $by_date_flg,
-        bool $by_instant_flg,
-        ?Carbon $border_date,
+        VillagePhaseSetting $phase_start_setting,
+        VillagePhaseSetting $phase_end_setting,
     ) : self{
         return new self(
             null,
             self::PHASE_RECRUITMENT_OF_MEMBER, 
             self::PHASE_STATUS_READY,
-            new VillagePhaseSetting(false, $by_manual_flg, $by_limit_flg, $by_date_flg, $by_instant_flg, $border_date)
+            $phase_start_setting,
+            $phase_end_setting,
         );
     }
 }

@@ -63,6 +63,18 @@ class VillageApiController extends BaseApiController
         $setting = $this->member->makeVillageSetting($request->core_member_limit);
         $requirement = $this->member->makeVillageMemberRequirement($request->requirement);
         $public_info = $this->member->makeVillagePublicInformation($request->nickname_flg, $request->gender_flg, $request->age_flg);
+
+        $phase_start_setting = $this->member->makeVillagePhaseStartSetting(
+            false,
+            false,
+            true,
+            null
+        );
+        $phase_end_setting = $this->member->makeVillagePhaseEndSetting(
+            true,
+            false,
+            null
+        );
         // ビレッジ登録
         $village = $this->member->registerVillage(
             $this->village_service,
@@ -70,16 +82,14 @@ class VillageApiController extends BaseApiController
             $setting, 
             $requirement, 
             $public_info,
-            $request->by_manual_flg,
-            $request->by_limit_flg,
-            $request->by_date_flg,
-            $request->by_instant_flg,
+            $phase_start_setting,
+            $phase_end_setting,
             new Carbon($request->border_date)
         );
         if(!is_null($village)){
-            $this->makeSuccessResponse([]);
+            return $this->makeSuccessResponse([]);
         }else{
-            $this->makeErrorResponse([]);
+            return $this->makeErrorResponse([]);
         }
     }
 

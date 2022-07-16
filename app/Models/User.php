@@ -48,4 +48,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+        /**
+     * 日付を変形する属性
+     *
+     * @var array
+     */
+    protected $dates = [
+        'date_of_birth',
+    ];
 }
