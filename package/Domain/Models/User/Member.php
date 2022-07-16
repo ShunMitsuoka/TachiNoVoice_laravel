@@ -114,9 +114,10 @@ class Member
         bool $by_manual_flg,
         bool $by_limit_flg,
         bool $by_date_flg,
+        bool $by_instant_flg,
         ?Carbon $border_date,
     ) : ?Village{
-        $init_phase = VillagePhase::getInitPhase($by_manual_flg, $by_limit_flg, $by_date_flg, $border_date);
+        $init_phase = VillagePhase::getInitPhase($by_manual_flg, $by_limit_flg, $by_date_flg, $by_instant_flg, $border_date);
         $village = new Village(null, $init_phase, $topic, $setting, $requirement, $public_information);
         return $this->village_service->registerVillage($this, $village);
     }

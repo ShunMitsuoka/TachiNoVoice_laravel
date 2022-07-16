@@ -26,6 +26,7 @@ class PhaseSetting extends Model
         'by_manual_flg',
         'by_limit_flg',
         'by_date_flg',
+        'by_instant_flg',
         'border_date',
     ];
 }

@@ -86,13 +86,14 @@ class VillagePhase
         bool $by_manual_flg,
         bool $by_limit_flg,
         bool $by_date_flg,
+        bool $by_instant_flg,
         ?Carbon $border_date,
     ) : self{
         return new self(
             null,
             self::PHASE_RECRUITMENT_OF_MEMBER, 
             self::PHASE_STATUS_READY,
-            new VillagePhaseSetting(false, $by_manual_flg, $by_limit_flg, $by_date_flg, $border_date)
+            new VillagePhaseSetting(false, $by_manual_flg, $by_limit_flg, $by_date_flg, $by_instant_flg, $border_date)
         );
     }
 }

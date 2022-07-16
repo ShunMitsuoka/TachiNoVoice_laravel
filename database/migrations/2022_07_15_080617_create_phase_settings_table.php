@@ -20,6 +20,7 @@ return new class extends Migration
             $table->boolean('by_manual_flg')->default(1)->comment('手動フラグ');
             $table->boolean('by_limit_flg')->default(0)->comment(' 限界値フラグ');
             $table->boolean('by_date_flg')->default(0)->comment('日付フラグ');
+            $table->boolean('by_instant_flg')->default(0)->comment('即時フラグ');
             $table->datetime('border_date')->nullable()->comment('日付');
             $table->timestamps();
         });

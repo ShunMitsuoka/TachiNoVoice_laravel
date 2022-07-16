@@ -74,6 +74,7 @@ class VillageRepository implements VillageRepositoryInterface
                         $phase_setting->by_manual_flg,
                         $phase_setting->by_limit_flg,
                         $phase_setting->by_date_flg,
+                        $phase_setting->by_instant_flg,
                         $phase_setting->border_date,
                     )
                 ), 
