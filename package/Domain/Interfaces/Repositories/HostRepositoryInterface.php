@@ -1,5 +1,4 @@
 <?php
-
 namespace Packages\Domain\Interfaces\Repositories;
 
 use Packages\Domain\Models\User\Host;

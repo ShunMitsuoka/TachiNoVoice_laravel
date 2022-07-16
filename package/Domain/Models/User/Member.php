@@ -13,8 +13,6 @@ use Packages\Domain\Services\VillageService;
 
 class Member
 {
-    protected VillageService $village_service;
-
     protected ?MemberId $id;
     private string $name;
     private string $nickname;
@@ -29,7 +27,6 @@ class Member
         string $email,
         int $gender,
         Carbon $date_of_birth,
-        VillageService  $village_service,
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -37,7 +34,6 @@ class Member
         $this->email = $email;
         $this->gender = $gender;
         $this->date_of_birth = $date_of_birth;
-        $this->village_service = $village_service;
     }
 
     public function id():int{
@@ -107,6 +103,7 @@ class Member
      * ビレッジを登録する
      */
     public function registerVillage(
+        VillageService  $village_service,
         Topic $topic,
         VillageSetting $setting,
         VillageMemberRequirement $requirement,
@@ -119,7 +116,7 @@ class Member
     ) : ?Village{
         $init_phase = VillagePhase::getInitPhase($by_manual_flg, $by_limit_flg, $by_date_flg, $by_instant_flg, $border_date);
         $village = new Village(null, $init_phase, $topic, $setting, $requirement, $public_information);
-        return $this->village_service->registerVillage($this, $village);
+        return $village_service->registerVillage($this, $village);
     }
 
     /**

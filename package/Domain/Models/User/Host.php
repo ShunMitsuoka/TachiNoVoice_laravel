@@ -16,9 +16,8 @@ class Host extends Member
         int $gender,
         Carbon $date_of_birth,
         Village $village,
-        VillageService  $village_service
     ) {
-        parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth, $village_service);
+        parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth);
         $this->village = $village;
     }
 }
