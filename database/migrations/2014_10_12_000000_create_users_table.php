@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email', 255)->unique()->comment('メールアドレス');
             $table->string('password', 255)->nullable()->comment('パスワード');
             $table->string('user_name', 255)->comment('ユーザ名称');
-            $table->string('nickname', 255)->comment('ニックネーム');
+            $table->string('nickname', 255)->nullable()->comment('ニックネーム');
             $table->boolean('gender')->comment('性別');
             $table->date('date_of_birth')->comment('生年月日');
             $table->timestamps();

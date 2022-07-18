@@ -43,7 +43,7 @@ class RegisterRequest extends FormRequest
             'nickname' => 'ニックネーム',
             'email' => 'メールアドレス',
             'password' => 'パスワード',
-            'password_confirmation' => 'パスワード確認用',
+            'password_confirmation' => 'パスワード確認フィールド',
             'gender' => '性別',
             'birthyear' => '生年月日-年',
             'birthmonth' => '生年月日-月',

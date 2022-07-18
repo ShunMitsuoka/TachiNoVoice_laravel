@@ -14,7 +14,7 @@ class RegisterApiController extends BaseApiController
     {
         try {
             $user = User::create([
-                'user_name' => $request->name,
+                'user_name' => $request->user_name,
                 'nickname' => $request->nickname,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
