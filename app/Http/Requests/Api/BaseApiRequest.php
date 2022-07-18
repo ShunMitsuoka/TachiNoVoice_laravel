@@ -12,7 +12,7 @@ class BaseApiRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $res = ApiResponseService::makeResponse(
-            400,
+            422,
             false,
             [],
             $validator->errors()
