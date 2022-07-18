@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('user_name', 255)->comment('ユーザ名称');
             $table->string('nickname', 255)->comment('ニックネーム');
             $table->boolean('gender')->comment('性別');
-            $table->string('address', 255)->comment('住所');
             $table->date('date_of_birth')->comment('生年月日');
             $table->timestamps();
             $table->boolean('deleted_flg')->default(0);

@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\API\BaseApiController;
+use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterApiController extends BaseApiController
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
         try {
             $user = User::create([
@@ -18,7 +19,6 @@ class RegisterApiController extends BaseApiController
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'gender'    => $request->gender,
-                'address'    => 'test',
                 'date_of_birth' => $request->birthyear . '-' . $request->birthmonth . '-' . $request->birthday,
             ]);
     
