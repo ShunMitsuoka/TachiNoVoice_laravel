@@ -1,4 +1,5 @@
 <?php
+
 namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
@@ -16,7 +17,7 @@ class Member
 {
     protected ?MemberId $id;
     private string $name;
-    private string $nickname;
+    private ?string $nickname;
     private string $email;
     private int $gender;
     private Carbon $date_of_birth;
@@ -24,7 +25,7 @@ class Member
     function __construct(
         ?MemberId $id,
         string $name,
-        string $nickname,
+        ?string $nickname,
         string $email,
         int $gender,
         Carbon $date_of_birth,
@@ -37,30 +38,39 @@ class Member
         $this->date_of_birth = $date_of_birth;
     }
 
-    public function id():int{
-        if(is_null($this->id)){
+    public function id(): int
+    {
+        if (is_null($this->id)) {
             throw new \Exception('IDが存在しません。');
         }
         return $this->id->id();
     }
 
-    public function name():string{
+    public function name(): string
+    {
         return $this->name;
     }
 
-    public function nickname():string{
+    public function nickname(): string
+    {
+        if (is_null($this->nickname)) {
+            return $this->name();
+        }
         return $this->nickname;
     }
 
-    public function email():string {
+    public function email(): string
+    {
         return $this->email;
     }
 
-    public function gender():int{
+    public function gender(): int
+    {
         return $this->gender;
     }
 
-    public function dateOfBirth():Carbon{
+    public function dateOfBirth(): Carbon
+    {
         return $this->date_of_birth;
     }
 
@@ -71,21 +81,23 @@ class Member
         string $title,
         ?string $content,
         ?string $note,
-    ) : Topic{
+    ): Topic {
         return new Topic($title, $content, $note);
     }
 
     /**
      * ビレッジの設定を作成する。
      */
-    public function makeVillageSetting(int $core_member_limit) : VillageSetting{
+    public function makeVillageSetting(int $core_member_limit): VillageSetting
+    {
         return new VillageSetting($core_member_limit);
     }
 
     /**
      * ビレッジメンバー参加条件を作成する。
      */
-    public function makeVillageMemberRequirement(string $requirement) : VillageMemberRequirement{
+    public function makeVillageMemberRequirement(string $requirement): VillageMemberRequirement
+    {
         return new VillageMemberRequirement($requirement);
     }
 
@@ -96,7 +108,7 @@ class Member
         bool $nickname_flg,
         bool $gender_flg,
         bool $age_flg
-    ) : VillagePublicInformation{
+    ): VillagePublicInformation {
         return new VillagePublicInformation($nickname_flg, $gender_flg, $age_flg);
     }
 
@@ -105,7 +117,7 @@ class Member
         bool $by_date_flg,
         bool $by_instant_flg,
         ?Carbon $border_date,
-    ){
+    ) {
         return new VillagePhaseSetting(false, true, $by_limit_flg, $by_date_flg, $by_instant_flg, $border_date);
     }
 
@@ -113,7 +125,7 @@ class Member
         bool $by_limit_flg,
         bool $by_date_flg,
         ?Carbon $border_date,
-    ){
+    ) {
         return new VillagePhaseSetting(true, true, $by_limit_flg, $by_date_flg, false, $border_date);
     }
 
@@ -128,7 +140,7 @@ class Member
         VillagePublicInformation $public_information,
         VillagePhaseSetting $phase_start_setting,
         VillagePhaseSetting $phase_end_setting
-    ) : ?Village{
+    ): ?Village {
         $init_phase = VillagePhase::getInitPhase(
             $phase_start_setting,
             $phase_end_setting
@@ -140,8 +152,8 @@ class Member
     /**
      * ビレッジに参加する
      */
-    public function joinVillage(Village $village):bool {
+    public function joinVillage(Village $village): bool
+    {
         throw new Exception("Error Processing Request", 1);
     }
-
 }
