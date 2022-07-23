@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Api\Auth;
 
+use App\Http\Requests\Api\BaseApiRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class LoginRequest extends BaseApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
