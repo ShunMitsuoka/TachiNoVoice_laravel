@@ -17,6 +17,41 @@ class VillagePhase
     public const PHASE_RECRUITMENT_OF_MEMBER = 1;
 
     /**
+     * フェーズ2:メンバー抽選
+     */
+    public const PHASE_DRAWING_CORE_MEMBER = 2;
+
+    /**
+     * フェーズ3:コアメンバー意見募集
+     */
+    public const PHASE_ASKING_OPINIONS_OF_CORE_MEMBER = 3;
+
+    /**
+     * フェーズ4:ホストカテゴリー分け
+     */
+    public const PHASE_CATEGORIZE_OPINIONS  = 4;
+
+    /**
+     * フェーズ5:ライズメンバー意見募集
+     */
+    public const PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER  = 5;
+
+    /**
+     * フェーズ6:評価フェーズ
+     */
+    public const PHASE_EVALUATION  = 6;
+
+    /**
+     * フェーズ7:方針決定
+     */
+    public const PHASE_DECIDING_POLICY  = 7;
+
+    /**
+     * フェーズ8:方針決定
+     */
+    public const PHASE_SURVEYING_SATISFACTION  = 8;
+
+    /**
      * ステータス：準備中
      */
     public const PHASE_STATUS_READY = 1;
