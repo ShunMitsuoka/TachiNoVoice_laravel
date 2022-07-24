@@ -46,6 +46,14 @@ class Member
         return $this->id->id();
     }
 
+    public function idObj(): MemberId
+    {
+        if (is_null($this->id)) {
+            throw new \Exception('IDが存在しません。');
+        }
+        return $this->id;
+    }
+
     public function name(): string
     {
         return $this->name;

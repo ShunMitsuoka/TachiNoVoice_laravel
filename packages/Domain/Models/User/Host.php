@@ -7,17 +7,14 @@ use Packages\Domain\Services\VillageService;
 
 class Host extends Member
 {
-    protected Village $village;
     function __construct(
         MemberId $id,
         string $name,
-        string $nickname,
-        ?string $email,
+        ?string $nickname,
+        string $email,
         int $gender,
         Carbon $date_of_birth,
-        Village $village,
     ) {
         parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth);
-        $this->village = $village;
     }
 }

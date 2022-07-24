@@ -8,5 +8,6 @@ use Packages\Domain\Models\Village\Village;
 interface HostRepositoryInterface 
 {
     public function get(int $user_id) : Host;
-    public function save(Member $member, Village $village) : Host;
+    public function getAllByVillageId(int $village_id) : array;
+    public function save(Member $member, Village $village) : bool;
 }

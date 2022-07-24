@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseApiController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
+use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\User\MemberId;
@@ -14,20 +15,12 @@ use Packages\Domain\Services\VillageService;
 
 class VillageApiController extends BaseApiController
 {
-    protected HostRepositoryInterface $host_repository;
-    protected VillageRepositoryInterface $village_repository;
     protected VillageService $village_service;
 
-    private Member $member;
-
     function __construct(
-        HostRepositoryInterface $host_repository,
-        VillageRepositoryInterface $village_repository
+        VillageService $village_service
     ) {
-        $this->village_service = new VillageService(
-            $village_repository,
-            $host_repository,
-        );
+        $this->village_service = $village_service;
     }
 
     
@@ -49,26 +42,26 @@ class VillageApiController extends BaseApiController
      */
     public function store(Request $request)
     {   
-        $this->member = $this->getLoginMember();
+        $member = $this->getLoginMember();
 
-        $topic = $this->member->makeVillageTopic($request->title, $request->content, $request->note);
-        $setting = $this->member->makeVillageSetting($request->core_member_limit, $request->village_member_limit);
-        $requirement = $this->member->makeVillageMemberRequirement($request->requirement);
-        $public_info = $this->member->makeVillagePublicInformation($request->nickname_flg, $request->gender_flg, $request->age_flg);
+        $topic = $member->makeVillageTopic($request->title, $request->content, $request->note);
+        $setting = $member->makeVillageSetting($request->core_member_limit, $request->village_member_limit);
+        $requirement = $member->makeVillageMemberRequirement($request->requirement);
+        $public_info = $member->makeVillagePublicInformation($request->nickname_flg, $request->gender_flg, $request->age_flg);
 
-        $phase_start_setting = $this->member->makeVillagePhaseStartSetting(
+        $phase_start_setting = $member->makeVillagePhaseStartSetting(
             false,
             false,
             true,
             null
         );
-        $phase_end_setting = $this->member->makeVillagePhaseEndSetting(
+        $phase_end_setting = $member->makeVillagePhaseEndSetting(
             true,
             false,
             null
         );
         // ビレッジ登録
-        $village = $this->member->registerVillage(
+        $village = $member->registerVillage(
             $this->village_service,
             $topic, 
             $setting, 

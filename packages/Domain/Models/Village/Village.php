@@ -1,7 +1,7 @@
 <?php
 namespace Packages\Domain\Models\Village;
 
-
+use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Topic\Topic;
 
@@ -13,6 +13,10 @@ class Village
     private Topic $topic;
     private VillageMemberRequirement $requirement;
     private VillagePublicInformation $public_information;
+    private array $hosts;
+    private array $village_members;
+    private array $core_members;
+    private array $rise_members;
 
     function __construct(
         ?VillageId $id,
@@ -28,6 +32,10 @@ class Village
         $this->setting = $setting;
         $this->requirement = $requirement;
         $this->public_information = $public_information;
+        $this->hosts = [];
+        $this->village_members = [];
+        $this->core_members = [];
+        $this->rise_members = [];
     }
 
     public function id() : int
@@ -60,7 +68,34 @@ class Village
     public function publicInformation() : VillagePublicInformation{
         return $this->public_information;
     }
+    public function hosts(){
+        return $this->hosts;
+    }
+    public function villageMembers(){
+        return $this->village_members;
+    }
+    public function coreMembers(){
+        return $this->core_members;
+    }
+    public function riseMembers(){
+        return $this->rise_members;
+    }
 
+    public function addHost(Member $host){
+        $this->hosts[$host->id()] = $host;
+    }
+
+    public function addVillageMember(Member $member){
+        $this->village_members[$member->id()] = $member;
+    }
+
+    public function addCoreMember(Member $member){
+        $this->core_members[$member->id()] = $member;
+    }
+
+    public function addRiseMember(Member $member){
+        $this->rise_members[$member->id()] = $member;
+    }
 
 
 }

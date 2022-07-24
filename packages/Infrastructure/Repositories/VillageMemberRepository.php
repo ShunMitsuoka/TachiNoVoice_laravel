@@ -1,51 +1,41 @@
 <?php
 namespace Packages\Infrastructure\Repositories;
 
-use App\Models\Host as ModelsHost;
+use App\Models\VillageMember as ModelsVillageMember;
 use Carbon\Carbon;
-use Exception;
-use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
-use Packages\Domain\Models\User\Host;
-use Packages\Domain\Models\User\Member;
+use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
 use Packages\Domain\Models\User\MemberId;
-use Packages\Domain\Models\Village\Village;
+use Packages\Domain\Models\User\VillageMember;
 
-class HostRepository implements HostRepositoryInterface 
+class VillageMemberRepository implements VillageMemberRepositoryInterface
 {
-    public function get(int $user_id) : Host{
-        throw new Exception("Error Processing Request", 1);
-    }
-    public function save(Member $member, Village $village) : bool{
-        ModelsHost::create([
-            'user_id' => $member->id(),
-            'village_id' => $village->id(),
-        ]);
-        return true;
-    }
     public function getAllByVillageId(int $village_id) : array{
         $result = [];
-        $records = ModelsHost::from('hosts as hosts')
+        $records = ModelsVillageMember::from('village_members as vm')
             ->select(
                 'user_id',
+                'role_id',
                 'email',
                 'user_name',
                 'nickname',
                 'gender',
                 'date_of_birth',
             )
-            ->join('users', 'users.id', 'hosts.user_id')
+            ->join('users', 'users.id', 'vm.user_id')
             ->where('village_id', $village_id)
             ->get();
         foreach ($records as $record) {
-            $result[] = new Host(
+            $result[] = new VillageMember(
                 new MemberId($record->user_id),
                 $record->user_name,
                 $record->nickname,
                 $record->email,
                 $record->gender,
                 new Carbon($record->date_of_birth),
+                $record->role_id,
             );
         }
         return $result;
     }
+
 }

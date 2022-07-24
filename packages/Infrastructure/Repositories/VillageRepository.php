@@ -9,6 +9,7 @@ use App\Models\VillageMemberRequirement as ModelVillageMemberRequirement;
 use App\Models\VillageSetting as ModelVillageSetting;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
+use Packages\Domain\Models\User\MemberId;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
@@ -105,6 +106,36 @@ class VillageRepository implements VillageRepositoryInterface
         return null;
     }
 
+    public function getAllByHost(MemberId $member_id) : array{
+        try {
+            $result = [];
+            $village_infos = $this->queryVillageInfo()
+                ->join('hosts', 'hosts.village_id', 'v.id')
+                ->where('hosts.user_id', $member_id->id())
+                ->get();
+
+            foreach ($village_infos as $village_info) {
+                $phase_start = ModelPhaseSetting::from('phase_settings as ps')
+                    ->join('phases as p', 'ps.phase_id', 'p.id')
+                    ->where('ps.phase_id', $village_info->phase_id)
+                    ->where('ps.end_flg', false)
+                    ->first();
+                $phase_end = ModelPhaseSetting::from('phase_settings as ps')
+                    ->join('phases as p', 'ps.phase_id', 'p.id')
+                    ->where('ps.phase_id', $village_info->phase_id)
+                    ->where('ps.end_flg', true)
+                    ->first();
+
+                $result[] = $this->makeVillageFromRecord($village_info, $phase_start, $phase_end);
+            }                 
+            return $result;
+        } catch (\Exception $e) {
+            logs()->error($e->getMessage());
+            DB::rollback();
+        }
+        return null;
+    }
+
     public function save(Village $village) : Village{
         DB::beginTransaction();
         try {
@@ -192,5 +223,72 @@ class VillageRepository implements VillageRepositoryInterface
             DB::rollback();
         }
         return null;
+    }
+
+    private function queryVillageInfo(){
+        $query = ModelVillage::from('villages as v')
+        ->select('v.id as village_id',
+                 'v.title',
+                 'v.content',
+                 'v.note',
+                 'p.id as phase_id',
+                 'p.m_phase_id',
+                 'p.m_phase_status_id',
+                 'vs.core_member_limit',
+                 'vs.village_member_limit',
+                 'vmr.requirement',
+                 'pi.nickname_flg',
+                 'pi.gender_flg',
+                 'pi.age_flg',
+        )
+        ->join('phases as p', 'p.village_id', 'v.id')
+        ->join('village_member_requirements as vmr', 'vmr.village_id', 'v.id')
+        ->join('village_settings as vs', 'vs.village_id', 'v.id')
+        ->join('public_informations as pi', 'pi.village_id', 'v.id');
+        return $query;
+    }
+
+    private function makeVillageFromRecord($village_info, $phase_start, $phase_end) : Village{
+        return new Village(
+            new VillageId($village_info->village_id), 
+            new VillagePhase(
+                new VillagePhaseId($village_info->phase_id),
+                $village_info->m_phase_id,
+                $village_info->m_phase_status_id,
+                new VillagePhaseSetting(
+                    $phase_start->end_flg,
+                    $phase_start->by_manual_flg,
+                    $phase_start->by_limit_flg,
+                    $phase_start->by_date_flg,
+                    $phase_start->by_instant_flg,
+                    $phase_start->border_date,
+                ),
+                new VillagePhaseSetting(
+                    $phase_end->phase_id,
+                    $phase_end->by_manual_flg,
+                    $phase_end->by_limit_flg,
+                    $phase_end->by_date_flg,
+                    $phase_end->by_instant_flg,
+                    $phase_end->border_date,
+                ),
+            ), 
+            new Topic(
+                $village_info->title,
+                $village_info->content,
+                $village_info->note,
+            ), 
+            new VillageSetting(
+                $village_info->core_member_limit,
+                $village_info->village_member_limit,
+            ), 
+            new VillageMemberRequirement(
+                $village_info->requirement,
+            ), 
+            new VillagePublicInformation(
+                $village_info->nickname_flg,
+                $village_info->gender_flg,
+                $village_info->age_flg,
+            )
+        );
     }
 }

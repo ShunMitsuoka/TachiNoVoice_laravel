@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterApiController;
 use App\Http\Controllers\API\Auth\LoginApiController;
-
+use App\Http\Controllers\Api\Member\MyVillage\MyVillageApiController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -41,4 +41,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/village/register/validation/topic', [VillageValidationApiController::class, 'topic']);
     Route::post('/village/register/validation/setting', [VillageValidationApiController::class, 'setting']);
 
+    Route::apiResource('/my/village', MyVillageApiController::class);
 });
