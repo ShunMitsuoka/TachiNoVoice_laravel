@@ -6,6 +6,7 @@ use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Village;
+use Packages\Domain\Models\Village\VillageId;
 
 class VillageService{
 
@@ -18,6 +19,18 @@ class VillageService{
     ) {
         $this->village_repository = $village_repository;
         $this->host_repository = $host_repository;
+    }
+    /**
+     * idからビレッジを取得する
+     */
+    public function getVillage(VillageId $village_id) : ?Village{
+        try {
+            $village_details = $this->village_repository->get($village_id);
+            return $village_details;
+        } catch (\Throwable $th) {
+            logs()->error($th->getMessage());
+        }
+        return null;
     }
 
     /**

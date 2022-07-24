@@ -21,6 +21,88 @@ use Packages\Domain\Models\Village\VillageSetting;
 
 class VillageRepository implements VillageRepositoryInterface
 {
+
+    public function get(VillageId $village_id) : Village{
+        try {
+            $village_info = ModelVillage::from('villages as v')
+                            ->select('v.id as village_id',
+                                     'v.title',
+                                     'v.content',
+                                     'v.note',
+                                     'p.id as phase_id',
+                                     'p.m_phase_id',
+                                     'p.m_phase_status_id',
+                                     'vs.core_member_limit',
+                                     'vmr.requirement',
+                                     'pi.nickname_flg',
+                                     'pi.gender_flg',
+                                     'pi.age_flg',
+                            )
+                            ->join('phases as p', 'p.village_id', 'v.id')
+                            ->join('village_member_requirements as vmr', 'vmr.village_id', 'v.id')
+                            ->join('village_settings as vs', 'vs.village_id', 'v.id')
+                            ->join('public_informations as pi', 'pi.village_id', 'v.id')
+                            ->where('v.id', $village_id->id())
+                            ->first();
+
+            $phase_start = ModelPhaseSetting::from('phase_settings as ps')
+                                ->join('phases as p', 'ps.phase_id', 'p.id')
+                                ->where('ps.phase_id', $village_info->phase_id)
+                                ->where('ps.end_flg', false)
+                                ->first();
+
+            $phase_end = ModelPhaseSetting::from('phase_settings as ps')
+                                ->join('phases as p', 'ps.phase_id', 'p.id')
+                                ->where('ps.phase_id', $village_info->phase_id)
+                                ->where('ps.end_flg', true)
+                                ->first();
+                            
+            return new Village(
+                new VillageId($village_info->village_id), 
+                new VillagePhase(
+                    new VillagePhaseId($village_info->phase_id),
+                    $village_info->m_phase_id,
+                    $village_info->m_phase_status_id,
+                    new VillagePhaseSetting(
+                        $phase_start->end_flg,
+                        $phase_start->by_manual_flg,
+                        $phase_start->by_limit_flg,
+                        $phase_start->by_date_flg,
+                        $phase_start->by_instant_flg,
+                        $phase_start->border_date,
+                    ),
+                    new VillagePhaseSetting(
+                        $phase_end->phase_id,
+                        $phase_end->by_manual_flg,
+                        $phase_end->by_limit_flg,
+                        $phase_end->by_date_flg,
+                        $phase_end->by_instant_flg,
+                        $phase_end->border_date,
+                    ),
+                ), 
+                new Topic(
+                    $village_info->title,
+                    $village_info->content,
+                    $village_info->note,
+                ), 
+                new VillageSetting(
+                    $village_info->core_member_limit,
+                ), 
+                new VillageMemberRequirement(
+                    $village_info->requirement,
+                ), 
+                new VillagePublicInformation(
+                    $village_info->nickname_flg,
+                    $village_info->gender_flg,
+                    $village_info->age_flg,
+                )
+            );
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+        return null;
+    }
+
     public function save(Village $village) : Village{
         DB::beginTransaction();
         try {
