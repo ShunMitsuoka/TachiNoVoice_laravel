@@ -33,6 +33,7 @@ class VillageRepository implements VillageRepositoryInterface
                                      'p.m_phase_id',
                                      'p.m_phase_status_id',
                                      'vs.core_member_limit',
+                                     'vs.village_member_limit',
                                      'vmr.requirement',
                                      'pi.nickname_flg',
                                      'pi.gender_flg',
@@ -87,6 +88,7 @@ class VillageRepository implements VillageRepositoryInterface
                 ), 
                 new VillageSetting(
                     $village_info->core_member_limit,
+                    $village_info->village_member_limit,
                 ), 
                 new VillageMemberRequirement(
                     $village_info->requirement,

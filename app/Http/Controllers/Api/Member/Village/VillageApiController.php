@@ -112,6 +112,7 @@ class VillageApiController extends BaseApiController
             'content' => $village_details->topic()->content(),
             'note' => $village_details->topic()->note(),
             'core_member_limit' => $village_details->setting()->coreMemberLimit(),
+            'village_member_limit' => $village_details->setting()->villageMemberLimit(),
             'requirement' => $village_details->requirement()->requirement(),
             'name_flg' => $village_details->publicInformation()->isNicknamePublic(),
             'gender_flg' => $village_details->publicInformation()->isGenderPublic(),
