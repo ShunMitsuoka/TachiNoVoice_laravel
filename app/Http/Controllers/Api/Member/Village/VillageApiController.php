@@ -9,6 +9,7 @@ use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\User\MemberId;
+use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\VillageService;
 
 class VillageApiController extends BaseApiController
@@ -93,16 +94,32 @@ class VillageApiController extends BaseApiController
         }
     }
 
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show($id)
-    // {
-    //     //
-    // }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        // ビレッジ取得
+        $village_details = $this->village_service->getVillage(new VillageId($id));
+        $result = [
+            'id' => $village_details->id(),
+            'phase' => $village_details->phase()->phase(),
+            'phase_status' => $village_details->phase()->phaseStatus(),
+            'title' => $village_details->topic()->title(),
+            'content' => $village_details->topic()->content(),
+            'note' => $village_details->topic()->note(),
+            'core_member_limit' => $village_details->setting()->coreMemberLimit(),
+            'requirement' => $village_details->requirement()->requirement(),
+            'name_flg' => $village_details->publicInformation()->isNicknamePublic(),
+            'gender_flg' => $village_details->publicInformation()->isGenderPublic(),
+            'age_flg' => $village_details->publicInformation()->isAgePublic(),
+        ];
+        
+        return $this->makeSuccessResponse($result);
+    }
 
     // /**
     //  * Update the specified resource in storage.

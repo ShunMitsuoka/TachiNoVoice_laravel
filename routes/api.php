@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\Member\Village\VillageApiController;
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('/member/village', VillageApiController::class);
+
     //省略
 });
 
