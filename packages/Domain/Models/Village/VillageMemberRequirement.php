@@ -3,10 +3,10 @@ namespace Packages\Domain\Models\Village;
 
 class VillageMemberRequirement
 {
-    private string $requirement;
+    private ?string $requirement;
 
     function __construct(
-        string $requirement,
+        ?string $requirement,
     ) {
         $this->requirement = $requirement;
     }

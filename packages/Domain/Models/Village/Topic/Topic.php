@@ -4,8 +4,8 @@ namespace Packages\Domain\Models\Village\Topic;
 class Topic
 {
     private string $title;
-    private string $content;
-    private string $note;
+    private ?string $content;
+    private ?string $note;
 
     function __construct(
         string $title,
