@@ -21,11 +21,11 @@ class Topic
         return $this->title;
     }
 
-    public function content():string{
+    public function content():?string{
         return $this->content;
     }
 
-    public function note():string{
+    public function note():?string{
         return $this->note;
     }
 

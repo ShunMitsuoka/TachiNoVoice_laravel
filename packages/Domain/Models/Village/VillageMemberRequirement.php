@@ -11,7 +11,7 @@ class VillageMemberRequirement
         $this->requirement = $requirement;
     }
 
-    public function requirement() : string{
+    public function requirement() : ?string{
         return $this->requirement;
     }
 

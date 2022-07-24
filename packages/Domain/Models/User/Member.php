@@ -96,7 +96,7 @@ class Member
     /**
      * ビレッジメンバー参加条件を作成する。
      */
-    public function makeVillageMemberRequirement(string $requirement): VillageMemberRequirement
+    public function makeVillageMemberRequirement(?string $requirement): VillageMemberRequirement
     {
         return new VillageMemberRequirement($requirement);
     }

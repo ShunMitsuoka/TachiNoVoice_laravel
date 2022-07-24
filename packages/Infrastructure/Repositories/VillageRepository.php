@@ -186,6 +186,7 @@ class VillageRepository implements VillageRepositoryInterface
                 )
             );
         } catch (\Exception $e) {
+            logs()->error($e->getMessage());
             DB::rollback();
         }
         return null;
