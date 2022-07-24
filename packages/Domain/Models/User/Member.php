@@ -88,9 +88,9 @@ class Member
     /**
      * ビレッジの設定を作成する。
      */
-    public function makeVillageSetting(int $core_member_limit): VillageSetting
+    public function makeVillageSetting(int $village_member_limit, int $core_member_limit): VillageSetting
     {
-        return new VillageSetting($core_member_limit);
+        return new VillageSetting($village_member_limit, $core_member_limit);
     }
 
     /**
