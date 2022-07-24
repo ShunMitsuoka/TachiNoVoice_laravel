@@ -17,6 +17,7 @@ use App\Http\Controllers\API\Auth\LoginApiController;
 */
 
 use App\Http\Controllers\Api\Member\Village\VillageApiController;
+use App\Http\Controllers\Api\Member\Village\VillageValidationApiController;
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('/member/village', VillageApiController::class);
@@ -36,4 +37,7 @@ Route::post('/auth/login', [LoginApiController::class, 'Login']);
 // ログイン後
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/village', VillageApiController::class);
+    // ビレッジ登録時バリデーション
+    Route::post('/village/register/validation/topic', [VillageValidationApiController::class, 'topic']);
+
 });

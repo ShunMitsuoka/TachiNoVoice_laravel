@@ -115,6 +115,7 @@ class VillageRepository implements VillageRepositoryInterface
 
             $created_village_setting = ModelVillageSetting::create([
                 'village_id' => $village->id(),
+                'village_member_limit' => $village->setting()->villageMemberLimit(),
                 'core_member_limit' => $village->setting()->coreMemberLimit(),
             ]);
 
@@ -172,6 +173,7 @@ class VillageRepository implements VillageRepositoryInterface
                     $created_village->note,
                 ), 
                 new VillageSetting(
+                    $created_village_setting->village_member_limit,
                     $created_village_setting->core_member_limit,
                 ), 
                 new VillageMemberRequirement(

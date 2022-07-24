@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('village_settings', function (Blueprint $table) {
             $table->id()->comment('ビレッジ参加条件設定id');
             $table->unsignedBigInteger('village_id')->comment('ビレッジid');
-            $table->Integer('core_member_limit')->nullable()->comment('コアメンバー最大人数');
+            $table->unsignedInteger('village_member_limit')->nullable()->comment('ビレッジメンバー最大人数');
+            $table->unsignedInteger('core_member_limit')->nullable()->comment('コアメンバー最大人数');
             $table->timestamps();
         });
     }

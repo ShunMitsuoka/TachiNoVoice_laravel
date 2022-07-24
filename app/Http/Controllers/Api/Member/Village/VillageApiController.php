@@ -61,7 +61,7 @@ class VillageApiController extends BaseApiController
         );
 
         $topic = $this->member->makeVillageTopic($request->title, $request->content, $request->note);
-        $setting = $this->member->makeVillageSetting($request->core_member_limit);
+        $setting = $this->member->makeVillageSetting($request->core_member_limit, $request->village_member_limit);
         $requirement = $this->member->makeVillageMemberRequirement($request->requirement);
         $public_info = $this->member->makeVillagePublicInformation($request->nickname_flg, $request->gender_flg, $request->age_flg);
 

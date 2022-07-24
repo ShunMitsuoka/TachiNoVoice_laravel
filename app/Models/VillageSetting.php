@@ -12,6 +12,7 @@ class VillageSetting extends Model
     public $timestamps = true;
     protected $fillable = [
         'village_id',
+        'village_member_limit',
         'core_member_limit',
     ];
 }
