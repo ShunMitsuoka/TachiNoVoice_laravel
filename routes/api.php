@@ -38,5 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/village', VillageApiController::class);
     // ビレッジ登録時バリデーション
     Route::post('/village/register/validation/topic', [VillageValidationApiController::class, 'topic']);
+    Route::post('/village/register/validation/setting', [VillageValidationApiController::class, 'setting']);
 
 });
