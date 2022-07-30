@@ -101,6 +101,20 @@ class VillageApiController extends BaseApiController
             'name_flg' => $village_details->publicInformation()->isNicknamePublic(),
             'gender_flg' => $village_details->publicInformation()->isGenderPublic(),
             'age_flg' => $village_details->publicInformation()->isAgePublic(),
+            'phase_start_setting' => [
+                'end_flg' => $village_details->phase()->phaseStartSetting()->isEndPhase(),
+                'by_manual_flg' => $village_details->phase()->phaseStartSetting()->byManual(),
+                'by_limit_flg' => $village_details->phase()->phaseStartSetting()->byLimit(),
+                'by_date_flg' => $village_details->phase()->phaseStartSetting()->byDate(),
+                'border_date' => $village_details->phase()->phaseStartSetting()->borderDate(),
+            ],
+            'phase_end_setting' => [
+                'end_flg' => $village_details->phase()->phaseEndSetting()->isEndPhase(),
+                'by_manual_flg' => $village_details->phase()->phaseEndSetting()->byManual(),
+                'by_limit_flg' => $village_details->phase()->phaseEndSetting()->byLimit(),
+                'by_date_flg' => $village_details->phase()->phaseEndSetting()->byDate(),
+                'border_date' => $village_details->phase()->phaseEndSetting()->borderDate(),
+            ]
         ];
         
         return $this->makeSuccessResponse($result);
