@@ -128,4 +128,21 @@ class VillageApiController extends BaseApiController
     // {
     //     //
     // }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function join(Request $request)
+    {   
+        try{
+            $member = $this->getLoginMember();
+            $member->joinVillage($request->village_id, $this->village_service);
+            return $this->makeSuccessResponse([]);
+        }catch (\Throwable $e) {
+            return $this->makeErrorResponse([$e]);
+        }
+    }
 }

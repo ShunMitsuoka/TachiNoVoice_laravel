@@ -1,12 +1,14 @@
 <?php
 namespace Packages\Domain\Services;
 
+use App\Models\Village as ModelsVillage;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Host;
 use Packages\Domain\Models\User\Member;
+use Packages\Domain\Models\User\MemberId;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
 
@@ -91,5 +93,23 @@ class VillageService{
             }
         }
         return $village;
+    }
+
+    /**
+     * ビレッジに参加する
+     */
+    public function joinVillage(VillageId $village_id, Member $member) : ?Village{
+        DB::beginTransaction();
+        try {
+            $village_member = 
+            $registered_village = $this->village_member_repository->save($village_id, $village_member);
+            // $this->host_repository->save($register_member, $registered_village);
+            DB::commit();
+            return $registered_village;
+        } catch (\Throwable $th) {
+            DB::rollback();
+            logs()->error($th->getMessage());
+        }
+        return null;
     }
 }

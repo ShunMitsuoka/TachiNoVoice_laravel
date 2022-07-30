@@ -8,6 +8,7 @@ use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 use Packages\Domain\Models\Village\Topic\Topic;
 use Packages\Domain\Models\Village\Village;
+use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Models\Village\VillageMemberRequirement;
 use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
@@ -38,15 +39,7 @@ class Member
         $this->date_of_birth = $date_of_birth;
     }
 
-    public function id(): int
-    {
-        if (is_null($this->id)) {
-            throw new \Exception('IDが存在しません。');
-        }
-        return $this->id->id();
-    }
-
-    public function idObj(): MemberId
+    public function id(): MemberId
     {
         if (is_null($this->id)) {
             throw new \Exception('IDが存在しません。');
@@ -160,8 +153,26 @@ class Member
     /**
      * ビレッジに参加する
      */
-    public function joinVillage(Village $village): bool
+    public function joinVillage(VillageId $village_id, Village $village): bool
     {
-        throw new Exception("Error Processing Request", 1);
+        // return $village->registerVillage($this, $village);
+        return false;
+        // throw new Exception("Error Processing Request", 1);
+    }
+
+    /**
+     * ビレッジメンバーになる
+     */
+    public function becomeVillageMember(): VillageMember
+    {
+        return new VillageMember(
+            $this->id(),
+            $this->name(),
+            $this->nickname(),
+            $this->email(),
+            $this->gender(),
+            $this->dateOfBirth(),
+        );
+        // throw new Exception("Error Processing Request", 1);
     }
 }
