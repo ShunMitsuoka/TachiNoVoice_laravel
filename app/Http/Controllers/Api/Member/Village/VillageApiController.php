@@ -139,9 +139,14 @@ class VillageApiController extends BaseApiController
     {   
         try{
             $member = $this->getLoginMember();
-            $member->joinVillage($request->village_id, $this->village_service);
-            return $this->makeSuccessResponse([]);
+            $success = $this->village_service->joinVillage(new villageId($request->village_id), $member);
+            if($success){
+                return $this->makeSuccessResponse([]);
+            }else{
+                return $this->makeErrorResponse([]);
+            }
         }catch (\Throwable $e) {
+            logs()->error($e->getMessage());
             return $this->makeErrorResponse([$e]);
         }
     }

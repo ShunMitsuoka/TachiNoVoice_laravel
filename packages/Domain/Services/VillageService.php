@@ -2,6 +2,7 @@
 namespace Packages\Domain\Services;
 
 use App\Models\Village as ModelsVillage;
+use App\Models\VillageMember;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
@@ -98,14 +99,13 @@ class VillageService{
     /**
      * ビレッジに参加する
      */
-    public function joinVillage(VillageId $village_id, Member $member) : ?Village{
+    public function joinVillage(VillageId $village_id, Member $member) : bool{
         DB::beginTransaction();
         try {
-            $village_member = 
-            $registered_village = $this->village_member_repository->save($village_id, $village_member);
-            // $this->host_repository->save($register_member, $registered_village);
+            $village_member = $member->becomeVillageMember();
+            $join_village = $this->village_member_repository->save($village_id, $village_member);
             DB::commit();
-            return $registered_village;
+            return $join_village;
         } catch (\Throwable $th) {
             DB::rollback();
             logs()->error($th->getMessage());

@@ -40,6 +40,12 @@ class VillageMemberRepository implements VillageMemberRepositoryInterface
     }
 
     public function save(VillageId $village_id, VillageMember $member): bool{
-        return false;
+
+        ModelsVillageMember::create([
+            'user_id' => $member->id()->id(),
+            'village_id' => $village_id->id(),
+            'role_id' => $member->role(),
+        ]);
+        return true;
     }
 }
