@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Member\Village;
 
 use App\Http\Controllers\API\BaseApiController;
+use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
@@ -23,16 +24,21 @@ class VillageApiController extends BaseApiController
         $this->village_service = $village_service;
     }
 
-    
+
     // /**
     //  * Display a listing of the resource.
     //  *
     //  * @return \Illuminate\Http\Response
     //  */
-    // public function index()
-    // {
-    //     //
-    // }
+    public function index(Request $request)
+    {
+        //検索文字列を受け取る処理
+        $keyword = $request->keyword;
+        //SELECT title, content FROM villages WHERE title LIKE '%検索文字列';
+        $response = Village::where('title', 'like', '%' . $keyword . '%')->get()->toArray();
+
+        return $this->makeSuccessResponse($response);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -41,7 +47,7 @@ class VillageApiController extends BaseApiController
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $member = $this->getLoginMember();
 
         $topic = $member->makeVillageTopic($request->title, $request->content, $request->note);
@@ -63,17 +69,17 @@ class VillageApiController extends BaseApiController
         // ビレッジ登録
         $village = $member->registerVillage(
             $this->village_service,
-            $topic, 
-            $setting, 
-            $requirement, 
+            $topic,
+            $setting,
+            $requirement,
             $public_info,
             $phase_start_setting,
             $phase_end_setting,
             new Carbon($request->border_date)
         );
-        if(!is_null($village)){
+        if (!is_null($village)) {
             return $this->makeSuccessResponse([]);
-        }else{
+        } else {
             return $this->makeErrorResponse([]);
         }
     }
@@ -116,7 +122,7 @@ class VillageApiController extends BaseApiController
                 'border_date' => $village_details->phase()->phaseEndSetting()->borderDate(),
             ]
         ];
-        
+
         return $this->makeSuccessResponse($result);
     }
 
