@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
 use Packages\Domain\Models\User\MemberId;
 use Packages\Domain\Models\User\VillageMember;
+use Packages\Domain\Models\Village\VillageId;
 
 class VillageMemberRepository implements VillageMemberRepositoryInterface
 {
@@ -38,4 +39,13 @@ class VillageMemberRepository implements VillageMemberRepositoryInterface
         return $result;
     }
 
+    public function save(VillageId $village_id, VillageMember $member): bool{
+
+        ModelsVillageMember::create([
+            'user_id' => $member->id()->id(),
+            'village_id' => $village_id->id(),
+            'role_id' => $member->role(),
+        ]);
+        return true;
+    }
 }

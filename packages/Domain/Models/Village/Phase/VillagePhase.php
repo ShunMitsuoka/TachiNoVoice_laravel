@@ -78,12 +78,12 @@ class VillagePhase
         $this->phase_end_setting = $phase_end_setting;
     }
 
-    public function id() : int
+    public function id() : VillagePhaseId
     {
         if(is_null($this->id)){
             throw new \Exception('IDが存在しません。');
         }
-        return $this->id->id();
+        return $this->id;
     }
 
     public function phase() : int{

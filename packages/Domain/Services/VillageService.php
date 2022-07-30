@@ -1,12 +1,15 @@
 <?php
 namespace Packages\Domain\Services;
 
+use App\Models\Village as ModelsVillage;
+use App\Models\VillageMember;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Host;
 use Packages\Domain\Models\User\Member;
+use Packages\Domain\Models\User\MemberId;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
 
@@ -70,11 +73,11 @@ class VillageService{
      * ビレッジにメンバーを設定する
      */
     public function setVillageMember(Village $village) : Village{
-        $hosts = $this->host_repository->getAllByVillageId($village->id());
+        $hosts = $this->host_repository->getAllByVillageId($village->id()->toInt());
         foreach ($hosts as $host) {
             $village->addHost($host);
         }
-        $village_members = $this->village_member_repository->getAllByVillageId($village->id());
+        $village_members = $this->village_member_repository->getAllByVillageId($village->id()->toInt());
         foreach ($village_members as $village_member) {
             switch (true) {
                 case $village_member->isVillageMember():
@@ -91,5 +94,22 @@ class VillageService{
             }
         }
         return $village;
+    }
+
+    /**
+     * ビレッジに参加する
+     */
+    public function joinVillage(VillageId $village_id, Member $member) : bool{
+        DB::beginTransaction();
+        try {
+            $village_member = $member->becomeVillageMember();
+            $join_village = $this->village_member_repository->save($village_id, $village_member);
+            DB::commit();
+            return $join_village;
+        } catch (\Throwable $th) {
+            DB::rollback();
+            logs()->error($th->getMessage());
+        }
+        return null;
     }
 }

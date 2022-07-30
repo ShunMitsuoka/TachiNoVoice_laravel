@@ -95,7 +95,7 @@ class VillageApiController extends BaseApiController
         // ビレッジ取得
         $village_details = $this->village_service->getVillage(new VillageId($id));
         $result = [
-            'id' => $village_details->id(),
+            'id' => $village_details->id()->toInt(),
             'phase' => $village_details->phase()->phase(),
             'phase_status' => $village_details->phase()->phaseStatus(),
             'title' => $village_details->topic()->title(),
@@ -134,4 +134,26 @@ class VillageApiController extends BaseApiController
     // {
     //     //
     // }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function join(Request $request)
+    {   
+        try{
+            $member = $this->getLoginMember();
+            $success = $this->village_service->joinVillage(new villageId($request->village_id), $member);
+            if($success){
+                return $this->makeSuccessResponse([]);
+            }else{
+                return $this->makeErrorResponse([]);
+            }
+        }catch (\Throwable $e) {
+            logs()->error($e->getMessage());
+            return $this->makeErrorResponse([$e]);
+        }
+    }
 }

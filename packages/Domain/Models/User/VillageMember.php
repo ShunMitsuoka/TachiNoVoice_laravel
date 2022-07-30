@@ -29,10 +29,9 @@ class VillageMember extends Member
         string $email,
         int $gender,
         Carbon $date_of_birth,
-        int $role_id,
     ) {
         parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth);
-        $this->role_id = $role_id;
+        $this->role_id = self::ROLE_VILLAGE_MEMBER;
     }
 
     public function giveAnOpinion()
@@ -50,5 +49,9 @@ class VillageMember extends Member
 
     public function isRiseMember(){
         return $this->role_id === self::ROLE_RISE_MEMBER;
+    }
+
+    public function role() : int{
+        return $this->role_id;
     }
 }

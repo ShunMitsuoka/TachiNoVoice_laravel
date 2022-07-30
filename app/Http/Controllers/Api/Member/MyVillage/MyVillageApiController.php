@@ -29,11 +29,11 @@ class MyVillageApiController extends BaseApiController
     {
         $result = [];
         $member = $this->getLoginMember();
-        $villages = $this->village_service->villageRepository()->getAllByHost($member->idObj());
+        $villages = $this->village_service->villageRepository()->getAllByHost($member->id());
         foreach ($villages as $village) {
             $this->village_service->setVillageMember($village);
             $result[] = [
-                'id' => $village->id(),
+                'id' => $village->id()->toInt(),
                 'phase' => $village->phase()->phase(),
                 'phase_status' => $village->phase()->phaseStatus(),
                 'title' => $village->topic()->title(),
