@@ -38,12 +38,12 @@ class Village
         $this->rise_members = [];
     }
 
-    public function id() : int
+    public function id() : VillageId
     {
         if(is_null($this->id)){
             throw new \Exception('IDが存在しません。');
         }
-        return $this->id->id();
+        return $this->id;
     }
 
     public function setId(int $id){

@@ -17,8 +17,8 @@ class HostRepository implements HostRepositoryInterface
     }
     public function save(Member $member, Village $village) : bool{
         ModelsHost::create([
-            'user_id' => $member->id(),
-            'village_id' => $village->id(),
+            'user_id' => $member->id()->toInt(),
+            'village_id' => $village->id()->toInt(),
         ]);
         return true;
     }

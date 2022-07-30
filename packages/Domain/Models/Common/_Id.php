@@ -9,7 +9,7 @@ class _Id
         $this->id = $id;
     }
 
-    public function id() : int{
+    public function toInt() : int{
         return $this->id;
     }
 }

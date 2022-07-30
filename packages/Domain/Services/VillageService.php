@@ -72,11 +72,11 @@ class VillageService{
      * ビレッジにメンバーを設定する
      */
     public function setVillageMember(Village $village) : Village{
-        $hosts = $this->host_repository->getAllByVillageId($village->id());
+        $hosts = $this->host_repository->getAllByVillageId($village->id()->toInt());
         foreach ($hosts as $host) {
             $village->addHost($host);
         }
-        $village_members = $this->village_member_repository->getAllByVillageId($village->id());
+        $village_members = $this->village_member_repository->getAllByVillageId($village->id()->toInt());
         foreach ($village_members as $village_member) {
             switch (true) {
                 case $village_member->isVillageMember():

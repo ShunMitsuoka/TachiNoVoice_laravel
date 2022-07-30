@@ -89,7 +89,7 @@ class VillageApiController extends BaseApiController
         // ビレッジ取得
         $village_details = $this->village_service->getVillage(new VillageId($id));
         $result = [
-            'id' => $village_details->id(),
+            'id' => $village_details->id()->toInt(),
             'phase' => $village_details->phase()->phase(),
             'phase_status' => $village_details->phase()->phaseStatus(),
             'title' => $village_details->topic()->title(),

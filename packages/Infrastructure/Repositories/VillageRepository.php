@@ -44,7 +44,7 @@ class VillageRepository implements VillageRepositoryInterface
                             ->join('village_member_requirements as vmr', 'vmr.village_id', 'v.id')
                             ->join('village_settings as vs', 'vs.village_id', 'v.id')
                             ->join('public_informations as pi', 'pi.village_id', 'v.id')
-                            ->where('v.id', $village_id->id())
+                            ->where('v.id', $village_id->toInt())
                             ->first();
 
             $phase_start = ModelPhaseSetting::from('phase_settings as ps')
@@ -111,7 +111,7 @@ class VillageRepository implements VillageRepositoryInterface
             $result = [];
             $village_infos = $this->queryVillageInfo()
                 ->join('hosts', 'hosts.village_id', 'v.id')
-                ->where('hosts.user_id', $member_id->id())
+                ->where('hosts.user_id', $member_id->toInt())
                 ->get();
 
             foreach ($village_infos as $village_info) {
@@ -147,25 +147,25 @@ class VillageRepository implements VillageRepositoryInterface
             $village->setId($created_village->id);
 
             $created_village_setting = ModelVillageSetting::create([
-                'village_id' => $village->id(),
+                'village_id' => $village->id()->toInt(),
                 'village_member_limit' => $village->setting()->villageMemberLimit(),
                 'core_member_limit' => $village->setting()->coreMemberLimit(),
             ]);
 
             $created_requirement = ModelVillageMemberRequirement::create([
-                'village_id' => $village->id(),
+                'village_id' => $village->id()->toInt(),
                 'requirement' => $village->requirement()->requirement(),
             ]);
 
             $created_public_info = ModelPublicInformation::create([
-                'village_id' => $village->id(),
+                'village_id' => $village->id()->toInt(),
                 'nickname_flg' => $village->publicInformation()->isNicknamePublic(),
                 'gender_flg' => $village->publicInformation()->isGenderPublic(),
                 'age_flg' => $village->publicInformation()->isAgePublic(),
             ]);
 
             $created_phase = ModelPhase::create([
-                'village_id' => $village->id(),
+                'village_id' => $village->id()->toInt(),
                 'm_phase_id' => $village->phase()->phase(),
                 'm_phase_status_id' => $village->phase()->phaseStatus(),
             ]);
