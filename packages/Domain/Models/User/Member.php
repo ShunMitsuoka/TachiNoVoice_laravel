@@ -16,6 +16,26 @@ use Packages\Domain\Services\VillageService;
 
 class Member
 {
+    /**
+     * 役割:ホスト
+     */
+    public const ROLE_HOST  = 0;
+
+    /**
+     * 役割:ビレッジメンバー
+     */
+    public const ROLE_VILLAGE_MEMBER  = 1;
+
+    /**
+     * 役割:コアメンバー
+     */
+    public const ROLE_CORE_MEMBER  = 2;
+
+    /**
+     * 役割:ライズメンバー
+     */
+    public const ROLE_RISE_MEMBER  = 3;
+
     protected ?MemberId $id;
     private string $name;
     private ?string $nickname;

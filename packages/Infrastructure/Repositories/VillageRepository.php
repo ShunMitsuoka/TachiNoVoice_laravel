@@ -10,6 +10,7 @@ use App\Models\VillageSetting as ModelVillageSetting;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\MemberId;
+use Packages\Domain\Models\User\VillageMember;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
@@ -106,34 +107,82 @@ class VillageRepository implements VillageRepositoryInterface
         return null;
     }
 
-    public function getAllByHost(MemberId $member_id) : array{
+    public function getAllAsHost(MemberId $member_id) : array{
         try {
             $result = [];
             $village_infos = $this->queryVillageInfo()
                 ->join('hosts', 'hosts.village_id', 'v.id')
                 ->where('hosts.user_id', $member_id->toInt())
                 ->get();
-
             foreach ($village_infos as $village_info) {
-                $phase_start = ModelPhaseSetting::from('phase_settings as ps')
-                    ->join('phases as p', 'ps.phase_id', 'p.id')
-                    ->where('ps.phase_id', $village_info->phase_id)
-                    ->where('ps.end_flg', false)
-                    ->first();
-                $phase_end = ModelPhaseSetting::from('phase_settings as ps')
-                    ->join('phases as p', 'ps.phase_id', 'p.id')
-                    ->where('ps.phase_id', $village_info->phase_id)
-                    ->where('ps.end_flg', true)
-                    ->first();
-
-                $result[] = $this->makeVillageFromRecord($village_info, $phase_start, $phase_end);
+                $result[] = $this->getVillageFromRecord($village_info);
             }                 
             return $result;
         } catch (\Exception $e) {
             logs()->error($e->getMessage());
-            DB::rollback();
         }
-        return null;
+        return [];
+    }
+    
+    /**
+     * ビレッジメンバーとして参加しているビレッジを全て取得する
+     */
+    public function getAllAsVillageMember(MemberId $member_id) : array{
+        try {
+            $result = [];
+            $village_infos = $this->queryVillageInfo()
+                ->join('village_members', 'village_members.village_id', 'v.id')
+                ->where('village_members.user_id', $member_id->toInt())
+                ->where('village_members.role_id', VillageMember::ROLE_VILLAGE_MEMBER)
+                ->get();
+            foreach ($village_infos as $village_info) {
+                $result[] = $this->getVillageFromRecord($village_info);
+            }                 
+            return $result;
+        } catch (\Exception $e) {
+            logs()->error($e->getMessage());
+        }
+        return [];
+    }
+    /**
+     * コアメンバーとして参加しているビレッジを全て取得する
+     */
+    public function getAllAsCoreMember(MemberId $member_id) : array{
+        try {
+            $result = [];
+            $village_infos = $this->queryVillageInfo()
+                ->join('village_members', 'village_members.village_id', 'v.id')
+                ->where('village_members.user_id', $member_id->toInt())
+                ->where('village_members.role_id', VillageMember::ROLE_CORE_MEMBER)
+                ->get();
+            foreach ($village_infos as $village_info) {
+                $result[] = $this->getVillageFromRecord($village_info);
+            }                 
+            return $result;
+        } catch (\Exception $e) {
+            logs()->error($e->getMessage());
+        }
+        return [];
+    }
+    /**
+     * ライズメンバーとして参加しているビレッジを全て取得する
+     */
+    public function getAllAsRiseMember(MemberId $member_id) : array{
+        try {
+            $result = [];
+            $village_infos = $this->queryVillageInfo()
+                ->join('village_members', 'village_members.village_id', 'v.id')
+                ->where('village_members.user_id', $member_id->toInt())
+                ->where('village_members.role_id', VillageMember::ROLE_RISE_MEMBER)
+                ->get();
+            foreach ($village_infos as $village_info) {
+                $result[] = $this->getVillageFromRecord($village_info);
+            }                 
+            return $result;
+        } catch (\Exception $e) {
+            logs()->error($e->getMessage());
+        }
+        return [];
     }
 
     public function save(Village $village) : Village{
@@ -246,6 +295,20 @@ class VillageRepository implements VillageRepositoryInterface
         ->join('village_settings as vs', 'vs.village_id', 'v.id')
         ->join('public_informations as pi', 'pi.village_id', 'v.id');
         return $query;
+    }
+
+    private function getVillageFromRecord($village_info) : Village{
+        $phase_start = ModelPhaseSetting::from('phase_settings as ps')
+        ->join('phases as p', 'ps.phase_id', 'p.id')
+        ->where('ps.phase_id', $village_info->phase_id)
+        ->where('ps.end_flg', false)
+        ->first();
+        $phase_end = ModelPhaseSetting::from('phase_settings as ps')
+            ->join('phases as p', 'ps.phase_id', 'p.id')
+            ->where('ps.phase_id', $village_info->phase_id)
+            ->where('ps.end_flg', true)
+            ->first();
+        return $this->makeVillageFromRecord($village_info, $phase_start, $phase_end);
     }
 
     private function makeVillageFromRecord($village_info, $phase_start, $phase_end) : Village{

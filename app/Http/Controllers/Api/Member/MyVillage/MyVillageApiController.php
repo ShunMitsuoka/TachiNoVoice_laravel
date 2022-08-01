@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\API\BaseApiController;
 use Illuminate\Http\Request;
-use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
-use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
-use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Member;
+use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Services\VillageService;
 
 class MyVillageApiController extends BaseApiController
@@ -29,22 +27,42 @@ class MyVillageApiController extends BaseApiController
     {
         $result = [];
         $member = $this->getLoginMember();
-        $villages = $this->village_service->villageRepository()->getAllByHost($member->id());
-        foreach ($villages as $village) {
+        $host_villages = $this->village_service->villageRepository()->getAllAsHost($member->id());
+        $village_member_villages = $this->village_service->villageRepository()->getAllAsVillageMember($member->id());
+        $core_member_villages = $this->village_service->villageRepository()->getAllAsCoreMember($member->id());
+        $rise_member_villages = $this->village_service->villageRepository()->getAllAsRiseMember($member->id());
+        foreach ($host_villages as $village) {
             $this->village_service->setVillageMember($village);
-            $result[] = [
-                'id' => $village->id()->toInt(),
-                'phase' => $village->phase()->phase(),
-                'phase_status' => $village->phase()->phaseStatus(),
-                'title' => $village->topic()->title(),
-                'content' => $village->topic()->content(),
-                'note' => $village->topic()->note(),
-                'core_member_limit' => $village->setting()->coreMemberLimit(),
-                'village_member_limit' => $village->setting()->villageMemberLimit(),
-            ];
+            $result[] = $this->makeResultFromRecord($village, Member::ROLE_HOST);
         }
-
+        foreach ($village_member_villages as $village) {
+            $this->village_service->setVillageMember($village);
+            $result[] = $this->makeResultFromRecord($village, Member::ROLE_VILLAGE_MEMBER);
+        }
+        foreach ($core_member_villages as $village) {
+            $this->village_service->setVillageMember($village);
+            $result[] = $this->makeResultFromRecord($village, Member::ROLE_CORE_MEMBER);
+        }
+        foreach ($rise_member_villages as $village) {
+            $this->village_service->setVillageMember($village);
+            $result[] = $this->makeResultFromRecord($village, Member::ROLE_RISE_MEMBER);
+        }
         return $this->makeSuccessResponse($result);
+    }
+
+    private function makeResultFromRecord(Village $village, int $role_id){
+        return [
+            'id' => $village->id()->toInt(),
+            'phase' => $village->phase()->phase(),
+            'phase_name' => $village->phase()->getPhaseName(),
+            'phase_status' => $village->phase()->phaseStatus(),
+            'title' => $village->topic()->title(),
+            'content' => $village->topic()->content(),
+            'note' => $village->topic()->note(),
+            'core_member_limit' => $village->setting()->coreMemberLimit(),
+            'village_member_limit' => $village->setting()->villageMemberLimit(),
+            'role_id' => $role_id,
+        ];
     }
 
     /**

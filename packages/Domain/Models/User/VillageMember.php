@@ -7,21 +7,6 @@ class VillageMember extends Member
 {
     private int $role_id;
 
-    /**
-     * 役割:ビレッジメンバー
-     */
-    public const ROLE_VILLAGE_MEMBER  = 1;
-
-    /**
-     * 役割:コアメンバー
-     */
-    public const ROLE_CORE_MEMBER  = 2;
-
-    /**
-     * 役割:ライズメンバー
-     */
-    public const ROLE_RISE_MEMBER  = 3;
-
     function __construct(
         MemberId $id,
         string $name,
