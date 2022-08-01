@@ -82,19 +82,19 @@ class Village
     }
 
     public function addHost(Member $host){
-        $this->hosts[$host->id()] = $host;
+        $this->hosts[$host->id()->toInt()] = $host;
     }
 
     public function addVillageMember(Member $member){
-        $this->village_members[$member->id()] = $member;
+        $this->village_members[$member->id()->toInt()] = $member;
     }
 
     public function addCoreMember(Member $member){
-        $this->core_members[$member->id()] = $member;
+        $this->core_members[$member->id()->toInt()] = $member;
     }
 
     public function addRiseMember(Member $member){
-        $this->rise_members[$member->id()] = $member;
+        $this->rise_members[$member->id()->toInt()] = $member;
     }
 
 
