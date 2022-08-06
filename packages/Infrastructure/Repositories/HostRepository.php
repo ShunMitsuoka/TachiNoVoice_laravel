@@ -7,7 +7,7 @@ use Exception;
 use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Models\User\Host;
 use Packages\Domain\Models\User\Member;
-use Packages\Domain\Models\User\MemberId;
+use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\Village;
 
 class HostRepository implements HostRepositoryInterface 
@@ -38,7 +38,7 @@ class HostRepository implements HostRepositoryInterface
             ->get();
         foreach ($records as $record) {
             $result[] = new Host(
-                new MemberId($record->user_id),
+                new UserId($record->user_id),
                 $record->user_name,
                 $record->nickname,
                 $record->email,

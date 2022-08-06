@@ -8,7 +8,7 @@ class VillageMember extends Member
     private int $role_id;
 
     function __construct(
-        MemberId $id,
+        UserId $id,
         string $name,
         ?string $nickname,
         string $email,

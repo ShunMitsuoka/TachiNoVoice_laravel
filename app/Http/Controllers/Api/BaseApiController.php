@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\ApiResponseService;
 use Illuminate\Http\JsonResponse;
 use Packages\Domain\Models\User\Member;
-use Packages\Domain\Models\User\MemberId;
+use Packages\Domain\Models\User\UserId;
 
 class BaseApiController extends Controller
 {
@@ -30,7 +30,7 @@ class BaseApiController extends Controller
     protected function getLoginMember() : Member{
         $user = auth()->user();
         return new Member(
-            new MemberId($user->id),
+            new UserId($user->id),
             $user->user_name,
             $user->nickname,
             $user->email,

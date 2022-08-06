@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(VillageRepositoryInterface::class, function ($app) {
-            return new VillageRepository();
+            return new VillageRepositoryMock();
         });
         $this->app->singleton(HostRepositoryInterface::class, function ($app) {
             return new HostRepository();

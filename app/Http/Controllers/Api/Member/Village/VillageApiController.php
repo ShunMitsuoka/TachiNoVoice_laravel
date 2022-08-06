@@ -10,9 +10,10 @@ use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Member;
-use Packages\Domain\Models\User\MemberId;
+use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\VillageService;
+use Packages\Infrastructure\Repositories\VillageRepository;
 
 class VillageApiController extends BaseApiController
 {
@@ -49,6 +50,8 @@ class VillageApiController extends BaseApiController
     public function store(Request $request)
     {
         $member = $this->getLoginMember();
+
+        $test = new VillageRepository();
 
         $topic = $member->makeVillageTopic($request->title, $request->content, $request->note);
         $setting = $member->makeVillageSetting($request->core_member_limit, $request->village_member_limit);

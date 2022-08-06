@@ -4,7 +4,7 @@ namespace Packages\Infrastructure\Repositories;
 use App\Models\VillageMember as ModelsVillageMember;
 use Carbon\Carbon;
 use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
-use Packages\Domain\Models\User\MemberId;
+use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\User\VillageMember;
 use Packages\Domain\Models\Village\VillageId;
 
@@ -27,7 +27,7 @@ class VillageMemberRepository implements VillageMemberRepositoryInterface
             ->get();
         foreach ($records as $record) {
             $result[] = new VillageMember(
-                new MemberId($record->user_id),
+                new UserId($record->user_id),
                 $record->user_name,
                 $record->nickname,
                 $record->email,

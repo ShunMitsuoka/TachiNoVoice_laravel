@@ -14,7 +14,7 @@ use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
 use Packages\Domain\Services\VillageService;
 
-class Member
+class Member extends User
 {
     /**
      * 役割:ホスト
@@ -36,63 +36,15 @@ class Member
      */
     public const ROLE_RISE_MEMBER  = 3;
 
-    protected ?MemberId $id;
-    private string $name;
-    private ?string $nickname;
-    private string $email;
-    private int $gender;
-    private Carbon $date_of_birth;
-
     function __construct(
-        ?MemberId $id,
+        ?UserId $id,
         string $name,
         ?string $nickname,
         string $email,
         int $gender,
         Carbon $date_of_birth,
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->nickname = $nickname;
-        $this->email = $email;
-        $this->gender = $gender;
-        $this->date_of_birth = $date_of_birth;
-    }
-
-    public function id(): MemberId
-    {
-        if (is_null($this->id)) {
-            throw new \Exception('IDが存在しません。');
-        }
-        return $this->id;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
-    }
-
-    public function nickname(): string
-    {
-        if (is_null($this->nickname)) {
-            return $this->name();
-        }
-        return $this->nickname;
-    }
-
-    public function email(): string
-    {
-        return $this->email;
-    }
-
-    public function gender(): int
-    {
-        return $this->gender;
-    }
-
-    public function dateOfBirth(): Carbon
-    {
-        return $this->date_of_birth;
+        parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth);
     }
 
     /**

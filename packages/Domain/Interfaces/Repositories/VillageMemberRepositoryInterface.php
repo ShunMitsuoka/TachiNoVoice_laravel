@@ -2,7 +2,7 @@
 namespace Packages\Domain\Interfaces\Repositories;
 
 use Packages\Domain\Models\User\Member;
-use Packages\Domain\Models\User\MemberId;
+use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\User\VillageMember;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;

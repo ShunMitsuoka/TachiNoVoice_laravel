@@ -8,7 +8,7 @@ use Packages\Domain\Services\VillageService;
 class Host extends Member
 {
     function __construct(
-        MemberId $id,
+        UserId $id,
         string $name,
         ?string $nickname,
         string $email,

@@ -9,7 +9,7 @@ use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Host;
 use Packages\Domain\Models\User\Member;
-use Packages\Domain\Models\User\MemberId;
+use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
 
