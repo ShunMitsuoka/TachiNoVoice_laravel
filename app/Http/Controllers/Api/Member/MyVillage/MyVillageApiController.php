@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\API\BaseApiController;
 use Illuminate\Http\Request;
+use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Services\VillageService;
@@ -11,11 +12,14 @@ use Packages\Domain\Services\VillageService;
 class MyVillageApiController extends BaseApiController
 {
     protected VillageService $village_service;
+    protected VillageRepositoryInterface $village_repository;
 
     function __construct(
-        VillageService $village_service
+        VillageService $village_service,
+        VillageRepositoryInterface $village_repository,
     ) {
         $this->village_service = $village_service;
+        $this->village_repository = $village_repository;
     }
 
     /**
@@ -27,24 +31,24 @@ class MyVillageApiController extends BaseApiController
     {
         $result = [];
         $member = $this->getLoginMember();
-        $host_villages = $this->village_service->villageRepository()->getAllAsHost($member->id());
-        $village_member_villages = $this->village_service->villageRepository()->getAllAsVillageMember($member->id());
-        $core_member_villages = $this->village_service->villageRepository()->getAllAsCoreMember($member->id());
-        $rise_member_villages = $this->village_service->villageRepository()->getAllAsRiseMember($member->id());
+        $host_villages = $this->village_repository->getAllAsHost($member->id());
+        $village_member_villages = $this->village_repository->getAllAsVillageMember($member->id());
+        $core_member_villages = $this->village_repository->getAllAsCoreMember($member->id());
+        $rise_member_villages = $this->village_repository->getAllAsRiseMember($member->id());
         foreach ($host_villages as $village) {
-            $this->village_service->setVillageMember($village);
+            $village->setMemberInfo($this->village_service);
             $result[] = $this->makeResultFromRecord($village, Member::ROLE_HOST);
         }
         foreach ($village_member_villages as $village) {
-            $this->village_service->setVillageMember($village);
+            $village->setMemberInfo($this->village_service);
             $result[] = $this->makeResultFromRecord($village, Member::ROLE_VILLAGE_MEMBER);
         }
         foreach ($core_member_villages as $village) {
-            $this->village_service->setVillageMember($village);
+            $village->setMemberInfo($this->village_service);
             $result[] = $this->makeResultFromRecord($village, Member::ROLE_CORE_MEMBER);
         }
         foreach ($rise_member_villages as $village) {
-            $this->village_service->setVillageMember($village);
+            $village->setMemberInfo($this->village_service);
             $result[] = $this->makeResultFromRecord($village, Member::ROLE_RISE_MEMBER);
         }
         return $this->makeSuccessResponse($result);

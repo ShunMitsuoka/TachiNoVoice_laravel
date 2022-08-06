@@ -1,22 +1,20 @@
 <?php
 namespace Packages\Domain\Models\Village;
 
-use Packages\Domain\Models\User\Member;
+use Packages\Domain\Models\Common\_Entity;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Topic\Topic;
+use Packages\Domain\Services\VillageService;
 
-class Village
+class Village extends _Entity
 {
     protected ?VillageId $id;
-    private VillagePhase $phase;
-    private VillageSetting $setting;
-    private Topic $topic;
-    private VillageMemberRequirement $requirement;
-    private VillagePublicInformation $public_information;
-    private array $hosts;
-    private array $village_members;
-    private array $core_members;
-    private array $rise_members;
+    public readonly VillagePhase $phase;
+    public readonly VillageSetting $setting;
+    public readonly Topic $topic;
+    public readonly VillageMemberRequirement $requirement;
+    public readonly VillagePublicInformation $public_information;
+    protected ?VillageMemberInfo $member_info;
 
     function __construct(
         ?VillageId $id,
@@ -32,25 +30,6 @@ class Village
         $this->setting = $setting;
         $this->requirement = $requirement;
         $this->public_information = $public_information;
-        $this->hosts = [];
-        $this->village_members = [];
-        $this->core_members = [];
-        $this->rise_members = [];
-    }
-
-    public function id() : VillageId
-    {
-        if(is_null($this->id)){
-            throw new \Exception('IDが存在しません。');
-        }
-        return $this->id;
-    }
-
-    public function setId(int $id){
-        if(!is_null($this->id)){
-            throw new \Exception('IDが既に存在しています。');
-        }
-        $this->id = new VillageId($id);
     }
 
     public function phase() : VillagePhase{
@@ -68,34 +47,15 @@ class Village
     public function publicInformation() : VillagePublicInformation{
         return $this->public_information;
     }
-    public function hosts(){
-        return $this->hosts;
-    }
-    public function villageMembers(){
-        return $this->village_members;
-    }
-    public function coreMembers(){
-        return $this->core_members;
-    }
-    public function riseMembers(){
-        return $this->rise_members;
+    public function memberInfo(){
+        if(is_null($this->member_info)){
+            throw new \Exception('メンバー情報が存在しません。');
+        }
+        return $this->member_info;
     }
 
-    public function addHost(Member $host){
-        $this->hosts[$host->id()->toInt()] = $host;
+    public function setMemberInfo(VillageService $service){
+        $this->member_info = $service->getVillageMemberInfo($this);
     }
-
-    public function addVillageMember(Member $member){
-        $this->village_members[$member->id()->toInt()] = $member;
-    }
-
-    public function addCoreMember(Member $member){
-        $this->core_members[$member->id()->toInt()] = $member;
-    }
-
-    public function addRiseMember(Member $member){
-        $this->rise_members[$member->id()->toInt()] = $member;
-    }
-
 
 }

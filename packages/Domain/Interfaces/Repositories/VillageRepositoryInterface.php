@@ -11,5 +11,5 @@ interface VillageRepositoryInterface
     public function get(VillageId $village_id): Village;
     public function save(Village $village): Village;
     public function getAll(array $filter): array;
-    public function getAllJoinedVillage(UserId $userId): array;
+    // public function getAllJoinedVillage(UserId $userId): array;
 }

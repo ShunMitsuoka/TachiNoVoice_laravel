@@ -1,42 +1,27 @@
 <?php
 namespace Packages\Domain\Services;
 
-use App\Models\Village as ModelsVillage;
-use App\Models\VillageMember;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
+use Packages\Domain\Interfaces\Repositories\VillageMemberInfoRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
-use Packages\Domain\Models\User\Host;
 use Packages\Domain\Models\User\Member;
-use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
+use Packages\Domain\Models\Village\VillageMemberInfo;
 
 class VillageService{
 
     protected VillageRepositoryInterface $village_repository;
-    protected HostRepositoryInterface $host_repository;
-    protected VillageMemberRepositoryInterface $village_member_repository;
+    protected VillageMemberInfoRepositoryInterface $village_member_info_repository;
 
     function __construct(
         VillageRepositoryInterface $village_repository,
-        HostRepositoryInterface $host_repository,
-        VillageMemberRepositoryInterface $village_member_repository,
+        VillageMemberInfoRepositoryInterface $village_member_info_repository,
     ) {
         $this->village_repository = $village_repository;
-        $this->host_repository = $host_repository;
-        $this->village_member_repository = $village_member_repository;
-    }
-
-    public function villageRepository() : VillageRepositoryInterface{
-        return $this->village_repository;
-    }
-    public function hostRepository() : HostRepositoryInterface{
-        return $this->host_repository;
-    }
-    public function villageMemberRepository() : VillageMemberRepositoryInterface{
-        return $this->village_member_repository;
+        $this->village_member_info_repository = $village_member_info_repository;
     }
 
     /**
@@ -70,30 +55,10 @@ class VillageService{
     }
 
     /**
-     * ビレッジにメンバーを設定する
+     * ビレッジのメンバーを情報を取得する
      */
-    public function setVillageMember(Village $village) : Village{
-        $hosts = $this->host_repository->getAllByVillageId($village->id()->toInt());
-        foreach ($hosts as $host) {
-            $village->addHost($host);
-        }
-        $village_members = $this->village_member_repository->getAllByVillageId($village->id()->toInt());
-        foreach ($village_members as $village_member) {
-            switch (true) {
-                case $village_member->isVillageMember():
-                    $village->addVillageMember($village_member);
-                    break;
-                case $village_member->isCoreMember():
-                    $village->addCoreMember($village_member);
-                    break;
-                case $village_member->isRiseMember():
-                    $village->addRiseMember($village_member);
-                    break;
-                default:
-                    break;
-            }
-        }
-        return $village;
+    public function getVillageMemberInfo(Village $village) : VillageMemberInfo{
+        return $this->village_member_info_repository->get($village->id());
     }
 
     /**

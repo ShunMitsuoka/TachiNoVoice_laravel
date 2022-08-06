@@ -2,8 +2,9 @@
 namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
+use Packages\Domain\Models\Common\_Entity;
 
-class User
+class User extends _Entity
 {
     protected ?UserId $id;
     protected string $name;
@@ -26,14 +27,6 @@ class User
         $this->email = $email;
         $this->gender = $gender;
         $this->date_of_birth = $date_of_birth;
-    }
-
-    public function id(): UserId
-    {
-        if (is_null($this->id)) {
-            throw new \Exception('IDが存在しません。');
-        }
-        return $this->id;
     }
 
     public function name(): string
