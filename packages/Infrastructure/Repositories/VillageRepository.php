@@ -8,6 +8,7 @@ use App\Models\PublicInformation as ModelPublicInformation;
 use App\Models\Village as ModelVillage;
 use App\Models\VillageMemberRequirement as ModelVillageMemberRequirement;
 use App\Models\VillageSetting as ModelVillageSetting;
+use App\Models\VillageMember as ModelVillageMember;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\UserId;
@@ -22,88 +23,70 @@ use Packages\Domain\Models\Village\VillageMemberRequirement;
 use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
 
+use function PHPUnit\Framework\isNull;
+
 class VillageRepository implements VillageRepositoryInterface
 {
 
     public function get(VillageId $village_id): Village
     {
         try {
-            $village_info = ModelVillage::from('villages as v')
-                ->select(
-                    'v.id as village_id',
-                    'v.title',
-                    'v.content',
-                    'v.note',
-                    'p.id as phase_id',
-                    'p.m_phase_id',
-                    'p.m_phase_status_id',
-                    'vs.core_member_limit',
-                    'vs.village_member_limit',
-                    'vmr.requirement',
-                    'pi.nickname_flg',
-                    'pi.gender_flg',
-                    'pi.age_flg',
-                )
-                ->join('phases as p', 'p.village_id', 'v.id')
-                ->join('village_member_requirements as vmr', 'vmr.village_id', 'v.id')
-                ->join('village_settings as vs', 'vs.village_id', 'v.id')
-                ->join('public_informations as pi', 'pi.village_id', 'v.id')
-                ->where('v.id', $village_id->toInt())
-                ->first();
+            $village_info = $this->queryVillageInfo()
+                            ->where('v.id', $village_id->toInt())->first();
 
-            $phase_start = ModelPhaseSetting::from('phase_settings as ps')
-                ->join('phases as p', 'ps.phase_id', 'p.id')
-                ->where('ps.phase_id', $village_info->phase_id)
-                ->where('ps.end_flg', false)
-                ->first();
+                $phase_start = ModelPhaseSetting::from('phase_settings as ps')
+                                    ->join('phases as p', 'ps.phase_id', 'p.id')
+                                    ->where('ps.phase_id', $village_info->phase_id)
+                                    ->where('ps.end_flg', false)
+                                    ->first();
 
-            $phase_end = ModelPhaseSetting::from('phase_settings as ps')
-                ->join('phases as p', 'ps.phase_id', 'p.id')
-                ->where('ps.phase_id', $village_info->phase_id)
-                ->where('ps.end_flg', true)
-                ->first();
-
-            return new Village(
-                new VillageId($village_info->village_id),
-                new VillagePhase(
-                    new VillagePhaseId($village_info->phase_id),
-                    $village_info->m_phase_id,
-                    $village_info->m_phase_status_id,
-                    new VillagePhaseSetting(
-                        $phase_start->end_flg,
-                        $phase_start->by_manual_flg,
-                        $phase_start->by_limit_flg,
-                        $phase_start->by_date_flg,
-                        $phase_start->by_instant_flg,
-                        $phase_start->border_date,
-                    ),
-                    new VillagePhaseSetting(
-                        $phase_end->phase_id,
-                        $phase_end->by_manual_flg,
-                        $phase_end->by_limit_flg,
-                        $phase_end->by_date_flg,
-                        $phase_end->by_instant_flg,
-                        $phase_end->border_date,
-                    ),
-                ),
-                new Topic(
-                    $village_info->title,
-                    $village_info->content,
-                    $village_info->note,
-                ),
-                new VillageSetting(
-                    $village_info->core_member_limit,
-                    $village_info->village_member_limit,
-                ),
-                new VillageMemberRequirement(
-                    $village_info->requirement,
-                ),
-                new VillagePublicInformation(
-                    $village_info->nickname_flg,
-                    $village_info->gender_flg,
-                    $village_info->age_flg,
-                )
-            );
+                $phase_end = ModelPhaseSetting::from('phase_settings as ps')
+                                    ->join('phases as p', 'ps.phase_id', 'p.id')
+                                    ->where('ps.phase_id', $village_info->phase_id)
+                                    ->where('ps.end_flg', true)
+                                    ->first();
+                                
+                return new Village(
+                    new VillageId($village_info->village_id), 
+                    new VillagePhase(
+                        new VillagePhaseId($village_info->phase_id),
+                        $village_info->m_phase_id,
+                        $village_info->m_phase_status_id,
+                        new VillagePhaseSetting(
+                            $phase_start->end_flg,
+                            $phase_start->by_manual_flg,
+                            $phase_start->by_limit_flg,
+                            $phase_start->by_date_flg,
+                            $phase_start->by_instant_flg,
+                            $phase_start->border_date,
+                        ),
+                        new VillagePhaseSetting(
+                            $phase_end->phase_id,
+                            $phase_end->by_manual_flg,
+                            $phase_end->by_limit_flg,
+                            $phase_end->by_date_flg,
+                            $phase_end->by_instant_flg,
+                            $phase_end->border_date,
+                        ),
+                    ), 
+                    new Topic(
+                        $village_info->title,
+                        $village_info->content,
+                        $village_info->note,
+                    ), 
+                    new VillageSetting(
+                        $village_info->core_member_limit,
+                        $village_info->village_member_limit,
+                    ), 
+                    new VillageMemberRequirement(
+                        $village_info->requirement,
+                    ), 
+                    new VillagePublicInformation(
+                        $village_info->nickname_flg,
+                        $village_info->gender_flg,
+                        $village_info->age_flg,
+                    )
+                );
         } catch (\Exception $e) {
             DB::rollback();
         }
@@ -381,5 +364,44 @@ class VillageRepository implements VillageRepositoryInterface
         } catch (\Exception $e) {
             logs()->error($e->getMessage());
         }
+    }
+
+
+    /**
+     * ログインユーザが参加条件を満たしている確認する
+     */
+    private function existCondition(?VillageId $village_id, ?UserId $member_id, $query){
+        try {
+            $query = $query->join('village_members as vm', 'vm.village_id', 'v.id');
+            if (!is_null($village_id)) {
+                $query = $query->where('village_id', $village_id->toInt());
+            }
+            if (!is_null($member_id)) {
+                $query = $query->where('user_id', $member_id->toInt());
+            }          
+            $query = $query->join('phases as p', 'p.village_id', 'v.id');
+            if (!is_null($village_id)) {
+                $query = $query->where('village_id', $village_id->toInt())
+                ->where('m_phase_status_id', 1);
+            }
+
+            // $query = $query->join('village_members as vm', 'vm.village_id', 'v.id')
+            //     ->where(function ($query_data) use($village_id){
+            //     $query_data->select(DB::raw('COUNT(user_id) As member_count'))
+            //             ->from('village_members as vm')
+            //             ->where('vm.village_id', $village_id->toInt())
+            //             ->groupBy('vm.user_id');
+            // }, '>', 'village_member_limit');
+                                        
+
+            // foreach ($village_infos as $village_info) {
+            //     $result[] = $this->getVillageFromRecord($village_info);
+            // }                 
+
+            return $query;
+        } catch (\Exception $e) {
+            logs()->error($e->getMessage());
+        }
+        return [];
     }
 }
