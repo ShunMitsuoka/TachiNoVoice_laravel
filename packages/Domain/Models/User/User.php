@@ -6,11 +6,11 @@ use Carbon\Carbon;
 class User
 {
     protected ?UserId $id;
-    public readonly string $name;
-    public readonly ?string $nickname;
-    public readonly string $email;
-    public readonly int $gender;
-    public readonly Carbon $date_of_birth;
+    protected string $name;
+    protected ?string $nickname;
+    protected string $email;
+    protected int $gender;
+    protected Carbon $date_of_birth;
 
     function __construct(
         ?UserId $id,
