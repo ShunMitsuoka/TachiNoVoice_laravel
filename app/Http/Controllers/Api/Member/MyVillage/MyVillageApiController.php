@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseApiController;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Village\Village;
+use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\Casts\VillageCast;
 use Packages\Domain\Services\VillageService;
 
@@ -55,6 +56,7 @@ class MyVillageApiController extends BaseApiController
             'village_member_count' => $village->memberInfo()->getVillageMemberCount(),
             'core_member_count' => $village->memberInfo()->getCoreMemberCount(),
             'rise_member_count' => $village->memberInfo()->getRiseMemberCount(),
+            'is_phase_preparing' => $village->phase()->isReady(),
         ];
     }
 
@@ -77,7 +79,12 @@ class MyVillageApiController extends BaseApiController
      */
     public function show($id)
     {
-        //
+        $result = [];
+        $member = $this->getLoginMember();
+        $village = $this->village_repository->get(new VillageId($id));
+        $village->setMemberInfo($this->village_service);
+        $result = $this->makeResultFromRecord($village, $village->getMemberRole($member));
+        return $this->makeSuccessResponse($result);
     }
 
     /**

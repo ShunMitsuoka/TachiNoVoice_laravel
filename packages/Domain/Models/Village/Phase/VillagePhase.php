@@ -59,8 +59,8 @@ class VillagePhase
     /**
      * ステータス：準備中
      */
-    public const PHASE_STATUS_READY = 1;
-    public const PHASE_STATUS_READY_NAME = '準備中';
+    public const PHASE_STATUS_PREPARATION = 1;
+    public const PHASE_STATUS_PREPARATION_NAME = '準備中';
     /**
      * ステータス：進行中
      */
@@ -120,6 +120,10 @@ class VillagePhase
         return $this->phase_end_setting;
     }
 
+    public function isReady() : bool{
+        return $this->phase_status == self::PHASE_STATUS_PREPARATION;
+    }
+
     /**
      * ビレッジ初期フェーズ作成
      */
@@ -130,7 +134,7 @@ class VillagePhase
         return new self(
             null,
             self::PHASE_RECRUITMENT_OF_MEMBER, 
-            self::PHASE_STATUS_READY,
+            self::PHASE_STATUS_PREPARATION,
             $phase_start_setting,
             $phase_end_setting,
         );
@@ -162,8 +166,8 @@ class VillagePhase
 
     public function getPhaseStatusName():string{
         switch ($this->phase_status) {
-            case self::PHASE_STATUS_READY:
-                return self::PHASE_STATUS_READY_NAME;
+            case self::PHASE_STATUS_PREPARATION:
+                return self::PHASE_STATUS_PREPARATION_NAME;
             case self::PHASE_STATUS_IN_PROGRESS:
                 return self::PHASE_STATUS_IN_PROGRESS_NAME;
             case self::PHASE_STATUS_COMPLATE:
