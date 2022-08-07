@@ -15,11 +15,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            MPhasesSeeder::class,
+            MPhaseStatusesSeeder::class,
+            // テストデータ
             UsersSeeder::class,
             VillagesSeeder::class,
             VillageMemberRequirementsSeeder::class,
             VillageSettingsSeeder::class,
             PublicInformationsSeeder::class,
+            PhasesSeeder::class,
         ]);
     }
 }
