@@ -5,8 +5,6 @@ use Carbon\Carbon;
 
 class VillageMember extends Member
 {
-    private int $role_id;
-
     function __construct(
         UserId $id,
         string $name,
