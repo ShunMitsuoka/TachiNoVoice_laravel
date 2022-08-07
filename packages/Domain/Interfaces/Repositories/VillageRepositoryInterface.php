@@ -8,11 +8,17 @@ use Packages\Domain\Models\Village\VillageId;
 
 interface VillageRepositoryInterface
 {
-    public function get(VillageId $village_id) : Village;
-    public function save(Village $village) : Village;
+    /**
+     * ビレッジIDからビレッジを1件取得する
+     */
+    public function get(VillageId $village_id): Village;
+    /**
+     * ビレッジを保存する
+     */
+    public function save(Village $village): Village;
+    /**
+     * 検索条件に一致するビレッジを全件取得する。
+     */
     public function getAll(array $filter): array;
-    public function getAllAsHost(UserId $member_id) : array;
-    public function getAllAsVillageMember(UserId $member_id) : array;
-    public function getAllAsCoreMember(UserId $member_id) : array;
-    public function getAllAsRiseMember(UserId $member_id) : array;
+    public function getAllJoinedVillage(UserId $userId): array;
 }

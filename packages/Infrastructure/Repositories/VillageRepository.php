@@ -32,65 +32,28 @@ class VillageRepository implements VillageRepositoryInterface
     {
         try {
             $village_info = $this->queryVillageInfo()
-                            ->where('v.id', $village_id->toInt())->first();
-
-                $phase_start = ModelPhaseSetting::from('phase_settings as ps')
-                                    ->join('phases as p', 'ps.phase_id', 'p.id')
-                                    ->where('ps.phase_id', $village_info->phase_id)
-                                    ->where('ps.end_flg', false)
-                                    ->first();
-
-                $phase_end = ModelPhaseSetting::from('phase_settings as ps')
-                                    ->join('phases as p', 'ps.phase_id', 'p.id')
-                                    ->where('ps.phase_id', $village_info->phase_id)
-                                    ->where('ps.end_flg', true)
-                                    ->first();
-                                
-                return new Village(
-                    new VillageId($village_info->village_id), 
-                    new VillagePhase(
-                        new VillagePhaseId($village_info->phase_id),
-                        $village_info->m_phase_id,
-                        $village_info->m_phase_status_id,
-                        new VillagePhaseSetting(
-                            $phase_start->end_flg,
-                            $phase_start->by_manual_flg,
-                            $phase_start->by_limit_flg,
-                            $phase_start->by_date_flg,
-                            $phase_start->by_instant_flg,
-                            $phase_start->border_date,
-                        ),
-                        new VillagePhaseSetting(
-                            $phase_end->phase_id,
-                            $phase_end->by_manual_flg,
-                            $phase_end->by_limit_flg,
-                            $phase_end->by_date_flg,
-                            $phase_end->by_instant_flg,
-                            $phase_end->border_date,
-                        ),
-                    ), 
-                    new Topic(
-                        $village_info->title,
-                        $village_info->content,
-                        $village_info->note,
-                    ), 
-                    new VillageSetting(
-                        $village_info->core_member_limit,
-                        $village_info->village_member_limit,
-                    ), 
-                    new VillageMemberRequirement(
-                        $village_info->requirement,
-                    ), 
-                    new VillagePublicInformation(
-                        $village_info->nickname_flg,
-                        $village_info->gender_flg,
-                        $village_info->age_flg,
-                    )
-                );
+                ->where('v.id', $village_id->toInt())->first();
+            if(!is_null($village_info)){
+                return $this->getVillageFromRecord($village_info);
+            }
         } catch (\Exception $e) {
-            DB::rollback();
+            logs()->error($e->getMessage());
         }
         return null;
+    }
+
+    public function getAll(array $filter): array
+    {
+        try {
+            $result = [];
+            $village_records = $this->queryVillageInfo()->get();
+            foreach ($village_records as $record) {
+                $result[] = $this->getVillageFromRecord($record);
+            }
+            return $result;
+        } catch (\Exception $e) {
+            logs()->error($e->getMessage());
+        }
     }
 
     public function getAllAsHost(UserId $member_id): array
@@ -100,70 +63,6 @@ class VillageRepository implements VillageRepositoryInterface
             $village_infos = $this->queryVillageInfo()
                 ->join('hosts', 'hosts.village_id', 'v.id')
                 ->where('hosts.user_id', $member_id->toInt())
-                ->get();
-            foreach ($village_infos as $village_info) {
-                $result[] = $this->getVillageFromRecord($village_info);
-            }
-            return $result;
-        } catch (\Exception $e) {
-            logs()->error($e->getMessage());
-        }
-        return [];
-    }
-
-    /**
-     * ビレッジメンバーとして参加しているビレッジを全て取得する
-     */
-    public function getAllAsVillageMember(UserId $member_id): array
-    {
-        try {
-            $result = [];
-            $village_infos = $this->queryVillageInfo()
-                ->join('village_members', 'village_members.village_id', 'v.id')
-                ->where('village_members.user_id', $member_id->toInt())
-                ->where('village_members.role_id', VillageMember::ROLE_VILLAGE_MEMBER)
-                ->get();
-            foreach ($village_infos as $village_info) {
-                $result[] = $this->getVillageFromRecord($village_info);
-            }
-            return $result;
-        } catch (\Exception $e) {
-            logs()->error($e->getMessage());
-        }
-        return [];
-    }
-    /**
-     * コアメンバーとして参加しているビレッジを全て取得する
-     */
-    public function getAllAsCoreMember(UserId $member_id): array
-    {
-        try {
-            $result = [];
-            $village_infos = $this->queryVillageInfo()
-                ->join('village_members', 'village_members.village_id', 'v.id')
-                ->where('village_members.user_id', $member_id->toInt())
-                ->where('village_members.role_id', VillageMember::ROLE_CORE_MEMBER)
-                ->get();
-            foreach ($village_infos as $village_info) {
-                $result[] = $this->getVillageFromRecord($village_info);
-            }
-            return $result;
-        } catch (\Exception $e) {
-            logs()->error($e->getMessage());
-        }
-        return [];
-    }
-    /**
-     * ライズメンバーとして参加しているビレッジを全て取得する
-     */
-    public function getAllAsRiseMember(UserId $member_id): array
-    {
-        try {
-            $result = [];
-            $village_infos = $this->queryVillageInfo()
-                ->join('village_members', 'village_members.village_id', 'v.id')
-                ->where('village_members.user_id', $member_id->toInt())
-                ->where('village_members.role_id', VillageMember::ROLE_RISE_MEMBER)
                 ->get();
             foreach ($village_infos as $village_info) {
                 $result[] = $this->getVillageFromRecord($village_info);
@@ -265,6 +164,9 @@ class VillageRepository implements VillageRepositoryInterface
         return null;
     }
 
+    /**
+     * Villgaeを作成するために必要なフィールド情報を取得するためのクエリを返す。
+     */
     private function queryVillageInfo()
     {
         $query = ModelVillage::from('villages as v')
@@ -290,6 +192,10 @@ class VillageRepository implements VillageRepositoryInterface
         return $query;
     }
 
+    /**
+     * queryVillageInfo関数を使用して取得したフィールド情報から
+     * Villageクラスを作成する。
+     */
     private function getVillageFromRecord($village_info): Village
     {
         $phase_start = ModelPhaseSetting::from('phase_settings as ps')
@@ -302,14 +208,6 @@ class VillageRepository implements VillageRepositoryInterface
             ->where('ps.phase_id', $village_info->phase_id)
             ->where('ps.end_flg', true)
             ->first();
-        return $this->makeVillageFromRecord($village_info, $phase_start, $phase_end);
-    }
-
-    /**
-     * ビレッジクラスを作るメソッド
-     */
-    private function makeVillageFromRecord($village_info, $phase_start, $phase_end): Village
-    {
         return new Village(
             new VillageId($village_info->village_id),
             new VillagePhase(
@@ -352,20 +250,6 @@ class VillageRepository implements VillageRepositoryInterface
             )
         );
     }
-    public function getAll(array $filter): array
-    {
-        try {
-            $result = [];
-            $village_records = $this->queryVillageInfo()->get();
-            foreach ($village_records as $record) {
-                $result[] = $this->getVillageFromRecord($record);
-            }
-            return $result;
-        } catch (\Exception $e) {
-            logs()->error($e->getMessage());
-        }
-    }
-
 
     /**
      * ログインユーザが参加条件を満たしている確認する
@@ -402,6 +286,10 @@ class VillageRepository implements VillageRepositoryInterface
         } catch (\Exception $e) {
             logs()->error($e->getMessage());
         }
+        return [];
+    }
+
+    public function getAllJoinedVillage(UserId $userId): array{
         return [];
     }
 }
