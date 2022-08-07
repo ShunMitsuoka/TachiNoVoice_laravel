@@ -70,4 +70,19 @@ class VillageMemberInfo
         return array_key_exists($member->id()->toInt(), $this->rise_members);
     }
 
+    public function getHostCount() : int{
+        return count($this->hosts);
+    }
+
+    public function getVillageMemberCount() : int{
+        return count($this->village_members);
+    }
+
+    public function getCoreMemberCount() : int{
+        return count($this->core_members);
+    }
+
+    public function getRiseMemberCount() : int{
+        return count($this->rise_members);
+    }
 }

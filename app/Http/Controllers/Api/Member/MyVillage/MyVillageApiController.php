@@ -42,7 +42,7 @@ class MyVillageApiController extends BaseApiController
 
     private function makeResultFromRecord(Village $village, int $role_id){
         return [
-            'id' => $village->id()->toInt(),
+            'village_id' => $village->id()->toInt(),
             'phase' => $village->phase()->phase(),
             'phase_name' => $village->phase()->getPhaseName(),
             'phase_status' => $village->phase()->phaseStatus(),
@@ -52,6 +52,9 @@ class MyVillageApiController extends BaseApiController
             'core_member_limit' => $village->setting()->coreMemberLimit(),
             'village_member_limit' => $village->setting()->villageMemberLimit(),
             'role_id' => $role_id,
+            'village_member_count' => $village->memberInfo()->getVillageMemberCount(),
+            'core_member_count' => $village->memberInfo()->getCoreMemberCount(),
+            'rise_member_count' => $village->memberInfo()->getRiseMemberCount(),
         ];
     }
 
