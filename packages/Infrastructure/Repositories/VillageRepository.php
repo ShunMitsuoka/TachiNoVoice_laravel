@@ -275,7 +275,10 @@ class VillageRepository implements VillageRepositoryInterface
     }
 
     /**
-     * ログインユーザが参加条件を満たしている確認する
+     * ログインユーザが参加条件を満たしているかを以下の順で確認する
+     * ①メンバー募集フェーズかどうか
+     * ②既にメンバーかどうか
+     * ③メンバー上限に達しているかどうか
      */
     private function existCondition(?VillageId $village_id, ?UserId $member_id, $query){
         try {
@@ -285,7 +288,8 @@ class VillageRepository implements VillageRepositoryInterface
             }
             if (!is_null($member_id)) {
                 $query = $query->where('user_id', $member_id->toInt());
-            }          
+            }     
+            // ①メンバー募集フェーズかどうか
             $query = $query->join('phases as p', 'p.village_id', 'v.id');
             if (!is_null($village_id)) {
                 $query = $query->where('village_id', $village_id->toInt())
