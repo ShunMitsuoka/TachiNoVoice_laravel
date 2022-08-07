@@ -17,13 +17,45 @@ class PhasesSeeder extends Seeder
     public function run()
     {
         Phase::truncate();
-
-        for ($i=1; $i <= 40; $i++) { 
-            Phase::create([
-                'village_id' => $i,
-                'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
-                'm_phase_status_id' => VillagePhase::PHASE_STATUS_PREPARATION,
-            ]);
-        }
+        // ビレッジ1
+        Phase::create([
+            'id' => 1,
+            'village_id' => 1,
+            'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_PREPARATION,
+        ]);
+        // ビレッジ2
+        Phase::create([
+            'id' => 2,
+            'village_id' => 2,
+            'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_IN_PROGRESS,
+        ]);
+        // ビレッジ3
+        Phase::create([
+            'id' => 3,
+            'village_id' => 3,
+            'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLATE,
+        ]);
+        Phase::create([
+            'id' => 4,
+            'village_id' => 3,
+            'm_phase_id' => VillagePhase::PHASE_DRAWING_CORE_MEMBER,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_PREPARATION,
+        ]);
+        // ビレッジ4
+        Phase::create([
+            'id' => 5,
+            'village_id' => 4,
+            'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLATE,
+        ]);
+        Phase::create([
+            'id' => 6,
+            'village_id' => 4,
+            'm_phase_id' => VillagePhase::PHASE_DRAWING_CORE_MEMBER,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_IN_PROGRESS,
+        ]);
     }
 }

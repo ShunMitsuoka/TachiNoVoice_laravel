@@ -70,7 +70,7 @@ class VillagePhase
     /**
      * ステータス：完了
      */
-    public const PHASE_STATUS_COMPLATE = 999;
+    public const PHASE_STATUS_COMPLATE = 200;
     public const PHASE_STATUS_COMPLATE_NAME = '完了';
 
     function __construct(

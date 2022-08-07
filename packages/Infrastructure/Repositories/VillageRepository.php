@@ -261,8 +261,8 @@ class VillageRepository implements VillageRepositoryInterface
                 $village_info->note,
             ),
             new VillageSetting(
-                $village_info->core_member_limit,
                 $village_info->village_member_limit,
+                $village_info->core_member_limit,
             ),
             new VillageMemberRequirement(
                 $village_info->requirement,

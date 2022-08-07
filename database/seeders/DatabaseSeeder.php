@@ -24,6 +24,9 @@ class DatabaseSeeder extends Seeder
             VillageSettingsSeeder::class,
             PublicInformationsSeeder::class,
             PhasesSeeder::class,
+            PhaseSettingsSeeder::class,
+            HostsSeeder::class,
+            VillageMembersSeeder::class,
         ]);
     }
 }
