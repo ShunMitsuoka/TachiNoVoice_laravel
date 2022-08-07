@@ -55,19 +55,19 @@ class VillageMemberInfo
     }
 
     public function isHost(Member $member) : bool{
-        throw new \Exception("Error Processing Request", 1);
+        return array_key_exists($member->id()->toInt(), $this->hosts);
     }
 
     public function isVillageMember(Member $member) : bool{
-        throw new \Exception("Error Processing Request", 1);
+        return array_key_exists($member->id()->toInt(), $this->village_members);
     }
 
     public function isCoreMember(Member $member) : bool{
-        throw new \Exception("Error Processing Request", 1);
+        return array_key_exists($member->id()->toInt(), $this->core_members);
     }
 
     public function isRiseMember(Member $member) : bool{
-        throw new \Exception("Error Processing Request", 1);
+        return array_key_exists($member->id()->toInt(), $this->rise_members);
     }
 
 }

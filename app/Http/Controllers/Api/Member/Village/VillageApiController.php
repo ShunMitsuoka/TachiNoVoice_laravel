@@ -50,9 +50,6 @@ class VillageApiController extends BaseApiController
     public function store(Request $request)
     {
         $member = $this->getLoginMember();
-
-        $test = new VillageRepository();
-
         $topic = $member->makeVillageTopic($request->title, $request->content, $request->note);
         $setting = $member->makeVillageSetting($request->core_member_limit, $request->village_member_limit);
         $requirement = $member->makeVillageMemberRequirement($request->requirement);

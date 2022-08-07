@@ -20,5 +20,8 @@ interface VillageRepositoryInterface
      * 検索条件に一致するビレッジを全件取得する。
      */
     public function getAll(array $filter): array;
-    public function getAllJoinedVillage(UserId $userId): array;
+    /**
+     * ユーザーが参加しているビレッジを全件取得する。
+     */
+    public function getAllJoiningVillage(UserId $userId): array;
 }

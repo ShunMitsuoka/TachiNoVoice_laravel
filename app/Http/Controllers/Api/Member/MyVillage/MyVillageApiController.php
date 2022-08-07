@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\Member\MyVillage;
 use App\Http\Controllers\API\BaseApiController;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
-use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Village;
+use Packages\Domain\Services\Casts\VillageCast;
 use Packages\Domain\Services\VillageService;
 
 class MyVillageApiController extends BaseApiController
@@ -31,25 +31,11 @@ class MyVillageApiController extends BaseApiController
     {
         $result = [];
         $member = $this->getLoginMember();
-        $host_villages = $this->village_repository->getAllAsHost($member->id());
-        $village_member_villages = $this->village_repository->getAllAsVillageMember($member->id());
-        $core_member_villages = $this->village_repository->getAllAsCoreMember($member->id());
-        $rise_member_villages = $this->village_repository->getAllAsRiseMember($member->id());
-        foreach ($host_villages as $village) {
+        $joining_villages = $this->village_repository->getAllJoiningVillage($member->id());
+        foreach ($joining_villages as $village) {
+            $village = VillageCast::castVillage($village);
             $village->setMemberInfo($this->village_service);
-            $result[] = $this->makeResultFromRecord($village, Member::ROLE_HOST);
-        }
-        foreach ($village_member_villages as $village) {
-            $village->setMemberInfo($this->village_service);
-            $result[] = $this->makeResultFromRecord($village, Member::ROLE_VILLAGE_MEMBER);
-        }
-        foreach ($core_member_villages as $village) {
-            $village->setMemberInfo($this->village_service);
-            $result[] = $this->makeResultFromRecord($village, Member::ROLE_CORE_MEMBER);
-        }
-        foreach ($rise_member_villages as $village) {
-            $village->setMemberInfo($this->village_service);
-            $result[] = $this->makeResultFromRecord($village, Member::ROLE_RISE_MEMBER);
+            $result[] = $this->makeResultFromRecord($village, $village->getMemberRole($member));
         }
         return $this->makeSuccessResponse($result);
     }

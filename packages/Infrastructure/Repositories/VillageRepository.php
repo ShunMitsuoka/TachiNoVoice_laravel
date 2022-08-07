@@ -56,6 +56,29 @@ class VillageRepository implements VillageRepositoryInterface
         }
     }
 
+    public function getAllJoiningVillage(UserId $userId): array{
+        try {
+            $result = [];
+            $village_records = $this->queryVillageInfo()
+                ->whereIn('v.id', 
+                function ($query) use($userId)
+                {
+                    $village_members = ModelVillageMember::select('village_id')->where('user_id', $userId->toInt());
+                    $query->select('village_id')
+                        ->from('hosts')
+                        ->union($village_members)
+                        ->where('user_id', $userId->toInt());
+                })
+                ->get();
+            foreach ($village_records as $record) {
+                $result[] = $this->getVillageFromRecord($record);
+            }
+            return $result;
+        } catch (\Exception $e) {
+            logs()->error($e->getMessage());
+        }
+    }
+
     public function getAllAsHost(UserId $member_id): array
     {
         try {
@@ -286,10 +309,6 @@ class VillageRepository implements VillageRepositoryInterface
         } catch (\Exception $e) {
             logs()->error($e->getMessage());
         }
-        return [];
-    }
-
-    public function getAllJoinedVillage(UserId $userId): array{
         return [];
     }
 }
