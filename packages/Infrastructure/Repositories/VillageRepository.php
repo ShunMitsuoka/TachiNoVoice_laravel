@@ -174,6 +174,25 @@ class VillageRepository implements VillageRepositoryInterface
      */
     private function queryVillageInfo()
     {
+        $maxPhseSubQuery = DB::table('phases as max_phases')
+        ->select(
+            'max_phases.village_id',
+            DB::raw('max(max_phases.m_phase_id) as max_m_phase_id'),
+        )
+        ->groupBy('max_phases.village_id');
+
+        $phseSubQuery = DB::table('phases as sub_phases')
+        ->select(
+            'sub_phases.id',
+            'sub_phases.village_id',
+            'sub_phases.m_phase_id',
+            'sub_phases.m_phase_status_id',
+        )
+        ->joinSub($maxPhseSubQuery, 'max_phases', function ($join) {
+            $join->on('max_phases.village_id', 'sub_phases.village_id')
+                ->where('max_phases.max_m_phase_id', '=', DB::raw('sub_phases.m_phase_id'));
+        });
+
         $query = ModelVillage::from('villages as v')
             ->select(
                 'v.id as village_id',
@@ -190,7 +209,7 @@ class VillageRepository implements VillageRepositoryInterface
                 'pi.gender_flg',
                 'pi.age_flg',
             )
-            ->join('phases as p', 'p.village_id', 'v.id')
+            ->joinSub($phseSubQuery, 'p', 'p.village_id', 'v.id')
             ->join('village_member_requirements as vmr', 'vmr.village_id', 'v.id')
             ->join('village_settings as vs', 'vs.village_id', 'v.id')
             ->join('public_informations as pi', 'pi.village_id', 'v.id');
