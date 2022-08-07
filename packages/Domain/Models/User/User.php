@@ -6,6 +6,10 @@ use Packages\Domain\Models\Common\_Entity;
 
 class User extends _Entity
 {
+    public const GENDER_MAN  = 1;
+    public const GENDER_WOMAN  = 2;
+    public const GENDER_LGBT  = 3;
+
     protected ?UserId $id;
     protected string $name;
     protected ?string $nickname;

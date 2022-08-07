@@ -2,8 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Packages\Domain\Models\User\User as MUser;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -18,11 +21,12 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
+            'user_name' => fake()->name(),
             'email' => fake()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'password' => Hash::make('test0000'),
+            'nickname' => fake()->name(),
+            'gender' => fake()->randomElement([MUser::GENDER_MAN, MUser::GENDER_WOMAN, MUser::GENDER_LGBT]),
+            'date_of_birth' => fake()->dateTimeBetween('-80 years', '-20years')->format('Y-m-d'),
         ];
     }
 

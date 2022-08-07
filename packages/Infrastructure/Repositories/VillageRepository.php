@@ -79,24 +79,6 @@ class VillageRepository implements VillageRepositoryInterface
         }
     }
 
-    public function getAllAsHost(UserId $member_id): array
-    {
-        try {
-            $result = [];
-            $village_infos = $this->queryVillageInfo()
-                ->join('hosts', 'hosts.village_id', 'v.id')
-                ->where('hosts.user_id', $member_id->toInt())
-                ->get();
-            foreach ($village_infos as $village_info) {
-                $result[] = $this->getVillageFromRecord($village_info);
-            }
-            return $result;
-        } catch (\Exception $e) {
-            logs()->error($e->getMessage());
-        }
-        return [];
-    }
-
     public function save(Village $village): Village
     {
         DB::beginTransaction();
