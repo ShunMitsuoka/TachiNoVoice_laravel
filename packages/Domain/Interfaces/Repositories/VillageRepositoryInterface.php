@@ -17,6 +17,10 @@ interface VillageRepositoryInterface
      */
     public function save(Village $village): Village;
     /**
+     * ビレッジを更新する
+     */
+    public function update(Village $village): Village;
+    /**
      * 検索条件に一致するビレッジを全件取得する。
      */
     public function getAll(array $filter): array;

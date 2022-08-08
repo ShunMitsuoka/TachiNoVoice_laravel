@@ -10,11 +10,11 @@ use Packages\Domain\Services\VillageService;
 class Village extends _Entity
 {
     protected ?VillageId $id;
-    public readonly VillagePhase $phase;
-    public readonly VillageSetting $setting;
-    public readonly Topic $topic;
-    public readonly VillageMemberRequirement $requirement;
-    public readonly VillagePublicInformation $public_information;
+    protected VillagePhase $phase;
+    protected VillageSetting $setting;
+    protected Topic $topic;
+    protected VillageMemberRequirement $requirement;
+    protected VillagePublicInformation $public_information;
     protected ?VillageMemberInfo $member_info;
 
     function __construct(
@@ -76,6 +76,16 @@ class Village extends _Entity
                 break;
         }
         throw new \Exception('メンバーに役割が設定されていません。');
+    }
+
+    public function nextPhase(){
+        $this->phase = new VillagePhase(
+            null,
+            $this->phase->phase()+1,
+            VillagePhase::PHASE_STATUS_PREPARATION,
+            null,
+            null
+        );
     }
 
 }

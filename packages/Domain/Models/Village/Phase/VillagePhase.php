@@ -178,4 +178,8 @@ class VillagePhase
         }
     }
 
+    public function startPhase(){
+        $this->phase_status = self::PHASE_STATUS_IN_PROGRESS;
+    }
+
 }
