@@ -82,180 +82,162 @@ class VillageRepository implements VillageRepositoryInterface
 
     public function save(Village $village): Village
     {
-        DB::beginTransaction();
-        try {
-            $created_village = ModelVillage::create([
-                'title' => $village->topic()->title(),
-                'content' => $village->topic()->content(),
-                'note' => $village->topic()->note(),
-            ]);
-            $village->setId($created_village->id);
+        $created_village = ModelVillage::create([
+            'title' => $village->topic()->title(),
+            'content' => $village->topic()->content(),
+            'note' => $village->topic()->note(),
+        ]);
+        $village->setId($created_village->id);
 
-            $created_village_setting = ModelVillageSetting::create([
-                'village_id' => $village->id()->toInt(),
-                'village_member_limit' => $village->setting()->villageMemberLimit(),
-                'core_member_limit' => $village->setting()->coreMemberLimit(),
-            ]);
+        $created_village_setting = ModelVillageSetting::create([
+            'village_id' => $village->id()->toInt(),
+            'village_member_limit' => $village->setting()->villageMemberLimit(),
+            'core_member_limit' => $village->setting()->coreMemberLimit(),
+        ]);
 
-            $created_requirement = ModelVillageMemberRequirement::create([
-                'village_id' => $village->id()->toInt(),
-                'requirement' => $village->requirement()->requirement(),
-            ]);
+        $created_requirement = ModelVillageMemberRequirement::create([
+            'village_id' => $village->id()->toInt(),
+            'requirement' => $village->requirement()->requirement(),
+        ]);
 
-            $created_public_info = ModelPublicInformation::create([
-                'village_id' => $village->id()->toInt(),
-                'nickname_flg' => $village->publicInformation()->isNicknamePublic(),
-                'gender_flg' => $village->publicInformation()->isGenderPublic(),
-                'age_flg' => $village->publicInformation()->isAgePublic(),
-            ]);
+        $created_public_info = ModelPublicInformation::create([
+            'village_id' => $village->id()->toInt(),
+            'nickname_flg' => $village->publicInformation()->isNicknamePublic(),
+            'gender_flg' => $village->publicInformation()->isGenderPublic(),
+            'age_flg' => $village->publicInformation()->isAgePublic(),
+        ]);
 
-            $created_phase = ModelPhase::create([
-                'village_id' => $village->id()->toInt(),
-                'm_phase_id' => $village->phase()->phaseNo(),
-                'm_phase_status_id' => $village->phase()->phaseStatus(),
-            ]);
-            $created_phase_start_setting = null;
-            if ($village->phase()->existsPhaseStartSetting()) {
-                $created_phase_start_setting = ModelPhaseSetting::create([
-                    'phase_id' => $created_phase->id,
-                    'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
-                    'by_manual_flg' => $village->phase()->phaseStartSetting()->byManual(),
-                    'by_limit_flg' => $village->phase()->phaseStartSetting()->byLimit(),
-                    'by_date_flg' => $village->phase()->phaseStartSetting()->byDate(),
-                    'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
-                ]);
-            }
-            $created_phase_end_setting = ModelPhaseSetting::create([
+        $created_phase = ModelPhase::create([
+            'village_id' => $village->id()->toInt(),
+            'm_phase_id' => $village->phase()->phaseNo(),
+            'm_phase_status_id' => $village->phase()->phaseStatus(),
+        ]);
+        $created_phase_start_setting = null;
+        if ($village->phase()->existsPhaseStartSetting()) {
+            $created_phase_start_setting = ModelPhaseSetting::create([
                 'phase_id' => $created_phase->id,
+                'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
+                'by_manual_flg' => $village->phase()->phaseStartSetting()->byManual(),
+                'by_limit_flg' => $village->phase()->phaseStartSetting()->byLimit(),
+                'by_date_flg' => $village->phase()->phaseStartSetting()->byDate(),
+                'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
+            ]);
+        }
+        $created_phase_end_setting = ModelPhaseSetting::create([
+            'phase_id' => $created_phase->id,
+            'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
+            'by_manual_flg' => $village->phase()->phaseEndSetting()->byManual(),
+            'by_limit_flg' => $village->phase()->phaseEndSetting()->byLimit(),
+            'by_date_flg' => $village->phase()->phaseEndSetting()->byDate(),
+            'border_date' => $village->phase()->phaseEndSetting()->borderDate(),
+        ]);
+
+        return new Village(
+            new VillageId($created_village->id),
+            VillagePhaseService::getVillagePhase(
+                new VillagePhaseId($created_phase->id),
+                $created_phase->m_phase_id,
+                $created_phase->m_phase_status_id,
+                $village->phase()->phaseStartSetting(),
+                $village->phase()->phaseEndSetting()
+            ),
+            new Topic(
+                $created_village->title,
+                $created_village->content,
+                $created_village->note,
+            ),
+            new VillageSetting(
+                $created_village_setting->village_member_limit,
+                $created_village_setting->core_member_limit,
+            ),
+            new VillageMemberRequirement(
+                $created_requirement->requirement,
+            ),
+            new VillagePublicInformation(
+                $created_public_info->nickname_flg,
+                $created_public_info->gender_flg,
+                $created_public_info->age_flg,
+            )
+        );
+    }
+
+    public function update(Village $village): Village{
+        ModelVillage::where('id', $village->id()->toInt())
+        ->update([
+            'title' => $village->topic()->title(),
+            'content' => $village->topic()->content(),
+            'note' => $village->topic()->note(),
+        ]);
+
+        ModelVillageSetting::where('village_id', $village->id()->toInt())
+        ->update([
+            'village_member_limit' => $village->setting()->villageMemberLimit(),
+            'core_member_limit' => $village->setting()->coreMemberLimit(),
+        ]);
+
+        ModelVillageMemberRequirement::where('village_id', $village->id()->toInt())
+        ->update([
+            'requirement' => $village->requirement()->requirement(),
+        ]);
+
+        ModelPublicInformation::where('village_id', $village->id()->toInt())
+        ->update([
+            'nickname_flg' => $village->publicInformation()->isNicknamePublic(),
+            'gender_flg' => $village->publicInformation()->isGenderPublic(),
+            'age_flg' => $village->publicInformation()->isAgePublic(),
+        ]);
+
+        $updated_phase = ModelPhase::updateOrCreate([
+            'village_id' => $village->id()->toInt(),
+            'm_phase_id' => $village->phase()->phaseNo(),
+        ],[
+            'village_id' => $village->id()->toInt(),
+            'm_phase_id' => $village->phase()->phaseNo(),
+            'm_phase_status_id' => $village->phase()->phaseStatus(),
+        ]);
+
+        $updated_phase_start_setting = null;
+        if ($village->phase()->existsPhaseStartSetting()) {
+            $updated_phase_start_setting = ModelPhaseSetting::updateOrCreate([
+                'phase_id' => $updated_phase->id,
+                'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
+            ],[
+                'phase_id' => $updated_phase->id,
+                'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
+                'by_manual_flg' => $village->phase()->phaseStartSetting()->byManual(),
+                'by_limit_flg' => $village->phase()->phaseStartSetting()->byLimit(),
+                'by_date_flg' => $village->phase()->phaseStartSetting()->byDate(),
+                'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
+            ]);
+        }
+        $updated_phase_end_setting = null;
+        if ($village->phase()->existsPhaseEndSetting()) {
+            $updated_phase_end_setting = ModelPhaseSetting::updateOrCreate([
+                'phase_id' => $updated_phase->id,
+                'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
+            ],[
+                'phase_id' => $updated_phase->id,
                 'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
                 'by_manual_flg' => $village->phase()->phaseEndSetting()->byManual(),
                 'by_limit_flg' => $village->phase()->phaseEndSetting()->byLimit(),
                 'by_date_flg' => $village->phase()->phaseEndSetting()->byDate(),
                 'border_date' => $village->phase()->phaseEndSetting()->borderDate(),
             ]);
-
-            DB::commit();
-
-            return new Village(
-                new VillageId($created_village->id),
-                VillagePhaseService::getVillagePhase(
-                    new VillagePhaseId($created_phase->id),
-                    $created_phase->m_phase_id,
-                    $created_phase->m_phase_status_id,
-                    $village->phase()->phaseStartSetting(),
-                    $village->phase()->phaseEndSetting()
-                ),
-                new Topic(
-                    $created_village->title,
-                    $created_village->content,
-                    $created_village->note,
-                ),
-                new VillageSetting(
-                    $created_village_setting->village_member_limit,
-                    $created_village_setting->core_member_limit,
-                ),
-                new VillageMemberRequirement(
-                    $created_requirement->requirement,
-                ),
-                new VillagePublicInformation(
-                    $created_public_info->nickname_flg,
-                    $created_public_info->gender_flg,
-                    $created_public_info->age_flg,
-                )
-            );
-        } catch (\Exception $e) {
-            logs()->error($e->getMessage());
-            DB::rollback();
         }
-        return null;
-    }
-
-    public function update(Village $village): Village{
-        DB::beginTransaction();
-        try {
-            ModelVillage::where('id', $village->id()->toInt())
-            ->update([
-                'title' => $village->topic()->title(),
-                'content' => $village->topic()->content(),
-                'note' => $village->topic()->note(),
-            ]);
-
-            ModelVillageSetting::where('village_id', $village->id()->toInt())
-            ->update([
-                'village_member_limit' => $village->setting()->villageMemberLimit(),
-                'core_member_limit' => $village->setting()->coreMemberLimit(),
-            ]);
-
-            ModelVillageMemberRequirement::where('village_id', $village->id()->toInt())
-            ->update([
-                'requirement' => $village->requirement()->requirement(),
-            ]);
-
-            ModelPublicInformation::where('village_id', $village->id()->toInt())
-            ->update([
-                'nickname_flg' => $village->publicInformation()->isNicknamePublic(),
-                'gender_flg' => $village->publicInformation()->isGenderPublic(),
-                'age_flg' => $village->publicInformation()->isAgePublic(),
-            ]);
-
-            $updated_phase = ModelPhase::updateOrCreate([
-                'village_id' => $village->id()->toInt(),
-                'm_phase_id' => $village->phase()->phaseNo(),
-            ],[
-                'village_id' => $village->id()->toInt(),
-                'm_phase_id' => $village->phase()->phaseNo(),
-                'm_phase_status_id' => $village->phase()->phaseStatus(),
-            ]);
-
-            $updated_phase_start_setting = null;
-            if ($village->phase()->existsPhaseStartSetting()) {
-                $updated_phase_start_setting = ModelPhaseSetting::updateOrCreate([
-                    'phase_id' => $updated_phase->id,
-                    'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
-                ],[
-                    'phase_id' => $updated_phase->id,
-                    'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
-                    'by_manual_flg' => $village->phase()->phaseStartSetting()->byManual(),
-                    'by_limit_flg' => $village->phase()->phaseStartSetting()->byLimit(),
-                    'by_date_flg' => $village->phase()->phaseStartSetting()->byDate(),
-                    'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
-                ]);
-            }
-            $updated_phase_end_setting = null;
-            if ($village->phase()->existsPhaseEndSetting()) {
-                $updated_phase_end_setting = ModelPhaseSetting::updateOrCreate([
-                    'phase_id' => $updated_phase->id,
-                    'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
-                ],[
-                    'phase_id' => $updated_phase->id,
-                    'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
-                    'by_manual_flg' => $village->phase()->phaseEndSetting()->byManual(),
-                    'by_limit_flg' => $village->phase()->phaseEndSetting()->byLimit(),
-                    'by_date_flg' => $village->phase()->phaseEndSetting()->byDate(),
-                    'border_date' => $village->phase()->phaseEndSetting()->borderDate(),
-                ]);
-            }
-
-            DB::commit();
-
-            return new Village(
-                new VillageId($village->id()->toInt()),
-                VillagePhaseService::getVillagePhase(
-                    new VillagePhaseId($updated_phase->id),
-                    $updated_phase->m_phase_id,
-                    $updated_phase->m_phase_status_id,
-                    $village->phase()->phaseStartSetting(),
-                    $village->phase()->phaseEndSetting()
-                ),
-                $village->topic(),
-                $village->setting(),
-                $village->requirement(),
-                $village->publicInformation()
-            );
-        } catch (\Exception $e) {
-            logs()->error($e->getMessage());
-            DB::rollback();
-        }
+        return new Village(
+            new VillageId($village->id()->toInt()),
+            VillagePhaseService::getVillagePhase(
+                new VillagePhaseId($updated_phase->id),
+                $updated_phase->m_phase_id,
+                $updated_phase->m_phase_status_id,
+                $village->phase()->phaseStartSetting(),
+                $village->phase()->phaseEndSetting()
+            ),
+            $village->topic(),
+            $village->setting(),
+            $village->requirement(),
+            $village->publicInformation()
+        );
     }
 
     /**

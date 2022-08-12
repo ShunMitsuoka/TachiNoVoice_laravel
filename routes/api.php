@@ -37,5 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/village/register/validation/topic', [VillageValidationApiController::class, 'topic']);
     Route::post('/village/register/validation/setting', [VillageValidationApiController::class, 'setting']);
     Route::apiResource('/my/village', MyVillageApiController::class);
+    // ビレッジ詳細
     Route::post('/my/village/{id}/phase/start', [MyVillagePhaseApiController::class, 'start']);
+    Route::post('/my/village/{id}/phase/next', [MyVillagePhaseApiController::class, 'next']);
 });

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageMemberInfoRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\Member;
+use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Models\Village\VillageMemberInfo;
@@ -78,5 +79,81 @@ class VillageService{
             logs()->error($th->getMessage());
         }
         return null;
+    }
+
+    /**
+     * ビレッジのフェーズを次フェーズに進める。
+     */
+    public function startPhase(Village $village) : Village
+    {
+        try {
+            DB::beginTransaction();
+            // 現在のフェーズを開始する。
+            $village->phase()->startPhase();
+            // 自動で進めるフェーズの場合の処理
+            if($village->phase()->phaseNo() == VillagePhase::PHASE_DRAWING_CORE_MEMBER){
+                $this->drawingMember($village);
+                $village->phase()->completePhase();
+                $this->village_repository->update($village);
+                $village->nextPhase();
+            }
+            $updated_village = $this->village_repository->update($village);
+            DB::commit();
+            return $updated_village;
+        } catch (\Throwable $th) {
+            logs()->error($th->getMessage());
+            DB::rollback();
+        }
+    }
+
+    /**
+     * ビレッジのフェーズを次フェーズに進める。
+     */
+    public function nextPhase(Village $village) : Village
+    {
+        try {
+            DB::beginTransaction();
+            // 現在のフェーズ状態を完了として一度、保存する。
+            $village->phase()->completePhase();
+            $this->village_repository->update($village);
+            // 次フェーズに進める。
+            $village->nextPhase();
+            $updated_village = $this->village_repository->update($village);
+            DB::commit();
+            return $updated_village;
+        } catch (\Throwable $th) {
+            logs()->error($th->getMessage());
+            DB::rollback();
+        }
+    }
+
+    /**
+     * メンバー抽選を行う。
+     */
+    public function drawingMember(Village $village) : Village{
+        $village->setMemberInfo($this);
+        $village_member_info = $village->memberInfo();
+        $village_members = $village_member_info->villageMembers();
+        $core_member_limit = $village->setting()->coreMemberLimit();
+        if(count($village_members) <= $core_member_limit){
+            throw new \Exception("メンバー数が少ないため抽選ができません。", 1);
+        }
+        $core_member_keys = array_rand($village_members, $core_member_limit);
+        $member_info = new VillageMemberInfo(
+            $village_member_info->hosts(),
+            [],
+            [],
+            []
+        );
+        foreach ($village_members as $key => $members) {
+            if(array_key_exists($key, $core_member_keys)){
+                $member_info->addCoreMember($members);
+            }else{
+                $member_info->addRiseMember($members);
+            }
+        }
+        $this->village_member_info_repository->update($village->id(), $member_info);
+        $village->setMemberInfo($this);
+        return $village;
     }
 }

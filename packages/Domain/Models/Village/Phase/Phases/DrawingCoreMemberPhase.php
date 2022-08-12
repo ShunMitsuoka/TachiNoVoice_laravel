@@ -20,7 +20,7 @@ class DrawingCoreMemberPhase extends VillagePhase
         $this->id = $id;
         $this->phase_no = $phase_no;
         $this->phase_name = self::PHASE_DRAWING_CORE_MEMBER_NAME;
-        $this->phase_status = $phase_status;
+        $this->phase_status = self::PHASE_STATUS_COMPLATE;
         $this->phase_start_setting = $phase_start_setting;
         $this->phase_end_setting = $phase_end_setting;
     }

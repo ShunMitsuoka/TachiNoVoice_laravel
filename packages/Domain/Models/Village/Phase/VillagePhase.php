@@ -144,6 +144,10 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         }
     }
 
+    public function completePhase(){
+        $this->phase_status = self::PHASE_STATUS_COMPLATE;
+    }
+
     public function startPhase(){
         $this->phase_status = self::PHASE_STATUS_IN_PROGRESS;
     }
