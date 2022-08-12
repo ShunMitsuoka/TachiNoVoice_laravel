@@ -44,8 +44,8 @@ class MyVillageApiController extends BaseApiController
     private function makeResultFromRecord(Village $village, int $role_id){
         return [
             'village_id' => $village->id()->toInt(),
-            'phase' => $village->phase()->phase(),
-            'phase_name' => $village->phase()->getPhaseName(),
+            'phase' => $village->phase()->phaseNo(),
+            'phase_name' => $village->phase()->phaseName(),
             'phase_status' => $village->phase()->phaseStatus(),
             'title' => $village->topic()->title(),
             'content' => $village->topic()->content(),

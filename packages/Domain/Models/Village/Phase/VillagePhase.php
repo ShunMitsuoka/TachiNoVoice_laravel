@@ -1,14 +1,11 @@
 <?php
 namespace Packages\Domain\Models\Village\Phase;
 
-class VillagePhase
-{
-    private ?VillagePhaseId $id;
-    private int $phase;
-    private int $phase_status;
-    private VillagePhaseSetting $phase_start_setting;
-    private VillagePhaseSetting $phase_end_setting;
+use Packages\Domain\Interfaces\Models\Village\Phase\VillagePhaseInterface;
+use Packages\Domain\Models\Common\_Entity;
 
+abstract class VillagePhase extends _Entity implements VillagePhaseInterface
+{
     /**
      * フェーズ1:ビレッジメンバー募集
      */
@@ -73,30 +70,33 @@ class VillagePhase
     public const PHASE_STATUS_COMPLATE = 200;
     public const PHASE_STATUS_COMPLATE_NAME = '完了';
 
+    protected ?VillagePhaseId $id;
+    protected int $phase_no;
+    protected string $phase_name;
+    protected int $phase_status;
+    protected VillagePhaseSetting $phase_start_setting;
+    protected VillagePhaseSetting $phase_end_setting;
+
     function __construct(
         ?VillagePhaseId $id,
-        int $phase,
+        int $phase_no,
         int $phase_status,
         ?VillagePhaseSetting $phase_start_setting,
         ?VillagePhaseSetting $phase_end_setting,
     ) {
         $this->id = $id;
-        $this->phase = $phase;
+        $this->phase_no = $phase_no;
         $this->phase_status = $phase_status;
         $this->phase_start_setting = $phase_start_setting;
         $this->phase_end_setting = $phase_end_setting;
     }
 
-    public function id() : VillagePhaseId
-    {
-        if(is_null($this->id)){
-            throw new \Exception('IDが存在しません。');
-        }
-        return $this->id;
+    public function phaseNo() : int{
+        return $this->phase_no;
     }
 
-    public function phase() : int{
-        return $this->phase;
+    public function phaseName() : string{
+        return $this->phase_name;
     }
 
     public function phaseStatus() : int{
@@ -111,7 +111,6 @@ class VillagePhase
         return !is_null($this->phase_end_setting);
     }
     
-    
     public function phaseStartSetting() : ?VillagePhaseSetting{
         return $this->phase_start_setting;
     }
@@ -122,46 +121,6 @@ class VillagePhase
 
     public function isReady() : bool{
         return $this->phase_status == self::PHASE_STATUS_PREPARATION;
-    }
-
-    /**
-     * ビレッジ初期フェーズ作成
-     */
-    static function getInitPhase(
-        VillagePhaseSetting $phase_start_setting,
-        VillagePhaseSetting $phase_end_setting,
-    ) : self{
-        return new self(
-            null,
-            self::PHASE_RECRUITMENT_OF_MEMBER, 
-            self::PHASE_STATUS_PREPARATION,
-            $phase_start_setting,
-            $phase_end_setting,
-        );
-    }
-
-    public function getPhaseName():string{
-        switch ($this->phase) {
-            case self::PHASE_RECRUITMENT_OF_MEMBER:
-                return self::PHASE_RECRUITMENT_OF_MEMBER_NAME;
-            case self::PHASE_DRAWING_CORE_MEMBER:
-                return self::PHASE_DRAWING_CORE_MEMBER_NAME;
-            case self::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
-                return self::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER_NAME;
-            case self::PHASE_CATEGORIZE_OPINIONS:
-                return self::PHASE_CATEGORIZE_OPINIONS_NAME;
-            case self::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER:
-                return self::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER_NAME;
-            case self::PHASE_EVALUATION:
-                return self::PHASE_EVALUATION_NAME;
-            case self::PHASE_DECIDING_POLICY:
-                return self::PHASE_DECIDING_POLICY_NAME;
-            case self::PHASE_SURVEYING_SATISFACTION:
-                return self::PHASE_SURVEYING_SATISFACTION_NAME;
-            default:
-                throw new \Exception("存在しないPhaseです。", 1);
-                break;
-        }
     }
 
     public function getPhaseStatusName():string{

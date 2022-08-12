@@ -6,15 +6,8 @@ use App\Http\Controllers\API\BaseApiController;
 use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Packages\Domain\Interfaces\Repositories\HostRepositoryInterface;
-use Packages\Domain\Interfaces\Repositories\VillageMemberRepositoryInterface;
-use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
-use Packages\Domain\Models\User\Member;
-use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\VillageService;
-use Packages\Infrastructure\Repositories\VillageRepository;
-
 class VillageApiController extends BaseApiController
 {
     protected VillageService $village_service;
@@ -96,7 +89,7 @@ class VillageApiController extends BaseApiController
         $village_details = $this->village_service->getVillage(new VillageId($id));
         $result = [
             'id' => $village_details->id()->toInt(),
-            'phase' => $village_details->phase()->phase(),
+            'phase' => $village_details->phase()->phaseNo(),
             'phase_status' => $village_details->phase()->phaseStatus(),
             'title' => $village_details->topic()->title(),
             'content' => $village_details->topic()->content(),

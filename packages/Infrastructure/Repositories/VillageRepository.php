@@ -22,6 +22,7 @@ use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Models\Village\VillageMemberRequirement;
 use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
+use Packages\Domain\Services\VillagePhaseService;
 
 use function PHPUnit\Framework\isNull;
 
@@ -110,7 +111,7 @@ class VillageRepository implements VillageRepositoryInterface
 
             $created_phase = ModelPhase::create([
                 'village_id' => $village->id()->toInt(),
-                'm_phase_id' => $village->phase()->phase(),
+                'm_phase_id' => $village->phase()->phaseNo(),
                 'm_phase_status_id' => $village->phase()->phaseStatus(),
             ]);
             $created_phase_start_setting = null;
@@ -137,7 +138,7 @@ class VillageRepository implements VillageRepositoryInterface
 
             return new Village(
                 new VillageId($created_village->id),
-                new VillagePhase(
+                VillagePhaseService::getVillagePhase(
                     new VillagePhaseId($created_phase->id),
                     $created_phase->m_phase_id,
                     $created_phase->m_phase_status_id,
@@ -199,10 +200,10 @@ class VillageRepository implements VillageRepositoryInterface
 
             $updated_phase = ModelPhase::updateOrCreate([
                 'village_id' => $village->id()->toInt(),
-                'm_phase_id' => $village->phase()->phase(),
+                'm_phase_id' => $village->phase()->phaseNo(),
             ],[
                 'village_id' => $village->id()->toInt(),
-                'm_phase_id' => $village->phase()->phase(),
+                'm_phase_id' => $village->phase()->phaseNo(),
                 'm_phase_status_id' => $village->phase()->phaseStatus(),
             ]);
 
@@ -239,7 +240,7 @@ class VillageRepository implements VillageRepositoryInterface
 
             return new Village(
                 $village->id(),
-                new VillagePhase(
+                VillagePhaseService::getVillagePhase(
                     new VillagePhaseId($updated_phase->id),
                     $updated_phase->m_phase_id,
                     $updated_phase->m_phase_status_id,
@@ -322,7 +323,7 @@ class VillageRepository implements VillageRepositoryInterface
             ->first();
         return new Village(
             new VillageId($village_info->village_id),
-            new VillagePhase(
+            VillagePhaseService::getVillagePhase(
                 new VillagePhaseId($village_info->phase_id),
                 $village_info->m_phase_id,
                 $village_info->m_phase_status_id,
