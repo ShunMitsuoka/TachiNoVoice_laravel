@@ -3,7 +3,7 @@ namespace Packages\Domain\Models\Common;
 
 class _Id
 {
-    readonly int $id;
+    protected int $id;
 
     function __construct(int $id) {
         $this->id = $id;

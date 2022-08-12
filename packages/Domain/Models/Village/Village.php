@@ -5,6 +5,7 @@ use Packages\Domain\Models\Common\_Entity;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Topic\Topic;
+use Packages\Domain\Services\VillagePhaseService;
 use Packages\Domain\Services\VillageService;
 
 class Village extends _Entity
@@ -31,6 +32,13 @@ class Village extends _Entity
         $this->setting = $setting;
         $this->requirement = $requirement;
         $this->public_information = $public_information;
+    }
+
+    public function setId(int $id){
+        if(!is_null($this->id)){
+            throw new \Exception('IDが既に存在しています。');
+        }
+        $this->id = new VillageId($id);
     }
 
     public function phase() : VillagePhase{
@@ -79,9 +87,9 @@ class Village extends _Entity
     }
 
     public function nextPhase(){
-        $this->phase = new VillagePhase(
+        $this->phase = VillagePhaseService::getVillagePhase(
             null,
-            $this->phase->phase()+1,
+            $this->phase->phaseNo()+1,
             VillagePhase::PHASE_STATUS_PREPARATION,
             null,
             null

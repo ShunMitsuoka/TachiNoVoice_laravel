@@ -12,10 +12,10 @@ use App\Models\VillageMember as ModelVillageMember;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\UserId;
-use Packages\Domain\Models\User\VillageMember;
-use Packages\Domain\Models\Village\Phase\VillagePhase;
+use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
+use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
 use Packages\Domain\Models\Village\Topic\Topic;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
@@ -239,7 +239,7 @@ class VillageRepository implements VillageRepositoryInterface
             DB::commit();
 
             return new Village(
-                $village->id(),
+                new VillageId($village->id()->toInt()),
                 VillagePhaseService::getVillagePhase(
                     new VillagePhaseId($updated_phase->id),
                     $updated_phase->m_phase_id,
@@ -327,20 +327,17 @@ class VillageRepository implements VillageRepositoryInterface
                 new VillagePhaseId($village_info->phase_id),
                 $village_info->m_phase_id,
                 $village_info->m_phase_status_id,
-                new VillagePhaseSetting(
-                    $phase_start->end_flg,
+                new VillagePhaseStartSetting(
                     $phase_start->by_manual_flg,
                     $phase_start->by_limit_flg,
                     $phase_start->by_date_flg,
                     $phase_start->by_instant_flg,
                     $phase_start->border_date,
                 ),
-                new VillagePhaseSetting(
-                    $phase_end->phase_id,
+                new VillagePhaseEndSetting(
                     $phase_end->by_manual_flg,
                     $phase_end->by_limit_flg,
                     $phase_end->by_date_flg,
-                    $phase_end->by_instant_flg,
                     $phase_end->border_date,
                 ),
             ),

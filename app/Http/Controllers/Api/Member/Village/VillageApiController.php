@@ -6,7 +6,14 @@ use App\Http\Controllers\API\BaseApiController;
 use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
+use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
+use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
+use Packages\Domain\Models\Village\Topic\Topic;
 use Packages\Domain\Models\Village\VillageId;
+use Packages\Domain\Models\Village\VillageMemberRequirement;
+use Packages\Domain\Models\Village\VillagePublicInformation;
+use Packages\Domain\Models\Village\VillageSetting;
 use Packages\Domain\Services\VillageService;
 class VillageApiController extends BaseApiController
 {
@@ -43,22 +50,12 @@ class VillageApiController extends BaseApiController
     public function store(Request $request)
     {
         $member = $this->getLoginMember();
-        $topic = $member->makeVillageTopic($request->title, $request->content, $request->note);
-        $setting = $member->makeVillageSetting($request->core_member_limit, $request->village_member_limit);
-        $requirement = $member->makeVillageMemberRequirement($request->requirement);
-        $public_info = $member->makeVillagePublicInformation($request->nickname_flg, $request->gender_flg, $request->age_flg);
-
-        $phase_start_setting = $member->makeVillagePhaseStartSetting(
-            false,
-            false,
-            true,
-            null
-        );
-        $phase_end_setting = $member->makeVillagePhaseEndSetting(
-            true,
-            false,
-            null
-        );
+        $topic = new Topic($request->title, $request->content, $request->note);
+        $setting = new VillageSetting($request->core_member_limit, $request->village_member_limit);
+        $requirement = new VillageMemberRequirement($request->requirement);
+        $public_info = new VillagePublicInformation($request->nickname_flg, $request->gender_flg, $request->age_flg);
+        $phase_start_setting = new VillagePhaseStartSetting(true, false, false, true, null);
+        $phase_end_setting = new VillagePhaseEndSetting(true, true, false, null);
         // ビレッジ登録
         $village = $member->registerVillage(
             $this->village_service,

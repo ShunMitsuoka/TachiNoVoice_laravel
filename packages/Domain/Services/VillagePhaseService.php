@@ -12,6 +12,7 @@ use Packages\Domain\Models\Village\Phase\Phases\SurveyingSatisfactionPhase;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
+use Packages\Domain\Models\Village\Village;
 
 class VillagePhaseService{
 
@@ -22,7 +23,7 @@ class VillagePhaseService{
         VillagePhaseSetting $phase_start_setting,
         VillagePhaseSetting $phase_end_setting,
     ) : VillagePhase{
-        return new VillagePhase(
+        return new RecruitmentOfMemberPhase(
             null,
             VillagePhase::PHASE_RECRUITMENT_OF_MEMBER, 
             VillagePhase::PHASE_STATUS_PREPARATION,
@@ -31,6 +32,9 @@ class VillagePhaseService{
         );
     }
 
+    /**
+     * フェーズNoから個別のフェーズを取得する
+     */
     static public function getVillagePhase(
         ?VillagePhaseId $id,
         int $phase_no,

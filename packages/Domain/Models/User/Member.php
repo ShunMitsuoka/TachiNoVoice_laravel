@@ -12,6 +12,7 @@ use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Models\Village\VillageMemberRequirement;
 use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
+use Packages\Domain\Services\VillagePhaseService;
 use Packages\Domain\Services\VillageService;
 
 class Member extends User
@@ -48,61 +49,6 @@ class Member extends User
     }
 
     /**
-     * ビレッジに問いを作成する。
-     */
-    public function makeVillageTopic(
-        string $title,
-        ?string $content,
-        ?string $note,
-    ): Topic {
-        return new Topic($title, $content, $note);
-    }
-
-    /**
-     * ビレッジの設定を作成する。
-     */
-    public function makeVillageSetting(int $village_member_limit, int $core_member_limit): VillageSetting
-    {
-        return new VillageSetting($village_member_limit, $core_member_limit);
-    }
-
-    /**
-     * ビレッジメンバー参加条件を作成する。
-     */
-    public function makeVillageMemberRequirement(?string $requirement): VillageMemberRequirement
-    {
-        return new VillageMemberRequirement($requirement);
-    }
-
-    /**
-     * ビレッジ公開情報を作成する。
-     */
-    public function makeVillagePublicInformation(
-        bool $nickname_flg,
-        bool $gender_flg,
-        bool $age_flg
-    ): VillagePublicInformation {
-        return new VillagePublicInformation($nickname_flg, $gender_flg, $age_flg);
-    }
-
-    public function makeVillagePhaseStartSetting(
-        bool $by_limit_flg,
-        bool $by_date_flg,
-        bool $by_instant_flg,
-        ?Carbon $border_date,
-    ) {
-        return new VillagePhaseSetting(false, true, $by_limit_flg, $by_date_flg, $by_instant_flg, $border_date);
-    }
-
-    public function makeVillagePhaseEndSetting(
-        bool $by_limit_flg,
-        bool $by_date_flg,
-        ?Carbon $border_date,
-    ) {
-        return new VillagePhaseSetting(true, true, $by_limit_flg, $by_date_flg, false, $border_date);
-    }
-
-    /**
      * ビレッジを登録する
      */
     public function registerVillage(
@@ -114,7 +60,7 @@ class Member extends User
         VillagePhaseSetting $phase_start_setting,
         VillagePhaseSetting $phase_end_setting
     ): ?Village {
-        $init_phase = VillagePhase::getInitPhase(
+        $init_phase = VillagePhaseService::getInitPhase(
             $phase_start_setting,
             $phase_end_setting
         );
@@ -129,22 +75,6 @@ class Member extends User
     {
         // return $village->registerVillage($this, $village);
         return false;
-        // throw new Exception("Error Processing Request", 1);
-    }
-
-    /**
-     * ビレッジメンバーになる
-     */
-    public function becomeVillageMember(): VillageMember
-    {
-        return new VillageMember(
-            $this->id(),
-            $this->name(),
-            $this->nickname(),
-            $this->email(),
-            $this->gender(),
-            $this->dateOfBirth(),
-        );
         // throw new Exception("Error Processing Request", 1);
     }
 }

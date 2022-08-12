@@ -74,21 +74,28 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
     protected int $phase_no;
     protected string $phase_name;
     protected int $phase_status;
-    protected VillagePhaseSetting $phase_start_setting;
-    protected VillagePhaseSetting $phase_end_setting;
+    protected VillagePhaseStartSetting $phase_start_setting;
+    protected VillagePhaseEndSetting $phase_end_setting;
 
     function __construct(
         ?VillagePhaseId $id,
         int $phase_no,
         int $phase_status,
-        ?VillagePhaseSetting $phase_start_setting,
-        ?VillagePhaseSetting $phase_end_setting,
+        ?VillagePhaseStartSetting $phase_start_setting,
+        ?VillagePhaseEndSetting $phase_end_setting,
     ) {
         $this->id = $id;
         $this->phase_no = $phase_no;
         $this->phase_status = $phase_status;
         $this->phase_start_setting = $phase_start_setting;
         $this->phase_end_setting = $phase_end_setting;
+    }
+
+    public function setId(int $id){
+        if(!is_null($this->id)){
+            throw new \Exception('IDが既に存在しています。');
+        }
+        $this->id = new VillagePhaseId($id);
     }
 
     public function phaseNo() : int{
@@ -111,11 +118,11 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         return !is_null($this->phase_end_setting);
     }
     
-    public function phaseStartSetting() : ?VillagePhaseSetting{
+    public function phaseStartSetting() : ?VillagePhaseStartSetting{
         return $this->phase_start_setting;
     }
 
-    public function phaseEndSetting() : ?VillagePhaseSetting{
+    public function phaseEndSetting() : ?VillagePhaseEndSetting{
         return $this->phase_end_setting;
     }
 

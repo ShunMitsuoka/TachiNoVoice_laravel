@@ -33,6 +33,13 @@ class User extends _Entity
         $this->date_of_birth = $date_of_birth;
     }
 
+    public function setId(int $id){
+        if(!is_null($this->id)){
+            throw new \Exception('IDが既に存在しています。');
+        }
+        $this->id = new UserId($id);
+    }
+
     public function name(): string
     {
         return $this->name;
