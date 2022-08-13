@@ -1,7 +1,11 @@
 <?php
 namespace Packages\Domain\Models\Village;
 
+use Packages\Domain\Models\User\CoreMember;
+use Packages\Domain\Models\User\Host;
 use Packages\Domain\Models\User\Member;
+use Packages\Domain\Models\User\RiseMember;
+use Packages\Domain\Models\User\VillageMember;
 
 class VillageMemberInfo
 {
@@ -39,19 +43,47 @@ class VillageMemberInfo
     }
 
     public function addHost(Member $member){
-        $this->hosts[$member->id()->toInt()] = $member;
+        $this->hosts[$member->id()->toInt()] = new Host(
+            $member->id(),
+            $member->name(),
+            $member->nickname(),
+            $member->email(),
+            $member->gender(),
+            $member->dateOfBirth()
+        );;
     }
 
     public function addVillageMember(Member $member){
-        $this->village_members[$member->id()->toInt()] = $member;
+        $this->village_members[$member->id()->toInt()] = new VillageMember(
+            $member->id(),
+            $member->name(),
+            $member->nickname(),
+            $member->email(),
+            $member->gender(),
+            $member->dateOfBirth()
+        );;
     }
 
     public function addCoreMember(Member $member){
-        $this->core_members[$member->id()->toInt()] = $member;
+        $this->core_members[$member->id()->toInt()] = new CoreMember(
+            $member->id(),
+            $member->name(),
+            $member->nickname(),
+            $member->email(),
+            $member->gender(),
+            $member->dateOfBirth()
+        );
     }
 
     public function addRiseMember(Member $member){
-        $this->rise_members[$member->id()->toInt()] = $member;
+        $this->rise_members[$member->id()->toInt()] = new RiseMember(
+            $member->id(),
+            $member->name(),
+            $member->nickname(),
+            $member->email(),
+            $member->gender(),
+            $member->dateOfBirth()
+        );
     }
 
     public function isHost(Member $member) : bool{

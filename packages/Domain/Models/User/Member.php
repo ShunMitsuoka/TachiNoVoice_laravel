@@ -77,4 +77,38 @@ class Member extends User
         return false;
         // throw new Exception("Error Processing Request", 1);
     }
+
+
+    // public function becomeVillageMember() : VillageMember{
+    //     return new VillageMember(
+    //         $this->id(),
+    //         $this->name(),
+    //         $this->nickname(),
+    //         $this->email(),
+    //         $this->gender(),
+    //         $this->dateOfBirth()
+    //     );
+    // }
+
+    // public function becomeCoreMember() : CoreMember{
+    //     return new CoreMember(
+    //         $this->id(),
+    //         $this->name(),
+    //         $this->nickname(),
+    //         $this->email(),
+    //         $this->gender(),
+    //         $this->dateOfBirth()
+    //     );
+    // }
+
+    // public function becomeRiseMember() : RiseMember{
+    //     return new RiseMember(
+    //         $this->id(),
+    //         $this->name(),
+    //         $this->nickname(),
+    //         $this->email(),
+    //         $this->gender(),
+    //         $this->dateOfBirth()
+    //     );
+    // }
 }

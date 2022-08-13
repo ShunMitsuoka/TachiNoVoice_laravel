@@ -146,7 +146,7 @@ class VillageService{
             []
         );
         foreach ($village_members as $key => $members) {
-            if(array_key_exists($key, $core_member_keys)){
+            if(in_array($key, $core_member_keys)){
                 $member_info->addCoreMember($members);
             }else{
                 $member_info->addRiseMember($members);
