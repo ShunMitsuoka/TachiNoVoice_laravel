@@ -194,10 +194,8 @@ class VillageRepository implements VillageRepositoryInterface
             'm_phase_id' => $village->phase()->phaseNo(),
             'm_phase_status_id' => $village->phase()->phaseStatus(),
         ]);
-
-        $updated_phase_start_setting = null;
         if ($village->phase()->existsPhaseStartSetting()) {
-            $updated_phase_start_setting = ModelPhaseSetting::updateOrCreate([
+            ModelPhaseSetting::updateOrCreate([
                 'phase_id' => $updated_phase->id,
                 'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
             ], [
@@ -209,9 +207,8 @@ class VillageRepository implements VillageRepositoryInterface
                 'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
             ]);
         }
-        $updated_phase_end_setting = null;
         if ($village->phase()->existsPhaseEndSetting()) {
-            $updated_phase_end_setting = ModelPhaseSetting::updateOrCreate([
+            ModelPhaseSetting::updateOrCreate([
                 'phase_id' => $updated_phase->id,
                 'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
             ], [
@@ -302,25 +299,36 @@ class VillageRepository implements VillageRepositoryInterface
             ->where('ps.phase_id', $village_info->phase_id)
             ->where('ps.end_flg', true)
             ->first();
+        
+        $phase_start_setting = null;
+        if(!is_null($phase_start)){
+            $phase_start_setting = new VillagePhaseStartSetting(
+                $phase_start->by_manual_flg,
+                $phase_start->by_limit_flg,
+                $phase_start->by_date_flg,
+                $phase_start->by_instant_flg,
+                $phase_start->border_date,
+            );
+        }
+
+        $phase_end_setting = null;
+        if(!is_null($phase_end)){
+            $phase_end_setting = new VillagePhaseEndSetting(
+                $phase_end->by_manual_flg,
+                $phase_end->by_limit_flg,
+                $phase_end->by_date_flg,
+                $phase_end->border_date,
+            );
+        }
+        
         return new Village(
             new VillageId($village_info->village_id),
             VillagePhaseService::getVillagePhase(
                 new VillagePhaseId($village_info->phase_id),
                 $village_info->m_phase_id,
                 $village_info->m_phase_status_id,
-                new VillagePhaseStartSetting(
-                    $phase_start->by_manual_flg,
-                    $phase_start->by_limit_flg,
-                    $phase_start->by_date_flg,
-                    $phase_start->by_instant_flg,
-                    $phase_start->border_date,
-                ),
-                new VillagePhaseEndSetting(
-                    $phase_end->by_manual_flg,
-                    $phase_end->by_limit_flg,
-                    $phase_end->by_date_flg,
-                    $phase_end->border_date,
-                ),
+                $phase_start_setting,
+                $phase_end_setting,
             ),
             new Topic(
                 $village_info->title,
