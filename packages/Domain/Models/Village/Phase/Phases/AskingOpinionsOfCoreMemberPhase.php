@@ -29,7 +29,7 @@ class AskingOpinionsOfCoreMemberPhase extends VillagePhase
         return true;
     }
     public function isNecessaryToSetPhaseStartSetting() : bool{
-        return true;
+        return false;
     }
     public function isNecessaryToSetPhaseEndSetting() : bool{
         return true;

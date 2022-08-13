@@ -17,24 +17,42 @@ class PhaseSettingsSeeder extends Seeder
     {
         //
         PhaseSetting::truncate();
-        for ($i=1; $i <= 40; $i++) { 
-            PhaseSetting::create([
-                'phase_id' => $i,
-                'end_flg' => false,
-                'by_manual_flg' => true,
-                'by_limit_flg' => true,
-                'by_date_flg' => false,
-                'by_instant_flg' => true,
-            ]);
-            PhaseSetting::create([
-                'phase_id' => $i,
-                'end_flg' => true,
-                'by_manual_flg' => true,
-                'by_limit_flg' => true,
-                'by_date_flg' => false,
-                'by_instant_flg' => false,
-            ]);
-        }
+
+        // フェーズ1
+        PhaseSetting::create([
+            'phase_id' => 1,
+            'end_flg' => false,
+            'by_manual_flg' => true,
+            'by_limit_flg' => true,
+            'by_date_flg' => false,
+            'by_instant_flg' => true,
+        ]);
+        PhaseSetting::create([
+            'phase_id' => 1,
+            'end_flg' => true,
+            'by_manual_flg' => true,
+            'by_limit_flg' => true,
+            'by_date_flg' => false,
+            'by_instant_flg' => false,
+        ]);
+
+        // フェーズ2
+        PhaseSetting::create([
+            'phase_id' => 1,
+            'end_flg' => false,
+            'by_manual_flg' => true,
+            'by_limit_flg' => true,
+            'by_date_flg' => false,
+            'by_instant_flg' => true,
+        ]);
+        PhaseSetting::create([
+            'phase_id' => 1,
+            'end_flg' => true,
+            'by_manual_flg' => true,
+            'by_limit_flg' => true,
+            'by_date_flg' => false,
+            'by_instant_flg' => false,
+        ]);
 
     }
 }

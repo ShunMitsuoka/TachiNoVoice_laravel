@@ -26,12 +26,12 @@ class DrawingCoreMemberPhase extends VillagePhase
     }
 
     public function isNecessaryToSetPhaseSetting() : bool{
-        return true;
+        return false;
     }
     public function isNecessaryToSetPhaseStartSetting() : bool{
-        return true;
+        return false;
     }
     public function isNecessaryToSetPhaseEndSetting() : bool{
-        return true;
+        return false;
     }
 }
