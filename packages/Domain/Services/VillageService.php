@@ -82,7 +82,7 @@ class VillageService{
     }
 
     /**
-     * ビレッジのフェーズを次フェーズに進める。
+     * ビレッジのフェーズを開始する。
      */
     public function startPhase(Village $village) : Village
     {

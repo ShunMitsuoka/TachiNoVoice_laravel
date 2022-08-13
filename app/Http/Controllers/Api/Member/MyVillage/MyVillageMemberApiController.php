@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\API\BaseApiController;
+use App\Services\VillageApiResponseService;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\Casts\MemberCast;
@@ -28,6 +29,7 @@ class MyVillageMemberApiController extends BaseApiController
      */
     public function show($id)
     {
+        $member = $this->getLoginMember();
         $result = [];
         $village = $this->village_repository->get(new VillageId($id));
         $village->setMemberInfo($this->village_service);
@@ -63,24 +65,12 @@ class MyVillageMemberApiController extends BaseApiController
             ];
         }
 
-        $result = [
-            'village_id' => $village->id()->toInt(),
-            'phase_no' => $village->phase()->phaseNo(),
-            'phase_name' => $village->phase()->phaseName(),
-            'phase_status' => $village->phase()->phaseStatus(),
-            'title' => $village->topic()->title(),
-            'core_member_limit' => $village->setting()->coreMemberLimit(),
-            'village_member_limit' => $village->setting()->villageMemberLimit(),
-            'village_member_count' => $village->memberInfo()->getVillageMemberCount(),
-            'core_member_count' => $village->memberInfo()->getCoreMemberCount(),
-            'rise_member_count' => $village->memberInfo()->getRiseMemberCount(),
-            'members' => [
-                'village_members' => $village_members,
-                'core_members' => $core_members,
-                'rise_members' => $rise_members,
-            ]
+        $result = VillageApiResponseService::villageResponse($village, $member);
+        $result['members'] = [
+            'village_members' => $village_members,
+            'core_members' => $core_members,
+            'rise_members' => $rise_members,
         ];
-
         return $this->makeSuccessResponse($result);
     }
 }

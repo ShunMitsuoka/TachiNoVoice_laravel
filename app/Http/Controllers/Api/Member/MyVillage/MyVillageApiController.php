@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\API\BaseApiController;
+use App\Services\VillageApiResponseService;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Village\Village;
@@ -36,28 +37,9 @@ class MyVillageApiController extends BaseApiController
         foreach ($joining_villages as $village) {
             $village = VillageCast::castVillage($village);
             $village->setMemberInfo($this->village_service);
-            $result[] = $this->makeResultFromRecord($village, $village->getMemberRole($member));
+            $result[] = VillageApiResponseService::villageResponse($village, $member);
         }
         return $this->makeSuccessResponse($result);
-    }
-
-    private function makeResultFromRecord(Village $village, int $role_id){
-        return [
-            'village_id' => $village->id()->toInt(),
-            'phase' => $village->phase()->phaseNo(),
-            'phase_name' => $village->phase()->phaseName(),
-            'phase_status' => $village->phase()->phaseStatus(),
-            'title' => $village->topic()->title(),
-            'content' => $village->topic()->content(),
-            'note' => $village->topic()->note(),
-            'core_member_limit' => $village->setting()->coreMemberLimit(),
-            'village_member_limit' => $village->setting()->villageMemberLimit(),
-            'role_id' => $role_id,
-            'village_member_count' => $village->memberInfo()->getVillageMemberCount(),
-            'core_member_count' => $village->memberInfo()->getCoreMemberCount(),
-            'rise_member_count' => $village->memberInfo()->getRiseMemberCount(),
-            'is_phase_preparing' => $village->phase()->isReady(),
-        ];
     }
 
     /**
@@ -83,7 +65,7 @@ class MyVillageApiController extends BaseApiController
         $member = $this->getLoginMember();
         $village = $this->village_repository->get(new VillageId($id));
         $village->setMemberInfo($this->village_service);
-        $result = $this->makeResultFromRecord($village, $village->getMemberRole($member));
+        $result = VillageApiResponseService::villageResponse($village, $member);
         return $this->makeSuccessResponse($result);
     }
 
