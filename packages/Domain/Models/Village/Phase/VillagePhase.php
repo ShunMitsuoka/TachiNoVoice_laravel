@@ -74,8 +74,8 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
     protected int $phase_no;
     protected string $phase_name;
     protected int $phase_status;
-    protected VillagePhaseStartSetting $phase_start_setting;
-    protected VillagePhaseEndSetting $phase_end_setting;
+    protected ?VillagePhaseStartSetting $phase_start_setting;
+    protected ?VillagePhaseEndSetting $phase_end_setting;
 
     function __construct(
         ?VillagePhaseId $id,
