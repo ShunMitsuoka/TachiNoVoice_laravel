@@ -3,6 +3,7 @@
 namespace Packages\Domain\Interfaces\Repositories;
 
 use Packages\Domain\Models\Filter\SearchVillageFilter;
+use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
@@ -30,4 +31,9 @@ interface VillageRepositoryInterface
      * ユーザーが参加しているビレッジを全件取得する。
      */
     public function getAllJoiningVillage(UserId $userId): array;
+    /**
+     * ユーザーが参加可能かどうか確認する。
+     */
+    public function checkPermission(Village $village, Member $member): bool;
+
 }

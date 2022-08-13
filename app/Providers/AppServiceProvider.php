@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
+use Packages\Domain\Services\VillagePermissionService;
 use Packages\Domain\Services\VillageService;
 use Packages\Infrastructure\Repositories\VillageMemberInfoRepository;
 use Packages\Infrastructure\Repositories\VillageRepository;
@@ -24,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
             return new VillageService(
                 new VillageRepository(),
                 new VillageMemberInfoRepository()
+            );
+        });
+        $this->app->singleton(VillagePermissionService::class, function ($app) {
+            return new VillagePermissionService(
+                new VillageRepository()
             );
         });
     }

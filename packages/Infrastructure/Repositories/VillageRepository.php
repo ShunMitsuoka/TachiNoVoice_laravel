@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Filter\SearchVillageFilter;
+use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
@@ -239,6 +240,12 @@ class VillageRepository implements VillageRepositoryInterface
         );
     }
 
+    public function checkPermission(Village $village, Member $member) : bool{
+        $query = $this->queryVillageInfo()->where('v.id', $village->id()->toInt());
+        $query = $this->setJoiningCondition($member->id(), $query);
+        return $query->exists();
+    }
+
     /**
      * Villgaeを作成するために必要なフィールド情報を取得するためのクエリを返す。
      */
@@ -348,7 +355,7 @@ class VillageRepository implements VillageRepositoryInterface
      * ②既にメンバーかどうか
      * ③メンバー上限に達しているかどうか
      */
-    private function existCondition(?UserId $userId, $query)
+    private function setJoiningCondition(?UserId $userId, $query)
     {
         try {
             // ①メンバー募集フェーズかどうか
@@ -366,11 +373,10 @@ class VillageRepository implements VillageRepositoryInterface
                 }
             );
             // ③メンバー上限に達しているかどうか
-            $query = $query->where('vs.village_member_limit', '<', function ($query_data) {
+            $query = $query->where('vs.village_member_limit', '>', function ($query_data) {
                 $query_data->select(DB::raw('COUNT(vm.user_id)'))
                     ->from('village_members as vm')
-                    ->where('v.id', DB::raw('vm.village_id'))
-                    ->groupBy('vm.user_id');
+                    ->where('v.id', DB::raw('vm.village_id'));
             });
 
             return $query;

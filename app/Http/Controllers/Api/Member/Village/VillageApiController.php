@@ -17,6 +17,7 @@ use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Models\Village\VillageMemberRequirement;
 use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
+use Packages\Domain\Services\VillagePermissionService;
 use Packages\Domain\Services\VillageService;
 
 
@@ -24,13 +25,16 @@ use Packages\Domain\Services\VillageService;
 class VillageApiController extends BaseApiController
 {
     protected VillageService $village_service;
+    protected VillagePermissionService $village_permission_service;
     protected VillageRepositoryInterface $village_repository;
 
     function __construct(
         VillageService $village_service,
+        VillagePermissionService $village_permission_service,
         VillageRepositoryInterface $village_repository,
     ) {
         $this->village_service = $village_service;
+        $this->village_permission_service = $village_permission_service;
         $this->village_repository = $village_repository;
     }
 
@@ -166,6 +170,12 @@ class VillageApiController extends BaseApiController
     {
         try {
             $member = $this->getLoginMember();
+            $village = $this->village_repository->get(new villageId($request->village_id));
+
+            if(!$this->village_permission_service->checkPermission($village, $member)){
+                return $this->makeErrorResponse([]);
+            }
+            
             $success = $this->village_service->joinVillage(new villageId($request->village_id), $member);
             if ($success) {
                 return $this->makeSuccessResponse([]);
