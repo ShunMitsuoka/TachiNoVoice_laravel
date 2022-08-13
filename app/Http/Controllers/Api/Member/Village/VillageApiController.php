@@ -75,7 +75,7 @@ class VillageApiController extends BaseApiController
         $setting = new VillageSetting($request->core_member_limit, $request->village_member_limit);
         $requirement = new VillageMemberRequirement($request->requirement);
         $public_info = new VillagePublicInformation($request->nickname_flg, $request->gender_flg, $request->age_flg);
-        $phase_start_setting = new VillagePhaseStartSetting(true, false, false, true, null);
+        $phase_start_setting = new VillagePhaseStartSetting(true, false, true, null);
         $phase_end_setting = new VillagePhaseEndSetting(true, true, false, null);
         // ビレッジ登録
         $village = $member->registerVillage(
@@ -119,17 +119,17 @@ class VillageApiController extends BaseApiController
             'gender_flg' => $village_details->publicInformation()->isGenderPublic(),
             'age_flg' => $village_details->publicInformation()->isAgePublic(),
             'phase_start_setting' => [
-                'end_flg' => $village_details->phase()->phaseStartSetting()->isEndPhase(),
-                'by_manual_flg' => $village_details->phase()->phaseStartSetting()->byManual(),
-                'by_limit_flg' => $village_details->phase()->phaseStartSetting()->byLimit(),
-                'by_date_flg' => $village_details->phase()->phaseStartSetting()->byDate(),
+                'end_flg' => false,
+                'by_manual_flg' => $village_details->phase()->phaseStartSetting()->byManualFlg(),
+                'by_limit_flg' => false,
+                'by_date_flg' => $village_details->phase()->phaseStartSetting()->byDateFlg(),
                 'border_date' => $village_details->phase()->phaseStartSetting()->borderDate(),
             ],
             'phase_end_setting' => [
-                'end_flg' => $village_details->phase()->phaseEndSetting()->isEndPhase(),
-                'by_manual_flg' => $village_details->phase()->phaseEndSetting()->byManual(),
-                'by_limit_flg' => $village_details->phase()->phaseEndSetting()->byLimit(),
-                'by_date_flg' => $village_details->phase()->phaseEndSetting()->byDate(),
+                'end_flg' => true,
+                'by_manual_flg' => $village_details->phase()->phaseEndSetting()->byManualFlg(),
+                'by_limit_flg' => $village_details->phase()->phaseEndSetting()->byLimitFlg(),
+                'by_date_flg' => $village_details->phase()->phaseEndSetting()->byDateFlg(),
                 'border_date' => $village_details->phase()->phaseEndSetting()->borderDate(),
             ]
         ];

@@ -10,8 +10,10 @@ use Packages\Domain\Models\Village\Phase\Phases\EvaluationPhase;
 use Packages\Domain\Models\Village\Phase\Phases\RecruitmentOfMemberPhase;
 use Packages\Domain\Models\Village\Phase\Phases\SurveyingSatisfactionPhase;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
+use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
+use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
 use Packages\Domain\Models\Village\Village;
 
 class VillagePhaseService{
@@ -20,8 +22,8 @@ class VillagePhaseService{
      * ビレッジ初期フェーズ作成
      */
     static function getInitPhase(
-        VillagePhaseSetting $phase_start_setting,
-        VillagePhaseSetting $phase_end_setting,
+        VillagePhaseStartSetting $phase_start_setting,
+        VillagePhaseEndSetting $phase_end_setting,
     ) : VillagePhase{
         return new RecruitmentOfMemberPhase(
             null,
@@ -39,8 +41,8 @@ class VillagePhaseService{
         ?VillagePhaseId $id,
         int $phase_no,
         int $phase_status,
-        ?VillagePhaseSetting $phase_start_setting,
-        ?VillagePhaseSetting $phase_end_setting,
+        ?VillagePhaseStartSetting $phase_start_setting,
+        ?VillagePhaseEndSetting $phase_end_setting,
     ) : VillagePhase{
         switch ($phase_no) {
             case VillagePhase::PHASE_RECRUITMENT_OF_MEMBER:

@@ -5,7 +5,9 @@ namespace Packages\Domain\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
+use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
+use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
 use Packages\Domain\Models\Village\Topic\Topic;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
@@ -57,8 +59,8 @@ class Member extends User
         VillageSetting $setting,
         VillageMemberRequirement $requirement,
         VillagePublicInformation $public_information,
-        VillagePhaseSetting $phase_start_setting,
-        VillagePhaseSetting $phase_end_setting
+        VillagePhaseStartSetting $phase_start_setting,
+        VillagePhaseEndSetting $phase_end_setting
     ): ?Village {
         $init_phase = VillagePhaseService::getInitPhase(
             $phase_start_setting,

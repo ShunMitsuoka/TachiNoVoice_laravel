@@ -32,20 +32,12 @@ class VillagePhaseSetting
         return $this->end_flg;
     }
 
-    public function byManual() : bool{
+    public function byManualFlg() : bool{
         return $this->by_manual_flg;
     }
 
-    public function byLimit() : bool{
-        return $this->by_limit_flg;
-    }
-
-    public function byDate() : bool{
+    public function byDateFlg() : bool{
         return $this->by_date_flg;
-    }
-
-    public function byInstant() : bool{
-        return $this->by_instant_flg;
     }
 
     public function borderDate() : ?Carbon{

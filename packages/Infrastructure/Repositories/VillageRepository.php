@@ -10,7 +10,6 @@ use App\Models\VillageMemberRequirement as ModelVillageMemberRequirement;
 use App\Models\VillageSetting as ModelVillageSetting;
 use App\Models\VillageMember as ModelVillageMember;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Filter\SearchVillageFilter;
 use Packages\Domain\Models\User\Member;
@@ -18,7 +17,6 @@ use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
-use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
 use Packages\Domain\Models\Village\Topic\Topic;
 use Packages\Domain\Models\Village\Village;
@@ -27,9 +25,6 @@ use Packages\Domain\Models\Village\VillageMemberRequirement;
 use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
 use Packages\Domain\Services\VillagePhaseService;
-
-
-use function PHPUnit\Framework\isNull;
 
 class VillageRepository implements VillageRepositoryInterface
 {
@@ -111,25 +106,26 @@ class VillageRepository implements VillageRepositoryInterface
             'm_phase_id' => $village->phase()->phaseNo(),
             'm_phase_status_id' => $village->phase()->phaseStatus(),
         ]);
-        $created_phase_start_setting = null;
         if ($village->phase()->existsPhaseStartSetting()) {
-            $created_phase_start_setting = ModelPhaseSetting::create([
+            ModelPhaseSetting::create([
                 'phase_id' => $created_phase->id,
-                'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
-                'by_manual_flg' => $village->phase()->phaseStartSetting()->byManual(),
-                'by_limit_flg' => $village->phase()->phaseStartSetting()->byLimit(),
-                'by_date_flg' => $village->phase()->phaseStartSetting()->byDate(),
+                'end_flg' => false,
+                'by_manual_flg' => $village->phase()->phaseStartSetting()->byManualFlg(),
+                'by_instant_flg' => $village->phase()->phaseStartSetting()->byInstantFlg(),
+                'by_date_flg' => $village->phase()->phaseStartSetting()->byDateFlg(),
                 'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
             ]);
         }
-        $created_phase_end_setting = ModelPhaseSetting::create([
-            'phase_id' => $created_phase->id,
-            'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
-            'by_manual_flg' => $village->phase()->phaseEndSetting()->byManual(),
-            'by_limit_flg' => $village->phase()->phaseEndSetting()->byLimit(),
-            'by_date_flg' => $village->phase()->phaseEndSetting()->byDate(),
-            'border_date' => $village->phase()->phaseEndSetting()->borderDate(),
-        ]);
+        if ($village->phase()->existsPhaseEndSetting()) {
+            ModelPhaseSetting::create([
+                'phase_id' => $created_phase->id,
+                'end_flg' => true,
+                'by_manual_flg' => $village->phase()->phaseEndSetting()->byManualFlg(),
+                'by_limit_flg' => $village->phase()->phaseEndSetting()->byLimitFlg(),
+                'by_date_flg' => $village->phase()->phaseEndSetting()->byDateFlg(),
+                'border_date' => $village->phase()->phaseEndSetting()->borderDate(),
+            ]);
+        }
 
         return new Village(
             new VillageId($created_village->id),
@@ -198,26 +194,26 @@ class VillageRepository implements VillageRepositoryInterface
         if ($village->phase()->existsPhaseStartSetting()) {
             ModelPhaseSetting::updateOrCreate([
                 'phase_id' => $updated_phase->id,
-                'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
+                'end_flg' => false,
             ], [
                 'phase_id' => $updated_phase->id,
-                'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
-                'by_manual_flg' => $village->phase()->phaseStartSetting()->byManual(),
-                'by_limit_flg' => $village->phase()->phaseStartSetting()->byLimit(),
-                'by_date_flg' => $village->phase()->phaseStartSetting()->byDate(),
+                'end_flg' => false,
+                'by_manual_flg' => $village->phase()->phaseStartSetting()->byManualFlg(),
+                'by_date_flg' => $village->phase()->phaseStartSetting()->byDateFlg(),
+                'by_instant_flg' => $village->phase()->phaseStartSetting()->byInstantFlg(),
                 'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
             ]);
         }
         if ($village->phase()->existsPhaseEndSetting()) {
             ModelPhaseSetting::updateOrCreate([
                 'phase_id' => $updated_phase->id,
-                'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
+                'end_flg' => true,
             ], [
                 'phase_id' => $updated_phase->id,
-                'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
-                'by_manual_flg' => $village->phase()->phaseEndSetting()->byManual(),
-                'by_limit_flg' => $village->phase()->phaseEndSetting()->byLimit(),
-                'by_date_flg' => $village->phase()->phaseEndSetting()->byDate(),
+                'end_flg' => true,
+                'by_manual_flg' => $village->phase()->phaseEndSetting()->byManualFlg(),
+                'by_limit_flg' => $village->phase()->phaseEndSetting()->byLimitFlg(),
+                'by_date_flg' => $village->phase()->phaseEndSetting()->byDateFlg(),
                 'border_date' => $village->phase()->phaseEndSetting()->borderDate(),
             ]);
         }
@@ -311,7 +307,6 @@ class VillageRepository implements VillageRepositoryInterface
         if(!is_null($phase_start)){
             $phase_start_setting = new VillagePhaseStartSetting(
                 $phase_start->by_manual_flg,
-                $phase_start->by_limit_flg,
                 $phase_start->by_date_flg,
                 $phase_start->by_instant_flg,
                 $phase_start->border_date,
@@ -321,6 +316,7 @@ class VillageRepository implements VillageRepositoryInterface
         $phase_end_setting = null;
         if(!is_null($phase_end)){
             $phase_end_setting = new VillagePhaseEndSetting(
+                true,
                 $phase_end->by_manual_flg,
                 $phase_end->by_limit_flg,
                 $phase_end->by_date_flg,

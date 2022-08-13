@@ -77,6 +77,9 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
     protected ?VillagePhaseStartSetting $phase_start_setting;
     protected ?VillagePhaseEndSetting $phase_end_setting;
 
+    protected StartSettingInfo $start_setting_info;
+    protected EndSettingInfo $end_setting_info;
+
     function __construct(
         ?VillagePhaseId $id,
         int $phase_no,
@@ -110,6 +113,10 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         return $this->phase_status;
     }
 
+    public function existsPhaseSetting() : bool{
+        return !is_null($this->phase_start_setting) || !is_null($this->phase_end_setting);
+    }
+
     public function existsPhaseStartSetting() : bool{
         return !is_null($this->phase_start_setting);
     }
@@ -124,6 +131,14 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
 
     public function phaseEndSetting() : ?VillagePhaseEndSetting{
         return $this->phase_end_setting;
+    }
+
+    public function startSettingInfo() : ?StartSettingInfo{
+        return $this->start_setting_info;
+    }
+
+    public function endSettingInfo() : ?EndSettingInfo{
+        return $this->end_setting_info;
     }
 
     public function isReady() : bool{
@@ -152,4 +167,17 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         $this->phase_status = self::PHASE_STATUS_IN_PROGRESS;
     }
 
+    protected function getStartSetting(?VillagePhaseStartSetting $phase_start_setting) : VillagePhaseStartSetting{
+        if(!is_null($phase_start_setting)){
+            return $phase_start_setting;
+        }
+        return VillagePhaseStartSetting::defaultSetting();
+    }
+
+    protected function getEndSetting(?VillagePhaseEndSetting $phase_end_setting) : VillagePhaseEndSetting{
+        if(!is_null($phase_end_setting)){
+            return $phase_end_setting;
+        }
+        return VillagePhaseEndSetting::defaultSetting();
+    }
 }
