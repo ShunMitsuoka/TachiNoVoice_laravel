@@ -5,12 +5,13 @@ namespace App\Services;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Village;
 
-class VillageApiResponseService{
+class VillageApiResponseService
+{
 
     static public function villageResponse(
         Village $village,
         Member $member = null,
-    ){
+    ) {
         $result = [
             'village_id' => $village->id()->toInt(),
             'phase_no' => $village->phase()->phaseNo(),
@@ -21,15 +22,16 @@ class VillageApiResponseService{
             'note' => $village->topic()->note(),
             'core_member_limit' => $village->setting()->coreMemberLimit(),
             'village_member_limit' => $village->setting()->villageMemberLimit(),
-            'village_member_count' => $village->memberInfo()->getVillageMemberCount(),
-            'core_member_count' => $village->memberInfo()->getCoreMemberCount(),
-            'rise_member_count' => $village->memberInfo()->getRiseMemberCount(),
             'is_phase_preparing' => $village->phase()->isReady(),
         ];
-        if(!is_null($member)){
+        if ($village->existsMemberInfo()) {
+            $result['village_member_count'] = $village->memberInfo()->getVillageMemberCount();
+            $result['core_member_count'] = $village->memberInfo()->getCoreMemberCount();
+            $result['rise_member_count'] = $village->memberInfo()->getRiseMemberCount();
+        }
+        if (!is_null($member)) {
             $result['role_id'] = $village->getMemberRole($member);
         }
         return $result;
     }
-
 }

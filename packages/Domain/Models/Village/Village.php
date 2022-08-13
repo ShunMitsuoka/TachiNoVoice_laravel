@@ -1,4 +1,5 @@
 <?php
+
 namespace Packages\Domain\Models\Village;
 
 use Packages\Domain\Models\Common\_Entity;
@@ -32,43 +33,58 @@ class Village extends _Entity
         $this->setting = $setting;
         $this->requirement = $requirement;
         $this->public_information = $public_information;
+        $this->member_info = null;
     }
 
-    public function setId(int $id){
-        if(!is_null($this->id)){
+    public function setId(int $id)
+    {
+        if (!is_null($this->id)) {
             throw new \Exception('IDが既に存在しています。');
         }
         $this->id = new VillageId($id);
     }
 
-    public function phase() : VillagePhase{
+    public function phase(): VillagePhase
+    {
         return $this->phase;
     }
-    public function topic():Topic{
+    public function topic(): Topic
+    {
         return $this->topic;
     }
-    public function setting() : VillageSetting{
+    public function setting(): VillageSetting
+    {
         return $this->setting;
     }
-    public function requirement() : VillageMemberRequirement{
+    public function requirement(): VillageMemberRequirement
+    {
         return $this->requirement;
     }
-    public function publicInformation() : VillagePublicInformation{
+    public function publicInformation(): VillagePublicInformation
+    {
         return $this->public_information;
     }
-    public function memberInfo() : VillageMemberInfo{
-        if(is_null($this->member_info)){
+    public function existsMemberInfo(): bool
+    {
+        return !is_null($this->member_info);
+    }
+
+    public function memberInfo(): VillageMemberInfo
+    {
+        if (is_null($this->member_info)) {
             throw new \Exception('メンバー情報が存在しません。');
         }
         return $this->member_info;
     }
 
-    public function setMemberInfo(VillageService $service){
+    public function setMemberInfo(VillageService $service)
+    {
         $this->member_info = $service->getVillageMemberInfo($this);
     }
 
-    public function getMemberRole(Member $member) : int{
-        if(is_null($this->member_info)){
+    public function getMemberRole(Member $member): int
+    {
+        if (is_null($this->member_info)) {
             throw new \Exception('メンバー情報が存在しません。');
         }
         switch (true) {
@@ -86,14 +102,14 @@ class Village extends _Entity
         throw new \Exception('メンバーに役割が設定されていません。');
     }
 
-    public function nextPhase(){
+    public function nextPhase()
+    {
         $this->phase = VillagePhaseService::getVillagePhase(
             null,
-            $this->phase->phaseNo()+1,
+            $this->phase->phaseNo() + 1,
             VillagePhase::PHASE_STATUS_PREPARATION,
             null,
             null
         );
     }
-
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Member\Village;
 
 use App\Http\Controllers\API\BaseApiController;
 use App\Models\Village;
+use App\Services\VillageApiResponseService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
@@ -41,16 +42,19 @@ class VillageApiController extends BaseApiController
     //  */
     public function index(Request $request)
     {
+        $result = [];
         //検索文字列を受け取る処理
         $keyword = $request->keyword;
         $member = $this->getLoginMember();
         $flag = true;
 
         $filter = new SearchVillageFilter($keyword, $member->id(), $flag);
-        $result = $this->village_repository->getall($filter);
+        $villages = $this->village_repository->getall($filter);
         //SELECT title, content FROM villages WHERE title LIKE '%検索文字列';
         //$response = Village::where('title', 'like', '%' . $keyword . '%')->get()->toArray();
-
+        foreach ($villages as $village) {
+            $result[] = VillageApiResponseService::villageResponse($village);
+        }
         return $this->makeSuccessResponse($result);
     }
 
