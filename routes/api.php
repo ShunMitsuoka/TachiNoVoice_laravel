@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterApiController;
 use App\Http\Controllers\API\Auth\LoginApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageApiController;
+use App\Http\Controllers\Api\Member\MyVillage\MyVillageMemberApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillagePhaseApiController;
 /*
 |--------------------------------------------------------------------------
@@ -36,8 +37,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // ビレッジ登録時バリデーション
     Route::post('/village/register/validation/topic', [VillageValidationApiController::class, 'topic']);
     Route::post('/village/register/validation/setting', [VillageValidationApiController::class, 'setting']);
-    Route::apiResource('/my/village', MyVillageApiController::class);
     // ビレッジ詳細
+    Route::apiResource('/my/village', MyVillageApiController::class);
+    // ビレッジフェーズ処理
     Route::post('/my/village/{id}/phase/start', [MyVillagePhaseApiController::class, 'start']);
     Route::post('/my/village/{id}/phase/next', [MyVillagePhaseApiController::class, 'next']);
+    // ビレッジメンバー
+    Route::get('/my/village/{id}/members/', [MyVillageMemberApiController::class, 'show']);
+
 });

@@ -67,4 +67,9 @@ class User extends _Entity
     {
         return $this->date_of_birth;
     }
+
+    public function age(): int
+    {
+        return $this->date_of_birth->age;
+    }
 }
