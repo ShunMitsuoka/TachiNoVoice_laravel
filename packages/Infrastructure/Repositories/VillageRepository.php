@@ -12,6 +12,7 @@ use App\Models\VillageMember as ModelVillageMember;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
+use Packages\Domain\Models\Filter\SearchVillageFilter;
 use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
@@ -26,6 +27,7 @@ use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
 use Packages\Domain\Services\VillagePhaseService;
 
+
 use function PHPUnit\Framework\isNull;
 
 class VillageRepository implements VillageRepositoryInterface
@@ -36,7 +38,7 @@ class VillageRepository implements VillageRepositoryInterface
         try {
             $village_info = $this->queryVillageInfo()
                 ->where('v.id', $village_id->toInt())->first();
-            if(!is_null($village_info)){
+            if (!is_null($village_info)) {
                 return $this->getVillageFromRecord($village_info);
             }
         } catch (\Exception $e) {
@@ -45,41 +47,35 @@ class VillageRepository implements VillageRepositoryInterface
         return null;
     }
 
-    public function getAll(array $filter): array
+    public function getAll(SearchVillageFilter $filter): array
     {
-        try {
-            $result = [];
-            $village_records = $this->queryVillageInfo()->get();
-            foreach ($village_records as $record) {
-                $result[] = $this->getVillageFromRecord($record);
-            }
-            return $result;
-        } catch (\Exception $e) {
-            logs()->error($e->getMessage());
+        $result = [];
+        $village_records = $this->queryVillageInfo()->where('title', 'like', '%' . $filter->keyword . '%')->get();
+        foreach ($village_records as $record) {
+            $result[] = $this->getVillageFromRecord($record);
         }
+        return $result;
     }
 
-    public function getAllJoiningVillage(UserId $userId): array{
-        try {
-            $result = [];
-            $village_records = $this->queryVillageInfo()
-                ->whereIn('v.id', 
-                function ($query) use($userId)
-                {
+    public function getAllJoiningVillage(UserId $userId): array
+    {
+        $result = [];
+        $village_records = $this->queryVillageInfo()
+            ->whereIn(
+                'v.id',
+                function ($query) use ($userId) {
                     $village_members = ModelVillageMember::select('village_id')->where('user_id', $userId->toInt());
                     $query->select('village_id')
                         ->from('hosts')
                         ->union($village_members)
                         ->where('user_id', $userId->toInt());
-                })
-                ->get();
-            foreach ($village_records as $record) {
-                $result[] = $this->getVillageFromRecord($record);
-            }
-            return $result;
-        } catch (\Exception $e) {
-            logs()->error($e->getMessage());
+                }
+            )
+            ->get();
+        foreach ($village_records as $record) {
+            $result[] = $this->getVillageFromRecord($record);
         }
+        return $result;
     }
 
     public function save(Village $village): Village
@@ -163,36 +159,37 @@ class VillageRepository implements VillageRepositoryInterface
         );
     }
 
-    public function update(Village $village): Village{
+    public function update(Village $village): Village
+    {
         ModelVillage::where('id', $village->id()->toInt())
-        ->update([
-            'title' => $village->topic()->title(),
-            'content' => $village->topic()->content(),
-            'note' => $village->topic()->note(),
-        ]);
+            ->update([
+                'title' => $village->topic()->title(),
+                'content' => $village->topic()->content(),
+                'note' => $village->topic()->note(),
+            ]);
 
         ModelVillageSetting::where('village_id', $village->id()->toInt())
-        ->update([
-            'village_member_limit' => $village->setting()->villageMemberLimit(),
-            'core_member_limit' => $village->setting()->coreMemberLimit(),
-        ]);
+            ->update([
+                'village_member_limit' => $village->setting()->villageMemberLimit(),
+                'core_member_limit' => $village->setting()->coreMemberLimit(),
+            ]);
 
         ModelVillageMemberRequirement::where('village_id', $village->id()->toInt())
-        ->update([
-            'requirement' => $village->requirement()->requirement(),
-        ]);
+            ->update([
+                'requirement' => $village->requirement()->requirement(),
+            ]);
 
         ModelPublicInformation::where('village_id', $village->id()->toInt())
-        ->update([
-            'nickname_flg' => $village->publicInformation()->isNicknamePublic(),
-            'gender_flg' => $village->publicInformation()->isGenderPublic(),
-            'age_flg' => $village->publicInformation()->isAgePublic(),
-        ]);
+            ->update([
+                'nickname_flg' => $village->publicInformation()->isNicknamePublic(),
+                'gender_flg' => $village->publicInformation()->isGenderPublic(),
+                'age_flg' => $village->publicInformation()->isAgePublic(),
+            ]);
 
         $updated_phase = ModelPhase::updateOrCreate([
             'village_id' => $village->id()->toInt(),
             'm_phase_id' => $village->phase()->phaseNo(),
-        ],[
+        ], [
             'village_id' => $village->id()->toInt(),
             'm_phase_id' => $village->phase()->phaseNo(),
             'm_phase_status_id' => $village->phase()->phaseStatus(),
@@ -203,7 +200,7 @@ class VillageRepository implements VillageRepositoryInterface
             $updated_phase_start_setting = ModelPhaseSetting::updateOrCreate([
                 'phase_id' => $updated_phase->id,
                 'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
-            ],[
+            ], [
                 'phase_id' => $updated_phase->id,
                 'end_flg' => $village->phase()->phaseStartSetting()->isEndPhase(),
                 'by_manual_flg' => $village->phase()->phaseStartSetting()->byManual(),
@@ -217,7 +214,7 @@ class VillageRepository implements VillageRepositoryInterface
             $updated_phase_end_setting = ModelPhaseSetting::updateOrCreate([
                 'phase_id' => $updated_phase->id,
                 'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
-            ],[
+            ], [
                 'phase_id' => $updated_phase->id,
                 'end_flg' => $village->phase()->phaseEndSetting()->isEndPhase(),
                 'by_manual_flg' => $village->phase()->phaseEndSetting()->byManual(),
@@ -248,23 +245,23 @@ class VillageRepository implements VillageRepositoryInterface
     private function queryVillageInfo()
     {
         $maxPhseSubQuery = DB::table('phases as max_phases')
-        ->select(
-            'max_phases.village_id',
-            DB::raw('max(max_phases.m_phase_id) as max_m_phase_id'),
-        )
-        ->groupBy('max_phases.village_id');
+            ->select(
+                'max_phases.village_id',
+                DB::raw('max(max_phases.m_phase_id) as max_m_phase_id'),
+            )
+            ->groupBy('max_phases.village_id');
 
         $phseSubQuery = DB::table('phases as sub_phases')
-        ->select(
-            'sub_phases.id',
-            'sub_phases.village_id',
-            'sub_phases.m_phase_id',
-            'sub_phases.m_phase_status_id',
-        )
-        ->joinSub($maxPhseSubQuery, 'max_phases', function ($join) {
-            $join->on('max_phases.village_id', 'sub_phases.village_id')
-                ->where('max_phases.max_m_phase_id', '=', DB::raw('sub_phases.m_phase_id'));
-        });
+            ->select(
+                'sub_phases.id',
+                'sub_phases.village_id',
+                'sub_phases.m_phase_id',
+                'sub_phases.m_phase_status_id',
+            )
+            ->joinSub($maxPhseSubQuery, 'max_phases', function ($join) {
+                $join->on('max_phases.village_id', 'sub_phases.village_id')
+                    ->where('max_phases.max_m_phase_id', '=', DB::raw('sub_phases.m_phase_id'));
+            });
 
         $query = ModelVillage::from('villages as v')
             ->select(
@@ -351,29 +348,30 @@ class VillageRepository implements VillageRepositoryInterface
      * ②既にメンバーかどうか
      * ③メンバー上限に達しているかどうか
      */
-    private function existCondition(?UserId $userId, $query){
+    private function existCondition(?UserId $userId, $query)
+    {
         try {
             // ①メンバー募集フェーズかどうか
             $query = $query->where('p.m_phase_id', VillagePhase::PHASE_RECRUITMENT_OF_MEMBER);
 
             // ②既にメンバーかどうか
-            $query = $query->whereIn('v.id', 
-                function ($query) use($userId)
-                {
-                    $village_members = ModelVillageMember::select('village_id')->where('user_id', '<>' , $userId->toInt());
+            $query = $query->whereIn(
+                'v.id',
+                function ($query) use ($userId) {
+                    $village_members = ModelVillageMember::select('village_id')->where('user_id', '<>', $userId->toInt());
                     $query->select('village_id')
                         ->from('hosts')
                         ->union($village_members);
-                        // ->where('user_id', '<>', $userId->toInt());
+                    // ->where('user_id', '<>', $userId->toInt());
                 }
-            );        
+            );
             // ③メンバー上限に達しているかどうか
-            $query = $query->where('vs.village_member_limit', '<', function ($query_data){
+            $query = $query->where('vs.village_member_limit', '<', function ($query_data) {
                 $query_data->select(DB::raw('COUNT(vm.user_id)'))
-                        ->from('village_members as vm')
-                        ->where('v.id', DB::raw('vm.village_id'))
-                        ->groupBy('vm.user_id');
-            });                                    
+                    ->from('village_members as vm')
+                    ->where('v.id', DB::raw('vm.village_id'))
+                    ->groupBy('vm.user_id');
+            });
 
             return $query;
         } catch (\Exception $e) {

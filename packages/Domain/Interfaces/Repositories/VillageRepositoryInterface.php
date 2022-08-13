@@ -2,9 +2,11 @@
 
 namespace Packages\Domain\Interfaces\Repositories;
 
+use Packages\Domain\Models\Filter\SearchVillageFilter;
 use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
+
 
 interface VillageRepositoryInterface
 {
@@ -23,8 +25,8 @@ interface VillageRepositoryInterface
     /**
      * 検索条件に一致するビレッジを全件取得する。
      */
-    public function getAll(array $filter): array;
-    /**
+    public function getAll(SearchVillageFilter $filter): array;
+    /*
      * ユーザーが参加しているビレッジを全件取得する。
      */
     public function getAllJoiningVillage(UserId $userId): array;

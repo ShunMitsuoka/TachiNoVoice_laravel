@@ -6,6 +6,8 @@ use App\Http\Controllers\API\BaseApiController;
 use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
+use Packages\Domain\Models\Filter\SearchVillageFilter;
 use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
@@ -15,14 +17,20 @@ use Packages\Domain\Models\Village\VillageMemberRequirement;
 use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
 use Packages\Domain\Services\VillageService;
+
+
+
 class VillageApiController extends BaseApiController
 {
     protected VillageService $village_service;
+    protected VillageRepositoryInterface $village_repository;
 
     function __construct(
-        VillageService $village_service
+        VillageService $village_service,
+        VillageRepositoryInterface $village_repository,
     ) {
         $this->village_service = $village_service;
+        $this->village_repository = $village_repository;
     }
 
 
@@ -35,10 +43,15 @@ class VillageApiController extends BaseApiController
     {
         //検索文字列を受け取る処理
         $keyword = $request->keyword;
-        //SELECT title, content FROM villages WHERE title LIKE '%検索文字列';
-        $response = Village::where('title', 'like', '%' . $keyword . '%')->get()->toArray();
+        $member = $this->getLoginMember();
+        $flag = true;
 
-        return $this->makeSuccessResponse($response);
+        $filter = new SearchVillageFilter($keyword, $member->id(), $flag);
+        $result = $this->village_repository->getall($filter);
+        //SELECT title, content FROM villages WHERE title LIKE '%検索文字列';
+        //$response = Village::where('title', 'like', '%' . $keyword . '%')->get()->toArray();
+
+        return $this->makeSuccessResponse($result);
     }
 
     /**
@@ -146,16 +159,16 @@ class VillageApiController extends BaseApiController
      * @return \Illuminate\Http\Response
      */
     public function join(Request $request)
-    {   
-        try{
+    {
+        try {
             $member = $this->getLoginMember();
             $success = $this->village_service->joinVillage(new villageId($request->village_id), $member);
-            if($success){
+            if ($success) {
                 return $this->makeSuccessResponse([]);
-            }else{
+            } else {
                 return $this->makeErrorResponse([]);
             }
-        }catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             logs()->error($e->getMessage());
             return $this->makeErrorResponse([$e]);
         }
