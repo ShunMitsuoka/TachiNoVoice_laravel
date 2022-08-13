@@ -10,10 +10,12 @@ use App\Models\VillageMemberRequirement as ModelVillageMemberRequirement;
 use App\Models\VillageSetting as ModelVillageSetting;
 use App\Models\VillageMember as ModelVillageMember;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
+use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
 use Packages\Domain\Models\Village\Topic\Topic;
@@ -349,34 +351,29 @@ class VillageRepository implements VillageRepositoryInterface
      * ②既にメンバーかどうか
      * ③メンバー上限に達しているかどうか
      */
-    private function existCondition(?VillageId $village_id, ?UserId $member_id, $query){
+    private function existCondition(?UserId $userId, $query){
         try {
-            $query = $query->join('village_members as vm', 'vm.village_id', 'v.id');
-            if (!is_null($village_id)) {
-                $query = $query->where('village_id', $village_id->toInt());
-            }
-            if (!is_null($member_id)) {
-                $query = $query->where('user_id', $member_id->toInt());
-            }     
             // ①メンバー募集フェーズかどうか
-            $query = $query->join('phases as p', 'p.village_id', 'v.id');
-            if (!is_null($village_id)) {
-                $query = $query->where('village_id', $village_id->toInt())
-                ->where('m_phase_status_id', 1);
-            }
+            $query = $query->where('p.m_phase_id', VillagePhase::PHASE_RECRUITMENT_OF_MEMBER);
 
-            // $query = $query->join('village_members as vm', 'vm.village_id', 'v.id')
-            //     ->where(function ($query_data) use($village_id){
-            //     $query_data->select(DB::raw('COUNT(user_id) As member_count'))
-            //             ->from('village_members as vm')
-            //             ->where('vm.village_id', $village_id->toInt())
-            //             ->groupBy('vm.user_id');
-            // }, '>', 'village_member_limit');
-                                        
-
-            // foreach ($village_infos as $village_info) {
-            //     $result[] = $this->getVillageFromRecord($village_info);
-            // }                 
+            // ②既にメンバーかどうか
+            $query = $query->whereIn('v.id', 
+                function ($query) use($userId)
+                {
+                    $village_members = ModelVillageMember::select('village_id')->where('user_id', '<>' , $userId->toInt());
+                    $query->select('village_id')
+                        ->from('hosts')
+                        ->union($village_members);
+                        // ->where('user_id', '<>', $userId->toInt());
+                }
+            );        
+            // ③メンバー上限に達しているかどうか
+            $query = $query->where('vs.village_member_limit', '<', function ($query_data){
+                $query_data->select(DB::raw('COUNT(vm.user_id)'))
+                        ->from('village_members as vm')
+                        ->where('v.id', DB::raw('vm.village_id'))
+                        ->groupBy('vm.user_id');
+            });                                    
 
             return $query;
         } catch (\Exception $e) {
