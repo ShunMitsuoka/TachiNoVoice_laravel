@@ -9,6 +9,7 @@ use App\Models\Village as ModelVillage;
 use App\Models\VillageMemberRequirement as ModelVillageMemberRequirement;
 use App\Models\VillageSetting as ModelVillageSetting;
 use App\Models\VillageMember as ModelVillageMember;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Filter\SearchVillageFilter;
@@ -233,7 +234,8 @@ class VillageRepository implements VillageRepositoryInterface
         );
     }
 
-    public function checkPermission(Village $village, Member $member) : bool{
+    public function checkPermission(Village $village, Member $member): bool
+    {
         $query = $this->queryVillageInfo()->where('v.id', $village->id()->toInt());
         $query = $this->setJoiningCondition($member->id(), $query);
         return $query->exists();
@@ -302,28 +304,27 @@ class VillageRepository implements VillageRepositoryInterface
             ->where('ps.phase_id', $village_info->phase_id)
             ->where('ps.end_flg', true)
             ->first();
-        
+
         $phase_start_setting = null;
-        if(!is_null($phase_start)){
+        if (!is_null($phase_start)) {
             $phase_start_setting = new VillagePhaseStartSetting(
                 $phase_start->by_manual_flg,
                 $phase_start->by_date_flg,
                 $phase_start->by_instant_flg,
-                $phase_start->border_date,
+                !is_null($phase_start->border_date) ? new Carbon($phase_start->border_date) : null,
             );
         }
 
         $phase_end_setting = null;
-        if(!is_null($phase_end)){
+        if (!is_null($phase_end)) {
             $phase_end_setting = new VillagePhaseEndSetting(
-                true,
                 $phase_end->by_manual_flg,
                 $phase_end->by_limit_flg,
                 $phase_end->by_date_flg,
-                $phase_end->border_date,
+                !is_null($phase_end->border_date) ? new Carbon($phase_end->border_date) : null,
             );
         }
-        
+
         return new Village(
             new VillageId($village_info->village_id),
             VillagePhaseService::getVillagePhase(
