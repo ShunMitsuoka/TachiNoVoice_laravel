@@ -13,6 +13,7 @@ use Packages\Domain\Models\User\Host;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\User\RiseMember;
 use Packages\Domain\Models\User\UserId;
+use Packages\Domain\Models\User\UserInfo\Gender;
 use Packages\Domain\Models\User\VillageMember;
 
 class VillageMemberInfoRepository implements VillageMemberInfoRepositoryInterface
@@ -31,7 +32,7 @@ class VillageMemberInfoRepository implements VillageMemberInfoRepositoryInterfac
                         $record->user_name,
                         $record->nickname,
                         $record->email,
-                        $record->gender,
+                        new Gender($record->gender),
                         new Carbon($record->date_of_birth),
                     );
                     break;
@@ -41,7 +42,7 @@ class VillageMemberInfoRepository implements VillageMemberInfoRepositoryInterfac
                         $record->user_name,
                         $record->nickname,
                         $record->email,
-                        $record->gender,
+                        new Gender($record->gender),
                         new Carbon($record->date_of_birth),
                     );
                     break;
@@ -51,7 +52,7 @@ class VillageMemberInfoRepository implements VillageMemberInfoRepositoryInterfac
                         $record->user_name,
                         $record->nickname,
                         $record->email,
-                        $record->gender,
+                        new Gender($record->gender),
                         new Carbon($record->date_of_birth),
                     );
                     break;
@@ -150,7 +151,7 @@ class VillageMemberInfoRepository implements VillageMemberInfoRepositoryInterfac
                 $record->user_name,
                 $record->nickname,
                 $record->email,
-                $record->gender,
+                new Gender($record->gender),
                 new Carbon($record->date_of_birth),
             );
         }

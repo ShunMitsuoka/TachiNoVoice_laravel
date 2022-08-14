@@ -43,7 +43,8 @@ class MyVillageMemberApiController extends BaseApiController
             $village_members[] = [
                 'nickname' => $public_info->isNicknamePublic() ? $village_member->nickname() : null,
                 'age' => $public_info->isAgePublic() ? $village_member->age() : null,
-                'gender' => $public_info->isGenderPublic() ? $village_member->gender() : null,
+                'gender' => $public_info->isGenderPublic() ? $village_member->gender()->id() : null,
+                'gender_name' => $public_info->isGenderPublic() ? $village_member->gender()->name() : null,
             ];
         }
 
@@ -52,7 +53,8 @@ class MyVillageMemberApiController extends BaseApiController
             $core_members[] = [
                 'nickname' => $public_info->isNicknamePublic() ? $core_member->nickname() : null,
                 'age' => $public_info->isAgePublic() ? $core_member->age() : null,
-                'gender' => $public_info->isGenderPublic() ? $core_member->gender() : null,
+                'gender' => $public_info->isGenderPublic() ? $core_member->gender()->id() : null,
+                'gender_name' => $public_info->isGenderPublic() ? $core_member->gender()->name() : null,
             ];
         }
 
@@ -61,7 +63,8 @@ class MyVillageMemberApiController extends BaseApiController
             $rise_members[] = [
                 'nickname' => $public_info->isNicknamePublic() ? $rise_member->nickname() : null,
                 'age' => $public_info->isAgePublic() ? $rise_member->age() : null,
-                'gender' => $public_info->isGenderPublic() ? $rise_member->gender() : null,
+                'gender' => $public_info->isGenderPublic() ? $rise_member->gender()->id() : null,
+                'gender_name' => $public_info->isGenderPublic() ? $rise_member->gender()->name() : null,
             ];
         }
 

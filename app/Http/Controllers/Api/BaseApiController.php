@@ -7,6 +7,7 @@ use App\Services\ApiResponseService;
 use Illuminate\Http\JsonResponse;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\User\UserId;
+use Packages\Domain\Models\User\UserInfo\Gender;
 
 class BaseApiController extends Controller
 {
@@ -34,7 +35,7 @@ class BaseApiController extends Controller
             $user->user_name,
             $user->nickname,
             $user->email,
-            $user->gender,
+            new Gender($user->gender),
             $user->date_of_birth,
         );
     }

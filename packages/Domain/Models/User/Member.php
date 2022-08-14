@@ -4,6 +4,7 @@ namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
 use Exception;
+use Packages\Domain\Models\User\UserInfo\Gender;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
@@ -44,7 +45,7 @@ class Member extends User
         string $name,
         ?string $nickname,
         string $email,
-        int $gender,
+        Gender $gender,
         Carbon $date_of_birth,
     ) {
         parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth);

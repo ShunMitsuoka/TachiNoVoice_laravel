@@ -3,6 +3,7 @@ namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
 use Packages\Domain\Models\Common\_Entity;
+use Packages\Domain\Models\User\UserInfo\Gender;
 
 class User extends _Entity
 {
@@ -14,7 +15,7 @@ class User extends _Entity
     protected string $name;
     protected ?string $nickname;
     protected string $email;
-    protected int $gender;
+    protected Gender $gender;
     protected Carbon $date_of_birth;
 
     function __construct(
@@ -22,7 +23,7 @@ class User extends _Entity
         string $name,
         ?string $nickname,
         string $email,
-        int $gender,
+        Gender $gender,
         Carbon $date_of_birth,
     ) {
         $this->id = $id;
@@ -58,7 +59,7 @@ class User extends _Entity
         return $this->email;
     }
 
-    public function gender(): int
+    public function gender(): Gender
     {
         return $this->gender;
     }

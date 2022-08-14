@@ -2,6 +2,7 @@
 namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
+use Packages\Domain\Models\User\UserInfo\Gender;
 
 class VillageMember extends Member
 {
@@ -10,7 +11,7 @@ class VillageMember extends Member
         string $name,
         ?string $nickname,
         string $email,
-        int $gender,
+        Gender $gender,
         Carbon $date_of_birth,
     ) {
         parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth);
