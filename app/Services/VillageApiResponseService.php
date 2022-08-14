@@ -20,6 +20,7 @@ class VillageApiResponseService
             'title' => $village->topic()->title(),
             'content' => $village->topic()->content(),
             'note' => $village->topic()->note(),
+            'requirement' => $village->requirement()->requirement(),
             'core_member_limit' => $village->setting()->coreMemberLimit(),
             'village_member_limit' => $village->setting()->villageMemberLimit(),
             'is_phase_preparing' => $village->phase()->isReady(),
