@@ -141,6 +141,15 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         return $this->end_setting_info;
     }
 
+    public function updatePhaseStartSetting(VillagePhaseStartSetting $phase_start_setting){
+        $this->phase_start_setting = $phase_start_setting;
+    }
+
+    public function updatePhaseEndSetting(VillagePhaseEndSetting $phase_end_setting){
+        $this->phase_end_setting = $phase_end_setting;
+    }
+
+
     public function isReady() : bool{
         return $this->phase_status == self::PHASE_STATUS_PREPARATION;
     }

@@ -47,7 +47,10 @@ class VillageRepository implements VillageRepositoryInterface
     public function getAll(SearchVillageFilter $filter): array
     {
         $result = [];
-        $query = $this->queryVillageInfo()->where('title', 'like', '%' . $filter->keyword . '%');
+        $query = $this->queryVillageInfo();
+        if($filter->existkeyword()){
+            $query = $query->where('title', 'like', '%' . $filter->keyword . '%');
+        }
         $village_records = $this->setJoiningCondition($filter->user_id, $query)->get();
         foreach ($village_records as $record) {
             $result[] = $this->getVillageFromRecord($record);
@@ -368,14 +371,14 @@ class VillageRepository implements VillageRepositoryInterface
             $query = $query->where('p.m_phase_id', VillagePhase::PHASE_RECRUITMENT_OF_MEMBER);
 
             // ②既にメンバーかどうか
-            $query = $query->whereIn(
+            $query = $query->whereNotIn(
                 'v.id',
                 function ($query) use ($userId) {
-                    $village_members = ModelVillageMember::select('village_id')->where('user_id', '<>', $userId->toInt());
+                    $village_members = ModelVillageMember::select('village_id')->where('user_id', $userId->toInt());
                     $query->select('village_id')
                         ->from('hosts')
-                        ->union($village_members);
-                    // ->where('user_id', '<>', $userId->toInt());
+                        ->union($village_members)
+                        ->where('user_id', $userId->toInt());
                 }
             );
             // ③メンバー上限に達しているかどうか

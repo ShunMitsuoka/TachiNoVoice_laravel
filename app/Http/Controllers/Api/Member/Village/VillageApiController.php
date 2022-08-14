@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Api\Member\Village;
 
 use App\Http\Controllers\API\BaseApiController;
-use App\Models\Village;
 use App\Services\VillageApiResponseService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Filter\SearchVillageFilter;
 use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
-use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
 use Packages\Domain\Models\Village\Topic\Topic;
 use Packages\Domain\Models\Village\VillageId;
