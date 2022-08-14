@@ -105,35 +105,7 @@ class VillageApiController extends BaseApiController
     {
         // ビレッジ取得
         $village_details = $this->village_service->getVillage(new VillageId($id));
-        $result = [
-            'id' => $village_details->id()->toInt(),
-            'phase' => $village_details->phase()->phaseNo(),
-            'phase_status' => $village_details->phase()->phaseStatus(),
-            'title' => $village_details->topic()->title(),
-            'content' => $village_details->topic()->content(),
-            'note' => $village_details->topic()->note(),
-            'core_member_limit' => $village_details->setting()->coreMemberLimit(),
-            'village_member_limit' => $village_details->setting()->villageMemberLimit(),
-            'requirement' => $village_details->requirement()->requirement(),
-            'name_flg' => $village_details->publicInformation()->isNicknamePublic(),
-            'gender_flg' => $village_details->publicInformation()->isGenderPublic(),
-            'age_flg' => $village_details->publicInformation()->isAgePublic(),
-            'phase_start_setting' => [
-                'end_flg' => false,
-                'by_manual_flg' => $village_details->phase()->phaseStartSetting()->byManualFlg(),
-                'by_limit_flg' => false,
-                'by_date_flg' => $village_details->phase()->phaseStartSetting()->byDateFlg(),
-                'border_date' => $village_details->phase()->phaseStartSetting()->borderDate(),
-            ],
-            'phase_end_setting' => [
-                'end_flg' => true,
-                'by_manual_flg' => $village_details->phase()->phaseEndSetting()->byManualFlg(),
-                'by_limit_flg' => $village_details->phase()->phaseEndSetting()->byLimitFlg(),
-                'by_date_flg' => $village_details->phase()->phaseEndSetting()->byDateFlg(),
-                'border_date' => $village_details->phase()->phaseEndSetting()->borderDate(),
-            ]
-        ];
-
+        $result = VillageApiResponseService::villageResponse($village_details, null);
         return $this->makeSuccessResponse($result);
     }
 
@@ -175,7 +147,7 @@ class VillageApiController extends BaseApiController
             if(!$this->village_permission_service->checkPermission($village, $member)){
                 return $this->makeErrorResponse([]);
             }
-            
+
             $success = $this->village_service->joinVillage(new villageId($request->village_id), $member);
             if ($success) {
                 return $this->makeSuccessResponse([]);

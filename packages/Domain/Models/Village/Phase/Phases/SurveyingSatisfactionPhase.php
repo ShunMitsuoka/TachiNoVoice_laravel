@@ -1,9 +1,11 @@
 <?php
 namespace Packages\Domain\Models\Village\Phase\Phases;
 
+use Packages\Domain\Models\Village\Phase\EndSettingInfo;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
+use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
-use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
+use Packages\Domain\Models\Village\Phase\VillagePhaseSettingItem;
 
 class SurveyingSatisfactionPhase extends VillagePhase
 {
@@ -11,25 +13,32 @@ class SurveyingSatisfactionPhase extends VillagePhase
         ?VillagePhaseId $id,
         int $phase_no,
         int $phase_status,
-        ?VillagePhaseSetting $phase_start_setting,
-        ?VillagePhaseSetting $phase_end_setting,
+        ?VillagePhaseEndSetting $phase_end_setting,
     ) {
         if($phase_no !== self::PHASE_SURVEYING_SATISFACTION){
             throw new \Exception("異なるフェーズが設定されました。", 1);
         }
-        $this->id = $id;
-        $this->phase_no = $phase_no;
+
+        parent::__construct($id, $phase_no, $phase_status, null, $phase_end_setting);
         $this->phase_name = self::PHASE_SURVEYING_SATISFACTION_NAME;
-        $this->phase_status = $phase_status;
-        $this->phase_start_setting = $phase_start_setting;
-        $this->phase_end_setting = $phase_end_setting;
+        $this->end_setting_info = new EndSettingInfo(
+            new VillagePhaseSettingItem(
+                true, '手動で終了する。', $this->getEndSetting($phase_end_setting)->byManualFlg()
+            ),
+            new VillagePhaseSettingItem(
+                true, '回答期日を設定する。', $this->getEndSetting($phase_end_setting)->byDateFlg(), $this->getEndSetting($phase_end_setting)->borderDate()
+            ),
+            new VillagePhaseSettingItem(
+                true, '全員が回答した場合終了する。', $this->getEndSetting($phase_end_setting)->byLimitFlg()
+            )
+        );
     }
 
     public function isNecessaryToSetPhaseSetting() : bool{
         return true;
     }
     public function isNecessaryToSetPhaseStartSetting() : bool{
-        return true;
+        return false;
     }
     public function isNecessaryToSetPhaseEndSetting() : bool{
         return true;
