@@ -47,14 +47,8 @@ class VillageRepository implements VillageRepositoryInterface
     public function getAll(SearchVillageFilter $filter): array
     {
         $result = [];
-        $kensakuflag = true;
         $query = $this->queryVillageInfo()->where('title', 'like', '%' . $filter->keyword . '%');
         $village_records = $this->setJoiningCondition($filter->user_id, $query)->get();
-        if (is_null($village_records)) {
-            $kensakuflag = false;
-        } else {
-            $kensakuflag = true;
-        }
         foreach ($village_records as $record) {
             $result[] = $this->getVillageFromRecord($record);
         }
