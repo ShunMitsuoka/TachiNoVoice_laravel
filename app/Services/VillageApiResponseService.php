@@ -27,6 +27,21 @@ class VillageApiResponseService
             'exists_phase_setting' => $village->phase()->existsPhaseSetting(),
             'exists_phase_start_setting' => $village->phase()->existsPhaseStartSetting(),
             'exists_phase_end_setting' => $village->phase()->existsPhaseEndSetting(),
+
+            'phase_start_setting' => [
+                'end_flg' => false,
+                'by_manual_flg' => $village->phase()->phaseStartSetting()->byManualFlg(),
+                'by_limit_flg' => false,
+                'by_date_flg' => $village->phase()->phaseStartSetting()->byDateFlg(),
+                'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
+            ],
+            'phase_end_setting' => [
+                'end_flg' => true,
+                'by_manual_flg' => $village->phase()->phaseEndSetting()->byManualFlg(),
+                'by_limit_flg' => $village->phase()->phaseEndSetting()->byLimitFlg(),
+                'by_date_flg' => $village->phase()->phaseEndSetting()->byDateFlg(),
+                'border_date' => $village->phase()->phaseEndSetting()->borderDate(),
+            ],
             'is_necessary_to_set_phase_setting' => $village->phase()->isNecessaryToSetPhaseSetting(),
             'is_necessary_to_set_phase_start_setting' => $village->phase()->isNecessaryToSetPhaseStartSetting(),
             'is_necessary_to_set_phase_end_setting' => $village->phase()->isNecessaryToSetPhaseEndSetting(),
