@@ -6,11 +6,11 @@ use Packages\Domain\Models\User\UserId;
 
 class SearchVillageFilter
 {
-    public readonly string $keyword;
+    public readonly ?string $keyword;
     public readonly UserId $user_id;
     public readonly bool $flag;
     public function __construct(
-        string $keyword,
+        ?string $keyword,
         UserId $user_id,
         bool $flag,
     ) {
