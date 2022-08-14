@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ビレッジフェーズ処理
     Route::post('/my/village/{id}/phase/start', [MyVillagePhaseApiController::class, 'start']);
     Route::post('/my/village/{id}/phase/next', [MyVillagePhaseApiController::class, 'next']);
+    Route::post('/my/village/{id}/phase/setting', [MyVillagePhaseApiController::class, 'setting']);
     // ビレッジメンバー
     Route::get('/my/village/{id}/members/', [MyVillageMemberApiController::class, 'show']);
 

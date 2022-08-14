@@ -57,32 +57,26 @@ class VillagePhaseService{
                 return new DrawingCoreMemberPhase(
                     $id,
                     $phase_no,
-                    $phase_status,
-                    $phase_start_setting,
-                    $phase_end_setting
+                    $phase_status
                 );
             case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
                 return new AskingOpinionsOfCoreMemberPhase(
                     $id,
                     $phase_no,
                     $phase_status,
-                    $phase_start_setting,
                     $phase_end_setting
                 );
             case VillagePhase::PHASE_CATEGORIZE_OPINIONS:
                 return new CategorizeOpinionsPhase(
                     $id,
                     $phase_no,
-                    $phase_status,
-                    $phase_start_setting,
-                    $phase_end_setting
+                    $phase_status
                 );
             case VillagePhase::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER:
                 return new AskingOpinionsOfRiseMemberPhase(
                     $id,
                     $phase_no,
                     $phase_status,
-                    $phase_start_setting,
                     $phase_end_setting
                 );
             case VillagePhase::PHASE_EVALUATION:
@@ -90,23 +84,19 @@ class VillagePhaseService{
                     $id,
                     $phase_no,
                     $phase_status,
-                    $phase_start_setting,
                     $phase_end_setting
                 );
             case VillagePhase::PHASE_DECIDING_POLICY:
                 return new DecidingPolicyPhase(
                     $id,
                     $phase_no,
-                    $phase_status,
-                    $phase_start_setting,
-                    $phase_end_setting
+                    $phase_status
                 );
             case VillagePhase::PHASE_SURVEYING_SATISFACTION:
                 return new SurveyingSatisfactionPhase(
                     $id,
                     $phase_no,
                     $phase_status,
-                    $phase_start_setting,
                     $phase_end_setting
                 );
             default:
