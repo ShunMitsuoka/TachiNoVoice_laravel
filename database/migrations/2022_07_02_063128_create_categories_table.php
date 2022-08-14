@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id()->comment('カテゴリーid');
+            $table->unsignedBigInteger('village_id')->comment('ビレッジid');
             $table->string('category_name', 255)->comment('カテゴリー名');
             $table->timestamps();
             $table->boolean('deleted_flg')->default(0);

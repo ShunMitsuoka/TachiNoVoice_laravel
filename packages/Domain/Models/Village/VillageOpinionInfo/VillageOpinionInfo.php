@@ -1,6 +1,8 @@
 <?php
 namespace Packages\Domain\Models\Village\VillageOpinionInfo;
 
+use Packages\Domain\Models\Village\VillageId;
+
 class VillageOpinionInfo
 {
     private VillageId $village_id;

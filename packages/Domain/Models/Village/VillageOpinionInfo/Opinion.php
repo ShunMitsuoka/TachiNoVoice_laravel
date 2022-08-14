@@ -10,20 +10,20 @@ class Opinion extends _Entity
     private string $content;
     private Member $member;
     private ?array $evaluations;
-    private ?Category $category;
+    private ?CategoryId $category_id;
 
     function __construct(
         ?OpinionId $id,
         string $content,
         Member $member,
         ?array $evaluations,
-        ?Category $category,
+        ?CategoryId $category_id,
     ) {
         $this->id = $id;
         $this->content = $content;
         $this->member = $member;
         $this->evaluations = $evaluations;
-        $this->category = $category;
+        $this->category_id = $category_id;
     }
 
     public function setId(int $id)
@@ -46,8 +46,8 @@ class Opinion extends _Entity
         return $this->evaluations;
     }
 
-    public function category() : Category{
-        return $this->category;
+    public function categoryId() : CategoryId{
+        return $this->category_id;
     }
 
 }

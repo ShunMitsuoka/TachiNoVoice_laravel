@@ -81,37 +81,59 @@ class Member extends User
         // throw new Exception("Error Processing Request", 1);
     }
 
+    public function becomeHost(Village $village) : Host{
+        if(!$village->memberInfo()->isHost($this)){
+            throw new Exception("対象ユーザーはホストではありません。", 1);
+        }
+        return new Host(
+            $this->id(),
+            $this->name(),
+            $this->nickname(),
+            $this->email(),
+            $this->gender(),
+            $this->dateOfBirth()
+        );
+    }
 
-    // public function becomeVillageMember() : VillageMember{
-    //     return new VillageMember(
-    //         $this->id(),
-    //         $this->name(),
-    //         $this->nickname(),
-    //         $this->email(),
-    //         $this->gender(),
-    //         $this->dateOfBirth()
-    //     );
-    // }
+    public function becomeVillageMember(Village $village) : VillageMember{
+        if(!$village->memberInfo()->isVillageMember($this)){
+            throw new Exception("対象ユーザーはビレッジメンバーではありません。", 1);
+        }
+        return new VillageMember(
+            $this->id(),
+            $this->name(),
+            $this->nickname(),
+            $this->email(),
+            $this->gender(),
+            $this->dateOfBirth()
+        );
+    }
 
-    // public function becomeCoreMember() : CoreMember{
-    //     return new CoreMember(
-    //         $this->id(),
-    //         $this->name(),
-    //         $this->nickname(),
-    //         $this->email(),
-    //         $this->gender(),
-    //         $this->dateOfBirth()
-    //     );
-    // }
+    public function becomeCoreMember(Village $village) : CoreMember{
+        if(!$village->memberInfo()->isCoreMember($this)){
+            throw new Exception("対象ユーザーはコアメンバーではありません。", 1);
+        }
+        return new CoreMember(
+            $this->id(),
+            $this->name(),
+            $this->nickname(),
+            $this->email(),
+            $this->gender(),
+            $this->dateOfBirth()
+        );
+    }
 
-    // public function becomeRiseMember() : RiseMember{
-    //     return new RiseMember(
-    //         $this->id(),
-    //         $this->name(),
-    //         $this->nickname(),
-    //         $this->email(),
-    //         $this->gender(),
-    //         $this->dateOfBirth()
-    //     );
-    // }
+    public function becomeRiseMember(Village $village) : RiseMember{
+        if(!$village->memberInfo()->isRiseMember($this)){
+            throw new Exception("対象ユーザーはライズメンバーではありません。", 1);
+        }
+        return new RiseMember(
+            $this->id(),
+            $this->name(),
+            $this->nickname(),
+            $this->email(),
+            $this->gender(),
+            $this->dateOfBirth()
+        );
+    }
 }

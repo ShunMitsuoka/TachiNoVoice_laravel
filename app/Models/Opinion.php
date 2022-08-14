@@ -17,4 +17,9 @@ class Opinion extends Model
         'opinion',
         'deleted_flg',
     ];
+
+    public function scopeNotDeleted($query)
+    {
+        return $query->where('opinions.deleted_flg', false);
+    }
 }
