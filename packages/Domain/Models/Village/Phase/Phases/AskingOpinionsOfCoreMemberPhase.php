@@ -3,8 +3,8 @@ namespace Packages\Domain\Models\Village\Phase\Phases;
 
 use Packages\Domain\Models\Village\Phase\EndSettingInfo;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
+use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
-use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSettingItem;
 
 class AskingOpinionsOfCoreMemberPhase extends VillagePhase
@@ -13,7 +13,7 @@ class AskingOpinionsOfCoreMemberPhase extends VillagePhase
         ?VillagePhaseId $id,
         int $phase_no,
         int $phase_status,
-        ?VillagePhaseSetting $phase_end_setting,
+        ?VillagePhaseEndSetting $phase_end_setting,
     ) {
         if($phase_no !== self::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER){
             throw new \Exception("異なるフェーズが設定されました。", 1);
@@ -28,7 +28,7 @@ class AskingOpinionsOfCoreMemberPhase extends VillagePhase
                 true, '募集終了日を設定する。', $this->getEndSetting($phase_end_setting)->byDateFlg(), $this->getEndSetting($phase_end_setting)->borderDate()
             ),
             new VillagePhaseSettingItem(
-                true, '定員になり次第終了する。', $this->getEndSetting($phase_end_setting)->byLimitFlg()
+                true, '全員が意見した場合終了する。', $this->getEndSetting($phase_end_setting)->byLimitFlg()
             )
         );
     }

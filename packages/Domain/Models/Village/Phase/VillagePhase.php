@@ -84,8 +84,8 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         ?VillagePhaseId $id,
         int $phase_no,
         int $phase_status,
-        ?VillagePhaseStartSetting $phase_start_setting,
-        ?VillagePhaseEndSetting $phase_end_setting,
+        ?VillagePhaseStartSetting $phase_start_setting = null,
+        ?VillagePhaseEndSetting $phase_end_setting = null,
     ) {
         $this->id = $id;
         $this->phase_no = $phase_no;

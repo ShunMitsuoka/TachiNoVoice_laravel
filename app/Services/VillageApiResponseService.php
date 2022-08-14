@@ -54,9 +54,23 @@ class VillageApiResponseService
                     'label' => $village->phase()->startSettingInfo()->byManual()->label(),
                     'is_selected' => $village->phase()->startSettingInfo()->byManual()->isSelected(),
                 ],
-                // 'by_date' => $village->phase()->phaseStartSetting()->byDateFlg(),
-                // 'by_instant' => $village->phase()->phaseStartSetting()->byInstantFlg(),
-                // 'border_date' => $village->phase()->phaseStartSetting()->borderDate(),
+                'by_manual' => [
+                    'is_need' => $village->phase()->startSettingInfo()->byManual()->isNeed(),
+                    'label' => $village->phase()->startSettingInfo()->byManual()->label(),
+                    'is_selected' => $village->phase()->startSettingInfo()->byManual()->isSelected(),
+                ],
+                'by_instant' => [
+                    'is_need' => $village->phase()->startSettingInfo()->byInstant()->isNeed(),
+                    'label' => $village->phase()->startSettingInfo()->byInstant()->label(),
+                    'is_selected' => $village->phase()->startSettingInfo()->byInstant()->isSelected(),
+                    'date' => $village->phase()->startSettingInfo()->byInstant()->date(),
+                ],
+                'by_date' => [
+                    'is_need' => $village->phase()->startSettingInfo()->byManual()->isNeed(),
+                    'label' => $village->phase()->startSettingInfo()->byManual()->label(),
+                    'is_selected' => $village->phase()->startSettingInfo()->byManual()->isSelected(),
+                    'date' => $village->phase()->startSettingInfo()->byDate()->date(),
+                ],
             ];
         }
         $result['phase_end_setting'] = [];
@@ -66,11 +80,18 @@ class VillageApiResponseService
                     'is_need' => $village->phase()->endSettingInfo()->byManual()->isNeed(),
                     'label' => $village->phase()->endSettingInfo()->byManual()->label(),
                     'is_selected' => $village->phase()->endSettingInfo()->byManual()->isSelected(),
-                    // 'date' => $village->phase()->endSettingInfo()->byManual()->date(),
                 ],
-                // 'by_limit' => $village->phase()->phaseEndSetting()->byLimitFlg(),
-                // 'by_date' => $village->phase()->phaseEndSetting()->byDateFlg(),
-                // 'border_date' => $village->phase()->phaseEndSetting()->borderDate(),
+                'by_limit' => [
+                    'is_need' => $village->phase()->endSettingInfo()->byLimit()->isNeed(),
+                    'label' => $village->phase()->endSettingInfo()->byLimit()->label(),
+                    'is_selected' => $village->phase()->endSettingInfo()->byLimit()->isSelected(),
+                ],
+                'by_date' => [
+                    'is_need' => $village->phase()->endSettingInfo()->byDate()->isNeed(),
+                    'label' => $village->phase()->endSettingInfo()->byDate()->label(),
+                    'is_selected' => $village->phase()->endSettingInfo()->byDate()->isSelected(),
+                    'date' => $village->phase()->endSettingInfo()->byDate()->date(),
+                ],
             ];
         }
         if ($village->existsMemberInfo()) {
