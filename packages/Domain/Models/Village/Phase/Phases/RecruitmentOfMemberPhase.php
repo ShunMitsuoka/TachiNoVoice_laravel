@@ -6,7 +6,6 @@ use Packages\Domain\Models\Village\Phase\StartSettingInfo;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
-use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseSettingItem;
 use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
 
