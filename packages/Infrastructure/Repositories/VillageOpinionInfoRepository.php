@@ -197,7 +197,7 @@ class VillageOpinionInfoRepository implements VillageOpinionInfoRepositoryInterf
                 $created_opinion = ModelOpinion::create([
                     'village_id' => $village_id->toInt(),
                     'user_id' => $opinion->member()->id()->toInt(),
-                    'category_id' => $opinion->categoryId()->toInt(),
+                    'category_id' => $opinion->existsCategoryId() ? $opinion->categoryId()->toInt() : null,
                     'opinion' => $opinion->content(),
                 ]);
                 $opinion->setId($created_opinion->id);

@@ -6,7 +6,7 @@ use Packages\Domain\Models\Village\VillageOpinionInfo\Policy\Policy;
 
 class Category extends _Entity
 {
-    private ?CategoryId $id;
+    protected ?CategoryId $id;
     private string $name;
     private ?Policy $policy;
 

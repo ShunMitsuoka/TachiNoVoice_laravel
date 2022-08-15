@@ -7,7 +7,7 @@ use Packages\Domain\Models\Village\VillageOpinionInfo\Category\CategoryId;
 
 class Opinion extends _Entity
 {
-    private ?OpinionId $id;
+    protected ?OpinionId $id;
     private string $content;
     private Member $member;
     private ?array $evaluations;
@@ -49,6 +49,10 @@ class Opinion extends _Entity
 
     public function categoryId() : ?CategoryId{
         return $this->category_id;
+    }
+
+    public function existsCategoryId() : bool{
+        return !is_null($this->category_id);
     }
 
 }

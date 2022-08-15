@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Packages\Domain\Models\User\User;
+use Packages\Domain\Models\User\UserInfo\Gender;
 
 class UsersSeeder extends Seeder
 {
@@ -27,7 +28,16 @@ class UsersSeeder extends Seeder
             'password' => Hash::make('test0000'),
             'user_name' => '光岡 駿',
             'nickname' => '光岡 駿',
-            'gender' => User::GENDER_MAN,
+            'gender' => Gender::GENDER_MAN,
+            'date_of_birth' => new Carbon('1996/04/14'),
+        ]);
+
+        ModelsUser::create([
+            'email' => 'test1@gmail.com',
+            'password' => Hash::make('test0000'),
+            'user_name' => '二階堂ふみ',
+            'nickname' => '二階堂ふみ',
+            'gender' => Gender::GENDER_WOMAN,
             'date_of_birth' => new Carbon('1996/04/14'),
         ]);
 

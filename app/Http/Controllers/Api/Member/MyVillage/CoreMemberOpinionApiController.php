@@ -45,7 +45,7 @@ class CoreMemberOpinionApiController extends BaseApiController
     public function store($village_id, Request $request)
     {
         try {
-            DB::transaction();
+            DB::beginTransaction();
             $member = $this->getLoginMember();
             $village = $this->village_repository->get(new VillageId($village_id));
             $village->setMemberInfo($this->village_service);

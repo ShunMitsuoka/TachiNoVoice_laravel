@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('options', function (Blueprint $table) {
+        Schema::create('opinions', function (Blueprint $table) {
             $table->id()->comment('意見id');
             $table->unsignedBigInteger('village_id')->comment('ビレッジid');
             $table->unsignedBigInteger('user_id')->comment('ユーザーid');
