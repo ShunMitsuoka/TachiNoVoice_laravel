@@ -60,7 +60,7 @@ class VillageMemberInfoRepository implements VillageMemberInfoRepositoryInterfac
                     break;
             }
         }
-        return new VillageMemberInfo($hosts, $village_members, $core_members, $rise_members);
+        return new VillageMemberInfo($village_id, $hosts, $village_members, $core_members, $rise_members);
     }
 
     public function update(VillageId $village_id, VillageMemberInfo $village_member_info) : bool{

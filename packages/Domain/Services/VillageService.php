@@ -140,6 +140,7 @@ class VillageService{
         }
         $core_member_keys = array_rand($village_members, $core_member_limit);
         $member_info = new VillageMemberInfo(
+            $village->id(),
             $village_member_info->hosts(),
             [],
             [],

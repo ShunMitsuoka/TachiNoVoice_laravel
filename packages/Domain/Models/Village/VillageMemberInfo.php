@@ -9,17 +9,20 @@ use Packages\Domain\Models\User\VillageMember;
 
 class VillageMemberInfo
 {
+    private VillageId $village_id;
     private array $hosts;
     private array $village_members;
     private array $core_members;
     private array $rise_members;
 
     function __construct(
+        VillageId $village_id,
         array $hosts,
         array $village_members,
         array $core_members,
         array $rise_members,
     ){
+        $this->village_id = $village_id;
         $this->hosts = $hosts;
         $this->village_members = $village_members;
         $this->core_members = $core_members;
