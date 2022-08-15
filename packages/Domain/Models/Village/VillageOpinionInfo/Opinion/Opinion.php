@@ -23,7 +23,7 @@ class Opinion extends _Entity
         $this->id = $id;
         $this->content = $content;
         $this->member = $member;
-        $this->evaluations = $evaluations;
+        $this->evaluations = is_null($evaluations) ? [] : $evaluations;
         $this->category_id = $category_id;
     }
 

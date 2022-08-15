@@ -4,6 +4,7 @@ namespace Packages\Domain\Models\User;
 use Carbon\Carbon;
 use Packages\Domain\Models\User\UserInfo\Gender;
 use Packages\Domain\Models\Village\VillageId;
+use Packages\Domain\Services\VillageOpinionInfoService;
 
 class CoreMember extends VillageMember
 {
@@ -18,5 +19,9 @@ class CoreMember extends VillageMember
     ) {
         parent::__construct($village_id, $id, $name, $nickname, $email, $gender, $date_of_birth);
         $this->role_id = self::ROLE_CORE_MEMBER;
+    }
+
+    public function giveAnOpinion(string $opinion, VillageOpinionInfoService $service){
+        $service->addOpinion($this->village_id, $this, $opinion);
     }
 }

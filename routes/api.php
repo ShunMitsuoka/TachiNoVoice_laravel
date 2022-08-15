@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterApiController;
 use App\Http\Controllers\API\Auth\LoginApiController;
+use App\Http\Controllers\Api\Member\MyVillage\CoreMemberOpinionApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageMemberApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillagePhaseApiController;
@@ -45,5 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my/village/{id}/phase/setting', [MyVillagePhaseApiController::class, 'setting']);
     // ビレッジメンバー
     Route::get('/my/village/{id}/members/', [MyVillageMemberApiController::class, 'show']);
-
+    // コアメンバー意見
+    Route::apiResource('/my/village/{village_id}/core_member/opinion', CoreMemberOpinionApiController::class);
 });
+

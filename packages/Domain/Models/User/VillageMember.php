@@ -23,11 +23,6 @@ class VillageMember extends Member
         $this->role_id = self::ROLE_VILLAGE_MEMBER;
     }
 
-    public function giveAnOpinion()
-    {
-        # code...
-    }
-
     public function isVillageMember(){
         return $this->role_id === self::ROLE_VILLAGE_MEMBER;
     }
