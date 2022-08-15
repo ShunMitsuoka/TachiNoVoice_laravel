@@ -86,6 +86,7 @@ class Member extends User
             throw new Exception("対象ユーザーはホストではありません。", 1);
         }
         return new Host(
+            $village->id(),
             $this->id(),
             $this->name(),
             $this->nickname(),
@@ -100,6 +101,7 @@ class Member extends User
             throw new Exception("対象ユーザーはビレッジメンバーではありません。", 1);
         }
         return new VillageMember(
+            $village->id(),
             $this->id(),
             $this->name(),
             $this->nickname(),
@@ -114,6 +116,7 @@ class Member extends User
             throw new Exception("対象ユーザーはコアメンバーではありません。", 1);
         }
         return new CoreMember(
+            $village->id(),
             $this->id(),
             $this->name(),
             $this->nickname(),
@@ -128,6 +131,7 @@ class Member extends User
             throw new Exception("対象ユーザーはライズメンバーではありません。", 1);
         }
         return new RiseMember(
+            $village->id(), 
             $this->id(),
             $this->name(),
             $this->nickname(),

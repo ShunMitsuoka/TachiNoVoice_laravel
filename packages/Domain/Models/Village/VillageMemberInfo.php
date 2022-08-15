@@ -47,6 +47,7 @@ class VillageMemberInfo
 
     public function addHost(Member $member){
         $this->hosts[$member->id()->toInt()] = new Host(
+            $this->village_id,
             $member->id(),
             $member->name(),
             $member->nickname(),
@@ -58,6 +59,7 @@ class VillageMemberInfo
 
     public function addVillageMember(Member $member){
         $this->village_members[$member->id()->toInt()] = new VillageMember(
+            $this->village_id,
             $member->id(),
             $member->name(),
             $member->nickname(),
@@ -69,6 +71,7 @@ class VillageMemberInfo
 
     public function addCoreMember(Member $member){
         $this->core_members[$member->id()->toInt()] = new CoreMember(
+            $this->village_id,
             $member->id(),
             $member->name(),
             $member->nickname(),
@@ -80,6 +83,7 @@ class VillageMemberInfo
 
     public function addRiseMember(Member $member){
         $this->rise_members[$member->id()->toInt()] = new RiseMember(
+            $this->village_id,
             $member->id(),
             $member->name(),
             $member->nickname(),
