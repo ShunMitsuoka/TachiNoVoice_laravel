@@ -1,4 +1,5 @@
 <?php
+
 namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
@@ -19,7 +20,7 @@ class Host extends Member
         Carbon $date_of_birth,
     ) {
         parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth);
-        $this->$village_id = $village_id;
+        $this->village_id = $village_id;
         $this->role_id = self::ROLE_HOST;
     }
 }

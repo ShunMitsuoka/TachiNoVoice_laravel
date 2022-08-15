@@ -1,4 +1,5 @@
 <?php
+
 namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
@@ -19,23 +20,27 @@ class VillageMember extends Member
         Carbon $date_of_birth,
     ) {
         parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth);
-        $this->$village_id = $village_id;
+        $this->village_id = $village_id;
         $this->role_id = self::ROLE_VILLAGE_MEMBER;
     }
 
-    public function isVillageMember(){
+    public function isVillageMember()
+    {
         return $this->role_id === self::ROLE_VILLAGE_MEMBER;
     }
 
-    public function isCoreMember(){
+    public function isCoreMember()
+    {
         return $this->role_id === self::ROLE_CORE_MEMBER;
     }
 
-    public function isRiseMember(){
+    public function isRiseMember()
+    {
         return $this->role_id === self::ROLE_RISE_MEMBER;
     }
 
-    public function role() : int{
+    public function role(): int
+    {
         return $this->role_id;
     }
 }
