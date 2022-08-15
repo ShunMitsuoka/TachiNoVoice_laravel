@@ -1,7 +1,8 @@
 <?php
-namespace Packages\Domain\Models\Village\VillageOpinionInfo;
+namespace Packages\Domain\Models\Village\VillageOpinionInfo\Category;
 
 use Packages\Domain\Models\Common\_Entity;
+use Packages\Domain\Models\Village\VillageOpinionInfo\Policy\Policy;
 
 class Category extends _Entity
 {
@@ -29,6 +30,10 @@ class Category extends _Entity
 
     public function name() : string{
         return $this->name;
+    }
+
+    public function existsPolicy() : bool{
+        return !is_null($this->policy);
     }
 
     public function policy() : Policy{

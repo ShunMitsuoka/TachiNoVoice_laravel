@@ -1,5 +1,5 @@
 <?php
-namespace Packages\Domain\Models\Village\VillageOpinionInfo;
+namespace Packages\Domain\Models\Village\VillageOpinionInfo\Policy;
 
 class Policy
 {
@@ -8,7 +8,7 @@ class Policy
 
     function __construct(
         string $content,
-        ?array $satisfactions,
+        ?array $satisfactions = [],
     ) {
         $this->content = $content;
         $this->satisfactions = $satisfactions;
@@ -18,7 +18,7 @@ class Policy
         return $this->content;
     }
 
-    public function satisfaction() : array{
+    public function satisfactions() : array{
         return $this->satisfactions;
     }
 

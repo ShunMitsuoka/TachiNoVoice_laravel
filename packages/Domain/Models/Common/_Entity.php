@@ -11,5 +11,10 @@ abstract class _Entity
         return $this->id;
     }
 
+    public function existsId() : bool
+    {
+        return !is_null($this->id);
+    }
+
     abstract public function setId(int $id);
 }

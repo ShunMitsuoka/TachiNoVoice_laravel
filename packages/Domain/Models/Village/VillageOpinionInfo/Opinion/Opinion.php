@@ -1,8 +1,9 @@
 <?php
-namespace Packages\Domain\Models\Village\VillageOpinionInfo;
+namespace Packages\Domain\Models\Village\VillageOpinionInfo\Opinion;
 
 use Packages\Domain\Models\Common\_Entity;
 use Packages\Domain\Models\User\Member;
+use Packages\Domain\Models\Village\VillageOpinionInfo\Category\CategoryId;
 
 class Opinion extends _Entity
 {
@@ -17,7 +18,7 @@ class Opinion extends _Entity
         string $content,
         Member $member,
         ?array $evaluations,
-        ?CategoryId $category_id,
+        ?CategoryId $category_id = null,
     ) {
         $this->id = $id;
         $this->content = $content;
@@ -46,7 +47,7 @@ class Opinion extends _Entity
         return $this->evaluations;
     }
 
-    public function categoryId() : CategoryId{
+    public function categoryId() : ?CategoryId{
         return $this->category_id;
     }
 

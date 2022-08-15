@@ -1,5 +1,5 @@
 <?php
-namespace Packages\Domain\Models\Village\VillageOpinionInfo;
+namespace Packages\Domain\Models\Village\VillageOpinionInfo\Evaluation;
 
 use Packages\Domain\Models\User\Member;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Packages\Domain\Models\Village\VillageOpinionInfo;
+namespace Packages\Domain\Models\Village\VillageOpinionInfo\Category;
 
 use Packages\Domain\Models\Common\_Id;
 
