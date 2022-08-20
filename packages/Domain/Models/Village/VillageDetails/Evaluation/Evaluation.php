@@ -6,20 +6,20 @@ use Packages\Domain\Models\Village\VillageOpinionInfo\Opinion\OpinionId;
 
 class Evaluation
 {
-    private OpinionId $opinion;
+    private OpinionId $opinion_id;
     private int $value;
 
     function __construct(
-        OpinionId $opinion,
+        OpinionId $opinion_id,
         int $value,
     ) {
-        $this->opinion = $opinion;
+        $this->opinion_id = $opinion_id;
         $this->value = $value;
     }
 
-    public function opinion(): OpinionId
+    public function opinionId(): OpinionId
     {
-        return $this->opinion;
+        return $this->opinion_id;
     }
 
     public function value(): int

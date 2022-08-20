@@ -6,6 +6,7 @@ class Review
 {
     private array $satisfactions;
     private string $comment;
+
     function __construct(
         array $satisfactions = [],
         string $comment,
@@ -14,7 +15,7 @@ class Review
         $this->comment = $comment;
     }
 
-    public function satisfaction(): array
+    public function satisfactions(): array
     {
         return $this->satisfactions;
     }
