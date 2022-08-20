@@ -1,6 +1,7 @@
 <?php
 namespace Packages\Domain\Models\Village\VillageOpinionInfo;
 
+use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Models\Village\VillageOpinionInfo\Opinion\Opinion;
 
@@ -34,6 +35,10 @@ class VillageOpinionInfo
 
     public function addOpinion(Opinion $opinion){
         $this->opinios[] = $opinion;
+    }
+
+    public function alreadySaidOpinion(Member $member) : bool{
+        
     }
 
 }
