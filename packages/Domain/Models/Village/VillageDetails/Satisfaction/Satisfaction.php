@@ -2,17 +2,24 @@
 
 namespace Packages\Domain\Models\Village\VillageDetails\Satisfaction;
 
+use Package\Domain\Models\Village\VillageDetais\Policy\PolicyId;
+
 class Satisfaction
 {
+    private PolicyId $policy_id;
     private int $level;
-    private ?string $comment;
 
     function __construct(
+        PolicyId $policy_id,
         int $level,
-        ?string $comment,
     ) {
+        $this->policy_id = $policy_id;
         $this->level = $level;
-        $this->comment = $comment;
+    }
+
+    public function policyId(): PolicyId
+    {
+        return $this->policy_id;
     }
 
     public function level(): int
@@ -20,8 +27,4 @@ class Satisfaction
         return $this->level;
     }
 
-    public function comment(): string
-    {
-        return $this->comment;
-    }
 }

@@ -2,7 +2,7 @@
 
 namespace Packages\Domain\Village\VillageDetails\Evaluation;
 
-use Packages\Domain\Models\Village\VillageOpinionInfo\Opinion\OpinionId;
+use Packages\Domain\Village\VillageDetails\Opinion\OpinionId;
 
 class Evaluation
 {

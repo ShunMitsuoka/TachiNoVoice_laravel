@@ -39,4 +39,8 @@ class Opinion extends _Entity
     {
         return $this->category_id;
     }
+
+    public function existsCategoryId() : bool{
+        return !is_null($this->category_id);
+    }
 }

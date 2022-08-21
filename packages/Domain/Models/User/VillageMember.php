@@ -58,14 +58,33 @@ class VillageMember extends Member
     {
         return $this->opinions;
     }
+    public function setOpinions(array $opinions)
+    {
+        $this->opinions = $opinions;
+    }
 
     public function evaluations(): array
     {
         return $this->evaluations;
     }
 
+    public function setEvaluations(array $evaluations)
+    {
+        $this->evaluations = $evaluations;
+    }
+
     public function review(): Review
     {
         return $this->review;
+    }
+
+    public function setReview(Review $review)
+    {
+        $this->review = $review;
+    }
+
+    public function hasReview(): bool
+    {
+        return !is_null($this->review);
     }
 }

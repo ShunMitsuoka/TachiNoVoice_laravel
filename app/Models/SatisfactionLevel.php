@@ -11,9 +11,8 @@ class SatisfactionLevel extends Model
     protected $table = 'satisfaction_levels';
     public $timestamps = true;
     protected $fillable = [
-        'user_id',
+        'review_id',
         'policy_id',
         'satisfaction_level',
-        'comment',
     ];
 }

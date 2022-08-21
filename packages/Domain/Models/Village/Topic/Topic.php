@@ -40,4 +40,9 @@ class Topic
     {
         return $this->categories;
     }
+
+    public function setCategories(array $categories)
+    {
+        $this->categories = $categories;
+    }
 }
