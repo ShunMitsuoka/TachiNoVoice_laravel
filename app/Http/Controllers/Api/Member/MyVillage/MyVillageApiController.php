@@ -6,21 +6,24 @@ use App\Http\Controllers\Api\BaseApiController;
 use App\Services\VillageApiResponseService;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
-use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\Casts\VillageCast;
+use Packages\Domain\Services\VillageDetailsService;
 use Packages\Domain\Services\VillageService;
 
 class MyVillageApiController extends BaseApiController
 {
     protected VillageService $village_service;
+    protected VillageDetailsService $village_details_service;
     protected VillageRepositoryInterface $village_repository;
 
     function __construct(
         VillageService $village_service,
+        VillageDetailsService $village_details_service,
         VillageRepositoryInterface $village_repository,
     ) {
         $this->village_service = $village_service;
+        $this->village_details_service = $village_details_service;
         $this->village_repository = $village_repository;
     }
 
@@ -65,6 +68,7 @@ class MyVillageApiController extends BaseApiController
         $member = $this->getLoginMember();
         $village = $this->village_repository->get(new VillageId($id));
         $village->setMemberInfo($this->village_service);
+        $this->village_details_service->setDetails($village);
         $result = VillageApiResponseService::villageResponse($village, $member);
         return $this->makeSuccessResponse($result);
     }

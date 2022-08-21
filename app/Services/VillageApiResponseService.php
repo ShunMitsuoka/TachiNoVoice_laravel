@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Village;
+use Packages\Domain\Services\VillagePhaseTaskService;
 
 class VillageApiResponseService
 {
@@ -86,6 +87,7 @@ class VillageApiResponseService
         }
         if (!is_null($member)) {
             $result['role_id'] = $village->getMemberRole($member);
+            $result['is_task_done'] = VillagePhaseTaskService::isTaskDone($village, $member);
         }
         return $result;
     }
