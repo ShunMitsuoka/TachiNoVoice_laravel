@@ -27,7 +27,7 @@ class VillageMemberInfoRepository implements VillageMemberInfoRepositoryInterfac
         foreach ($village_member_records as $record) {
             switch ($record->role_id) {
                 case Member::ROLE_VILLAGE_MEMBER:
-                    $village_members[] = new VillageMember(
+                    $village_members[$record->user_id] = new VillageMember(
                         $village_id,
                         new UserId($record->user_id),
                         $record->user_name,
@@ -38,7 +38,7 @@ class VillageMemberInfoRepository implements VillageMemberInfoRepositoryInterfac
                     );
                     break;
                 case Member::ROLE_CORE_MEMBER:
-                    $core_members[] = new CoreMember(
+                    $core_members[$record->user_id] = new CoreMember(
                         $village_id,
                         new UserId($record->user_id),
                         $record->user_name,
@@ -49,7 +49,7 @@ class VillageMemberInfoRepository implements VillageMemberInfoRepositoryInterfac
                     );
                     break;
                 case Member::ROLE_RISE_MEMBER:
-                    $rise_members[] = new RiseMember(
+                    $rise_members[$record->user_id] = new RiseMember(
                         $village_id,
                         new UserId($record->user_id),
                         $record->user_name,

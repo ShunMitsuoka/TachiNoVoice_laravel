@@ -1,14 +1,13 @@
 <?php
-
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
-use Packages\Domain\Services\VillageOpinionInfoService;
+use Packages\Domain\Services\VillageDetailsService;
 use Packages\Domain\Services\VillagePermissionService;
 use Packages\Domain\Services\VillageService;
+use Packages\Infrastructure\Repositories\VillageDetailsRepository;
 use Packages\Infrastructure\Repositories\VillageMemberInfoRepository;
-use Packages\Infrastructure\Repositories\VillageOpinionInfoRepository;
 use Packages\Infrastructure\Repositories\VillageRepository;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,9 +33,9 @@ class AppServiceProvider extends ServiceProvider
                 new VillageRepository()
             );
         });
-        $this->app->singleton(VillageOpinionInfoService::class, function ($app) {
-            return new VillageOpinionInfoService(
-                new VillageOpinionInfoRepository()
+        $this->app->singleton(VillageDetailsService::class, function ($app) {
+            return new VillageDetailsService(
+                new VillageDetailsRepository()
             );
         });
     }

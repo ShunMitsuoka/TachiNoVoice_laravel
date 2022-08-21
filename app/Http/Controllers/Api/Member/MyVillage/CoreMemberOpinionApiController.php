@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Api\Member\MyVillage;
 
-use App\Http\Controllers\API\BaseApiController;
+use App\Http\Controllers\Api\BaseApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Village\VillageId;
-use Packages\Domain\Services\VillageOpinionInfoService;
+use Packages\Domain\Services\VillageDetailsService;
 use Packages\Domain\Services\VillageService;
 
 class CoreMemberOpinionApiController extends BaseApiController
 {
     protected VillageService $village_service;
-    protected VillageOpinionInfoService $village_opinion_info_service;
+    protected VillageDetailsService $village_details_service;
     protected VillageRepositoryInterface $village_repository;
 
     function __construct(
         VillageService $village_service,
-        VillageOpinionInfoService $village_opinion_info_service,
+        VillageDetailsService $village_details_service,
         VillageRepositoryInterface $village_repository,
     ) {
         $this->village_service = $village_service;
-        $this->village_opinion_info_service = $village_opinion_info_service;
+        $this->village_details_service = $village_details_service;
         $this->village_repository = $village_repository;
     }
     
@@ -49,8 +49,10 @@ class CoreMemberOpinionApiController extends BaseApiController
             $member = $this->getLoginMember();
             $village = $this->village_repository->get(new VillageId($village_id));
             $village->setMemberInfo($this->village_service);
+            $this->village_details_service->setDetails($village);
             $core_member = $member->becomeCoreMember($village);
-            $core_member->giveAnOpinion($request->opinion, $this->village_opinion_info_service);
+            $core_member->giveAnOpinion($request->opinion);
+            $this->village_details_service->updateDetails($village);
             DB::commit();
             return $this->makeSuccessResponse([]);
         } catch (\Throwable $th) {

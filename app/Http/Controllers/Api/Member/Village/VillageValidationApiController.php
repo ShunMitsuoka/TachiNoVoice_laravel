@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Member\Village;
 
-use App\Http\Controllers\API\BaseApiController;
+use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Requests\Api\Member\Village\SetSettingRequest;
 use App\Http\Requests\Api\Member\Village\SetTopicRequest;
 

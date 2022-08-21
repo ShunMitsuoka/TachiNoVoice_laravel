@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Member\MyVillage;
 
-use App\Http\Controllers\API\BaseApiController;
+use App\Http\Controllers\Api\BaseApiController;
 use App\Services\VillageApiResponseService;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Village\VillageId;

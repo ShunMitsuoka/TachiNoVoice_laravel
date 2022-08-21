@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\Auth\RegisterApiController;
-use App\Http\Controllers\API\Auth\LoginApiController;
+use App\Http\Controllers\Api\Auth\RegisterApiController;
+use App\Http\Controllers\Api\Auth\LoginApiController;
 use App\Http\Controllers\Api\Member\MyVillage\CoreMemberOpinionApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageMemberApiController;

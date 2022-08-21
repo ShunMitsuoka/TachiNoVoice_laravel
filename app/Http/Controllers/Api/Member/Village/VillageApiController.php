@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Member\Village;
 
-use App\Http\Controllers\API\BaseApiController;
+use App\Http\Controllers\Api\BaseApiController;
 use App\Services\VillageApiResponseService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

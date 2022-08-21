@@ -10,9 +10,9 @@ use Packages\Domain\Models\Village\VillageId;
 class VillageMember extends Member
 {
     protected VillageId $village_id;
-    private array $opinion;
-    private array $evaluations;
-    private ?Review $review;
+    protected array $opinions;
+    protected array $evaluations;
+    protected ?Review $review;
 
     function __construct(
         VillageId $village_id,
@@ -29,7 +29,7 @@ class VillageMember extends Member
         parent::__construct($id, $name, $nickname, $email, $gender, $date_of_birth, $opinions, $evaluations, $review);
         $this->village_id = $village_id;
         $this->role_id = self::ROLE_VILLAGE_MEMBER;
-        $this->opinion = $opinions;
+        $this->opinions = $opinions;
         $this->evaluations = $evaluations;
         $this->review = $review;
     }

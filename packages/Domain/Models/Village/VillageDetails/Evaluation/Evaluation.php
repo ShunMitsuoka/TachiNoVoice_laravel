@@ -1,8 +1,8 @@
 <?php
 
-namespace Packages\Domain\Village\VillageDetails\Evaluation;
+namespace Packages\Domain\Models\Village\VillageDetails\Evaluation;
 
-use Packages\Domain\Village\VillageDetails\Opinion\OpinionId;
+use Packages\Domain\Models\Village\VillageDetails\Opinion\OpinionId;
 
 class Evaluation
 {

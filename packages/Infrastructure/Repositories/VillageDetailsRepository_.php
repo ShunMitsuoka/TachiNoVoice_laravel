@@ -1,5 +1,5 @@
 <?php
-namespace Packages\Infrastructure\Repositories;
+namespace Packgage\Infrastructure\Repositories;
 
 use App\Models\Category as ModelCategory;
 use App\Models\Evaluation as ModelEvaluation;
@@ -25,6 +25,7 @@ use Packages\Domain\Services\Casts\EvaluationCast;
 use Packages\Domain\Services\Casts\MemberCast;
 use Packages\Domain\Services\Casts\OpinionCast;
 use Packages\Domain\Services\Casts\SatisfactionCast;
+
 class VillageDetailsRepository implements VillageDetailsRepositoryInterface
 {
     public function get(Village $village): Village

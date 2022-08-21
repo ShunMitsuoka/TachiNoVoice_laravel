@@ -6,6 +6,7 @@ use Packages\Domain\Models\Common\_Entity;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Topic\Topic;
+use Packages\Domain\Services\VillageDetailsService;
 use Packages\Domain\Services\VillagePhaseService;
 use Packages\Domain\Services\VillageService;
 
@@ -80,6 +81,11 @@ class Village extends _Entity
     public function setMemberInfo(VillageService $service)
     {
         $this->member_info = $service->getVillageMemberInfo($this);
+    }
+
+    public function setDetailsInfo(VillageDetailsService $service)
+    {
+        // $service->get($this);
     }
 
     public function getMemberRole(Member $member): int

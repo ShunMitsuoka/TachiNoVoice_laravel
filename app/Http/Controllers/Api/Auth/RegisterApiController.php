@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Http\Controllers\API\BaseApiController;
+use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;

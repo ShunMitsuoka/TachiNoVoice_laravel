@@ -5,6 +5,7 @@ use Packages\Domain\Models\User\CoreMember;
 use Packages\Domain\Models\User\Host;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\User\RiseMember;
+use Packages\Domain\Models\User\UserId;
 use Packages\Domain\Models\User\VillageMember;
 
 class VillageMemberInfo
@@ -123,5 +124,9 @@ class VillageMemberInfo
 
     public function getRiseMemberCount() : int{
         return count($this->rise_members);
+    }
+
+    public function searchFromCoreMember(Member $member) : ?CoreMember{
+        return $this->core_members[$member->id()->toInt()];
     }
 }

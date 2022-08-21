@@ -4,7 +4,6 @@ namespace Packages\Domain\Models\Village\VillageDetails\Opinion;
 
 use Packages\Domain\Models\Common\_Entity;
 use Packages\Domain\Models\Village\VillageDetails\Category\CategoryId;
-use Packages\Domain\Village\VillageDetails\Opinion\OpinionId;
 
 class Opinion extends _Entity
 {

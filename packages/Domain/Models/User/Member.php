@@ -115,15 +115,7 @@ class Member extends User
         if(!$village->memberInfo()->isCoreMember($this)){
             throw new Exception("対象ユーザーはコアメンバーではありません。", 1);
         }
-        return new CoreMember(
-            $village->id(),
-            $this->id(),
-            $this->name(),
-            $this->nickname(),
-            $this->email(),
-            $this->gender(),
-            $this->dateOfBirth()
-        );
+        return $village->memberInfo()->searchFromCoreMember($this);
     }
 
     public function becomeRiseMember(Village $village) : RiseMember{

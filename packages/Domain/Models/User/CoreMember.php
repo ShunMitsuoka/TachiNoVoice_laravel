@@ -3,8 +3,9 @@ namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
 use Packages\Domain\Models\User\UserInfo\Gender;
+use Packages\Domain\Models\Village\VillageDetails\Opinion\Opinion;
 use Packages\Domain\Models\Village\VillageId;
-use Packages\Domain\Services\VillageOpinionInfoService;
+use Packages\Domain\Services\VillageDetailsService;
 
 class CoreMember extends VillageMember
 {
@@ -21,7 +22,7 @@ class CoreMember extends VillageMember
         $this->role_id = self::ROLE_CORE_MEMBER;
     }
 
-    public function giveAnOpinion(string $opinion, VillageOpinionInfoService $service){
-        $service->addOpinion($this->village_id, $this, $opinion);
+    public function giveAnOpinion(string $opinion){
+        $this->opinions[] = new Opinion(null, $opinion, null);
     }
 }

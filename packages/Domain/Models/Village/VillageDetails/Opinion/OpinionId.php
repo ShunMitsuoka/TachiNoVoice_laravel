@@ -1,6 +1,6 @@
 <?php
 
-namespace Packages\Domain\Village\VillageDetails\Opinion;
+namespace Packages\Domain\Models\Village\VillageDetails\Opinion;
 
 use Packages\Domain\Models\Common\_Id;
 

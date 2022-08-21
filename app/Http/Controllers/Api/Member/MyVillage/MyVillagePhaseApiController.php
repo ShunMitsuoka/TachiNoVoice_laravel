@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Member\MyVillage;
 
-use App\Http\Controllers\API\BaseApiController;
+use App\Http\Controllers\Api\BaseApiController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
