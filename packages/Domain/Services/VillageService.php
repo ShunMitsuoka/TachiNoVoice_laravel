@@ -117,7 +117,14 @@ class VillageService{
             $village->phase()->completePhase();
             $this->village_repository->update($village);
             // 次フェーズに進める。
-            $village->nextPhase();
+            switch ($village->phase()->phaseNo()) {
+                case VillagePhase::PHASE_CATEGORIZE_OPINIONS:
+                    $village->nextPhase(VillagePhase::PHASE_STATUS_IN_PROGRESS);
+                    break;
+                default:
+                    $village->nextPhase();
+                    break;
+            }
             $updated_village = $this->village_repository->update($village);
             DB::commit();
             return $updated_village;

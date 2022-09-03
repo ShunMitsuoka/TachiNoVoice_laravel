@@ -108,12 +108,12 @@ class Village extends _Entity
         throw new \Exception('メンバーに役割が設定されていません。');
     }
 
-    public function nextPhase()
+    public function nextPhase(int $phase_statis = VillagePhase::PHASE_STATUS_PREPARATION)
     {
         $this->phase = VillagePhaseService::getVillagePhase(
             null,
             $this->phase->phaseNo() + 1,
-            VillagePhase::PHASE_STATUS_PREPARATION,
+            $phase_statis,
             null,
             null
         );
