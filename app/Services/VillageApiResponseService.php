@@ -3,7 +3,10 @@
 namespace App\Services;
 
 use Packages\Domain\Models\User\Member;
+use Packages\Domain\Models\User\VillageMember;
 use Packages\Domain\Models\Village\Village;
+use Packages\Domain\Services\Casts\MemberCast;
+use Packages\Domain\Services\Casts\OpinionCast;
 use Packages\Domain\Services\VillagePhaseTaskService;
 
 class VillageApiResponseService
@@ -90,5 +93,44 @@ class VillageApiResponseService
             $result['is_task_done'] = VillagePhaseTaskService::isTaskDone($village, $member);
         }
         return $result;
+    }
+
+    static public function villageDetailsResponse(
+        Village $village,
+        Member $member = null,
+    ) {
+        $result = self::villageResponse($village, $member);
+        $result['members']['core_members'] = self::makeMemberDetails($village, $village->memberInfo()->coreMembers());
+        $result['members']['rise_members'] = self::makeMemberDetails($village, $village->memberInfo()->riseMembers());
+        return $result;
+    }
+
+
+    static protected function makeMemberDetails(
+        Village $village,
+        array $members,
+    ){
+        $public_info = $village->publicInformation();
+        $member_details = [];
+        foreach ($members as $member) {
+            $member = MemberCast::castVillageMember($member);
+            $member_detail = [
+                'user_id' => $member->id()->toInt(),
+                'nickname' => $member->nickname(),
+                'age' => $public_info->isAgePublic() ? $member->age() : null,
+                'gender' => $public_info->isGenderPublic() ? $member->gender()->id() : null,
+                'gender_name' => $public_info->isGenderPublic() ? $member->gender()->name() : null,
+            ];
+            $opinions = [];
+            foreach ($member->opinions() as $opinion) {
+                $opinion = OpinionCast::castOpinion($opinion);
+                $opinions[] = $opinion->content();
+            }
+            if($opinions > 0){
+                $member_detail['opinions'] = $opinions;
+            }
+            $member_details[] = $member_detail;
+        }
+        return $member_details;
     }
 }

@@ -41,6 +41,7 @@ class MyVillageMemberApiController extends BaseApiController
         foreach ($member_info->villageMembers() as $village_member) {
             $village_member = MemberCast::castMember($village_member);
             $village_members[] = [
+                'user_id' => $village_member->id(),
                 'nickname' => $public_info->isNicknamePublic() ? $village_member->nickname() : null,
                 'age' => $public_info->isAgePublic() ? $village_member->age() : null,
                 'gender' => $public_info->isGenderPublic() ? $village_member->gender()->id() : null,
@@ -51,6 +52,7 @@ class MyVillageMemberApiController extends BaseApiController
         foreach ($member_info->coreMembers() as $core_member) {
             $core_member = MemberCast::castMember($core_member);
             $core_members[] = [
+                'user_id' => $core_member->id(),
                 'nickname' => $public_info->isNicknamePublic() ? $core_member->nickname() : null,
                 'age' => $public_info->isAgePublic() ? $core_member->age() : null,
                 'gender' => $public_info->isGenderPublic() ? $core_member->gender()->id() : null,
@@ -61,6 +63,7 @@ class MyVillageMemberApiController extends BaseApiController
         foreach ($member_info->riseMembers() as $rise_member) {
             $rise_member = MemberCast::castMember($rise_member);
             $rise_members[] = [
+                'user_id' => $rise_member->id(),
                 'nickname' => $public_info->isNicknamePublic() ? $rise_member->nickname() : null,
                 'age' => $public_info->isAgePublic() ? $rise_member->age() : null,
                 'gender' => $public_info->isGenderPublic() ? $rise_member->gender()->id() : null,
