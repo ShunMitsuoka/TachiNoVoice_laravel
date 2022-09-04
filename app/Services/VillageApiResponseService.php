@@ -5,6 +5,8 @@ namespace App\Services;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\User\VillageMember;
 use Packages\Domain\Models\Village\Village;
+use Packages\Domain\Models\Village\VillageDetails\Category\Category;
+use Packages\Domain\Services\Casts\CategoryCast;
 use Packages\Domain\Services\Casts\MemberCast;
 use Packages\Domain\Services\Casts\OpinionCast;
 use Packages\Domain\Services\VillagePhaseTaskService;
@@ -100,37 +102,56 @@ class VillageApiResponseService
         Member $member = null,
     ) {
         $result = self::villageResponse($village, $member);
-        $result['members']['core_members'] = self::makeMemberDetails($village, $village->memberInfo()->coreMembers());
-        $result['members']['rise_members'] = self::makeMemberDetails($village, $village->memberInfo()->riseMembers());
+
+        $categories = $village->topic()->categories();
+
+        $result_categories = [];
+        $result_categories[Category::UNCATEGORIZED_ID] = [
+            'category_name' => Category::UNCATEGORIZED_LABEL,
+            'category_id' => Category::UNCATEGORIZED_ID,
+            'opinions' => []
+        ];
+        foreach ($categories as $category){
+            $category = CategoryCast::castCategory($category);
+            $result_categories[$category->id()->toInt()] = [
+                'category_name' => $category->name(),
+                'category_id' => $category->id()->toInt(),
+                'opinions' => []
+            ];
+        }
+        $result_categories = self::setOpinions($village, $village->memberInfo()->coreMembers(), $result_categories);
+        $result_categories = self::setOpinions($village, $village->memberInfo()->riseMembers(), $result_categories);
+
+        $result['categories'] = array_values($result_categories);
         return $result;
     }
 
 
-    static protected function makeMemberDetails(
+    static protected function setOpinions(
         Village $village,
         array $members,
+        array $result_categories,
     ){
         $public_info = $village->publicInformation();
-        $member_details = [];
         foreach ($members as $member) {
             $member = MemberCast::castVillageMember($member);
             $member_detail = [
                 'user_id' => $member->id()->toInt(),
+                'role_id' => $member->role(),
                 'nickname' => $member->nickname(),
                 'age' => $public_info->isAgePublic() ? $member->age() : null,
                 'gender' => $public_info->isGenderPublic() ? $member->gender()->id() : null,
-                'gender_name' => $public_info->isGenderPublic() ? $member->gender()->name() : null,
             ];
-            $opinions = [];
             foreach ($member->opinions() as $opinion) {
                 $opinion = OpinionCast::castOpinion($opinion);
-                $opinions[] = $opinion->content();
+                $category_id = $opinion->existsCategoryId() ? $opinion->categoryId()->toInt() : Category::UNCATEGORIZED_ID;
+                $result_categories[$category_id]['opinions'][] = [
+                    'opinion_id' => $opinion->id()->toInt(),
+                    'opinion' => $opinion->content(),
+                    'member' => $member_detail,
+                ];
             }
-            if($opinions > 0){
-                $member_detail['opinions'] = $opinions;
-            }
-            $member_details[] = $member_detail;
         }
-        return $member_details;
+        return $result_categories;
     }
 }

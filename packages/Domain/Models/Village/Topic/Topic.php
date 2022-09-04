@@ -2,6 +2,8 @@
 
 namespace Packages\Domain\Models\Village\Topic;
 
+use Packages\Domain\Models\Village\VillageDetails\Category\Category;
+
 class Topic
 {
     private string $title;
@@ -40,9 +42,12 @@ class Topic
     {
         return $this->categories;
     }
-
     public function setCategories(array $categories)
     {
         $this->categories = $categories;
+    }
+    public function addCategory(Category $category)
+    {
+        $this->categories[] = $category;
     }
 }

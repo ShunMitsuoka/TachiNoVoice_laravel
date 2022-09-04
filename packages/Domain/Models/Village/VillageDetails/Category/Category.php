@@ -9,6 +9,10 @@ use Packages\Domain\Models\Common\_Entity;
 
 class Category extends _Entity
 {
+
+    public const UNCATEGORIZED_ID = 0;
+    public const UNCATEGORIZED_LABEL = 'カテゴリー未分類';
+
     protected ?CategoryId $id;
     private string $name;
     private ?Policy $policy;

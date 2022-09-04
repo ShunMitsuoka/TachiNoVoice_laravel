@@ -77,7 +77,6 @@ class VillageDetailsRepository implements VillageDetailsRepositoryInterface
             // カテゴリー保存
             $category = CategoryCast::castCategory($category);
             if($category->existsId()){
-                $category_ids[] = $category->id()->toInt();
                 ModelCategory::where('id', $category->id()->toInt())
                     ->update([
                         'village_id' => $village_id->toInt(),
@@ -90,6 +89,7 @@ class VillageDetailsRepository implements VillageDetailsRepositoryInterface
                 ]);
                 $category->setId($created_category->id);
             }
+            $category_ids[] = $category->id()->toInt();
             // 方針保存
             if($category->existsPolicy()){
                 $policy = $category->policy();
@@ -158,7 +158,7 @@ class VillageDetailsRepository implements VillageDetailsRepositoryInterface
                 $evaluation_record->evaluation,
             );
         }
-        $member->setEvaluations($opinions);
+        $member->setEvaluations($evaluations);
         // レビュー
         $review_record = ModelReview::select(
             'comment',
@@ -194,16 +194,20 @@ class VillageDetailsRepository implements VillageDetailsRepositoryInterface
         $opinions = $member->opinions();
         foreach ($opinions as $opinion) {
             $opinion = OpinionCast::castOpinion($opinion);
-            ModelOpinion::updateOrCreate([
-                'village_id' => $village_id->toInt(),
-                'user_id' => $user_id->toInt(),
-                'category_id' => $opinion->categoryId(),
-            ],[
-                'village_id' => $village_id->toInt(),
-                'user_id' => $user_id->toInt(),
-                'category_id' => $opinion->existsCategoryId() ? $opinion->categoryId()->toInt() : null,
-                'opinion' => $opinion->content(),
-            ]);
+            if($opinion->existsId()){
+                ModelOpinion::where('id', $opinion->id()->toInt())
+                ->update([
+                    'category_id' => $opinion->existsCategoryId() ? $opinion->categoryId()->toInt() : null,
+                ]);
+            }else{
+                $created_opinion = ModelOpinion::create([
+                    'village_id' => $village_id->toInt(),
+                    'user_id' => $user_id->toInt(),
+                    'category_id' => $opinion->existsCategoryId() ? $opinion->categoryId()->toInt() : null,
+                    'opinion' => $opinion->content(),
+                ]);
+                $opinion->setId($created_opinion->id);
+            }
         }
         $evaluations = $member->evaluations();
         foreach ($evaluations as $evaluation) {
