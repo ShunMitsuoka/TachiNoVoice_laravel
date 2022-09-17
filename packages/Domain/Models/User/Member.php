@@ -122,14 +122,6 @@ class Member extends User
         if(!$village->memberInfo()->isRiseMember($this)){
             throw new Exception("対象ユーザーはライズメンバーではありません。", 1);
         }
-        return new RiseMember(
-            $village->id(), 
-            $this->id(),
-            $this->name(),
-            $this->nickname(),
-            $this->email(),
-            $this->gender(),
-            $this->dateOfBirth()
-        );
+        return $village->memberInfo()->searchFromRiseMember($this);
     }
 }

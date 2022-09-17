@@ -26,6 +26,15 @@ class Category extends _Entity
         $this->name = $name;
         $this->policy = $policy;
     }
+
+    static public function uncategorizedCategory() : self{
+        return new self(
+            new CategoryId(self::UNCATEGORIZED_ID),
+            self::UNCATEGORIZED_LABEL,
+            null,
+        );
+    }
+
     public function setId(int $id)
     {
         if (!is_null($this->id)) {
@@ -47,5 +56,9 @@ class Category extends _Entity
     public function policy(): Policy
     {
         return $this->policy;
+    }
+
+    public function isUncategorizedCategory() : bool{
+        return $this->id()->toInt() == self::UNCATEGORIZED_ID;
     }
 }

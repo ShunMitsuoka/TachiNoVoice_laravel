@@ -4,8 +4,11 @@ namespace Packages\Domain\Models\Village;
 
 use Packages\Domain\Models\Common\_Entity;
 use Packages\Domain\Models\User\Member;
+use Packages\Domain\Models\User\VillageMember;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Topic\Topic;
+use Packages\Domain\Models\Village\VillageDetails\Category\Category;
+use Packages\Domain\Services\Casts\CategoryCast;
 use Packages\Domain\Services\VillageDetailsService;
 use Packages\Domain\Services\VillagePhaseService;
 use Packages\Domain\Services\VillageService;
@@ -53,6 +56,17 @@ class Village extends _Entity
     {
         return $this->topic;
     }
+    public function categories(): array
+    {
+        $categories = $this->topic()->categories();
+        if(count($categories) > 0){
+            $category = CategoryCast::castCategory($categories[0]);
+            if(!$category->isUncategorizedCategory() && $this->phase()->isPhaseCategorizeOpinions()){
+                array_unshift($categories, Category::uncategorizedCategory());
+            }
+        }
+        return $this->categories;
+    }
     public function setting(): VillageSetting
     {
         return $this->setting;
@@ -76,6 +90,21 @@ class Village extends _Entity
             throw new \Exception('メンバー情報が存在しません。');
         }
         return $this->member_info;
+    }
+
+    public function getMemberDetails(Member $member) : ?VillageMember{
+        if (is_null($this->member_info)) {
+            throw new \Exception('メンバー情報が存在しません。');
+        }
+        if($this->member_info->isCoreMember($member)){
+            $members = $this->member_info->coreMembers();
+            return $members[$member->id()->toInt()];
+        }
+        if($this->member_info->isRiseMember($member)){
+            $members = $this->member_info->riseMembers();
+            return $members[$member->id()->toInt()];
+        }
+        throw new \Exception('メンバー情報が存在しません。');
     }
 
     public function setMemberInfo(VillageService $service)

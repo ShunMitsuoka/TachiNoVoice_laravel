@@ -100,17 +100,13 @@ class VillageApiResponseService
     static public function villageDetailsResponse(
         Village $village,
         Member $member = null,
+        bool $only_coremember_opinion = false
     ) {
         $result = self::villageResponse($village, $member);
 
         $categories = $village->topic()->categories();
 
         $result_categories = [];
-        $result_categories[Category::UNCATEGORIZED_ID] = [
-            'category_name' => Category::UNCATEGORIZED_LABEL,
-            'category_id' => Category::UNCATEGORIZED_ID,
-            'opinions' => []
-        ];
         foreach ($categories as $category){
             $category = CategoryCast::castCategory($category);
             $result_categories[$category->id()->toInt()] = [
@@ -120,12 +116,15 @@ class VillageApiResponseService
             ];
         }
         $result_categories = self::setOpinions($village, $village->memberInfo()->coreMembers(), $result_categories);
-        $result_categories = self::setOpinions($village, $village->memberInfo()->riseMembers(), $result_categories);
-
+        if(!$only_coremember_opinion){
+            $result_categories = self::setOpinions($village, $village->memberInfo()->riseMembers(), $result_categories);
+        }
         $result['categories'] = array_values($result_categories);
+        if(!is_null($member)){
+            $result['my_details'] = self::setMemberDetails($village, $member);
+        }
         return $result;
     }
-
 
     static protected function setOpinions(
         Village $village,
@@ -153,5 +152,22 @@ class VillageApiResponseService
             }
         }
         return $result_categories;
+    }
+
+    static protected function setMemberDetails(Village $village, Member $member) : array{
+        $member = $village->getMemberDetails($member);
+        $result = [];
+        $opinions = [];
+        foreach ($member->opinions() as $opinion) {
+            $opinion = OpinionCast::castOpinion($opinion);
+            $category_id = $opinion->existsCategoryId() ? $opinion->categoryId()->toInt() : Category::UNCATEGORIZED_ID;
+            $opinions[$category_id][] = [
+                'category_id' => $category_id,
+                'opinion_id' => $opinion->id()->toInt(),
+                'opinion' => $opinion->content(),
+            ];
+        }
+        $result['opinios'] = $opinions;
+        return $result;
     }
 }

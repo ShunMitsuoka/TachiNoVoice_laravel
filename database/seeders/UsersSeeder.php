@@ -4,12 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\User as ModelsUser;
 use Carbon\Carbon;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Packages\Domain\Models\User\User;
 use Packages\Domain\Models\User\UserInfo\Gender;
 
 class UsersSeeder extends Seeder
@@ -44,20 +40,65 @@ class UsersSeeder extends Seeder
         ModelsUser::create([
             'email' => 'test2@gmail.com',
             'password' => Hash::make('test0000'),
-            'user_name' => 'ライズメンバー',
-            'nickname' => 'ライズメンバー',
+            'user_name' => 'コアメンバー1',
+            'nickname' => 'コアメンバー1',
             'gender' => Gender::GENDER_WOMAN,
             'date_of_birth' => new Carbon('1998/11/11'),
+        ]);
+
+        ModelsUser::create([
+            'email' => 'test3@gmail.com',
+            'password' => Hash::make('test0000'),
+            'user_name' => 'コアメンバー2',
+            'nickname' => 'コアメンバー2',
+            'gender' => Gender::GENDER_WOMAN,
+            'date_of_birth' => new Carbon('1996/11/11'),
+        ]);
+
+        ModelsUser::create([
+            'email' => 'test4@gmail.com',
+            'password' => Hash::make('test0000'),
+            'user_name' => 'コアメンバー3',
+            'nickname' => 'コアメンバー3',
+            'gender' => Gender::GENDER_WOMAN,
+            'date_of_birth' => new Carbon('1996/4/14'),
+        ]);
+
+        ModelsUser::create([
+            'email' => 'test5@gmail.com',
+            'password' => Hash::make('test0000'),
+            'user_name' => 'コアメンバー4',
+            'nickname' => 'コアメンバー4',
+            'gender' => Gender::GENDER_WOMAN,
+            'date_of_birth' => new Carbon('1996/8/14'),
+        ]);
+
+        ModelsUser::create([
+            'email' => 'test6@gmail.com',
+            'password' => Hash::make('test0000'),
+            'user_name' => 'ライズメンバー1',
+            'nickname' => 'ライズメンバー1',
+            'gender' => Gender::GENDER_WOMAN,
+            'date_of_birth' => new Carbon('1998/12/1'),
+        ]);
+
+        ModelsUser::create([
+            'email' => 'test7@gmail.com',
+            'password' => Hash::make('test0000'),
+            'user_name' => 'ライズメンバー2',
+            'nickname' => 'ライズメンバー2',
+            'gender' => Gender::GENDER_WOMAN,
+            'date_of_birth' => new Carbon('1998/12/1'),
         ]);
 
         ModelsUser::factory(20)->create();
 
         ModelsUser::create([
             'id' => 100,
-            'email' => 'test2@gmail.com',
+            'email' => 'test100@gmail.com',
             'password' => Hash::make('test0000'),
-            'user_name' => 'ライズメンバー',
-            'nickname' => 'ライズメンバー',
+            'user_name' => 'ライズメンバー2',
+            'nickname' => 'ライズメンバー2',
             'gender' => Gender::GENDER_WOMAN,
             'date_of_birth' => new Carbon('1998/11/11'),
         ]);

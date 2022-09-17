@@ -3,6 +3,7 @@
 namespace Packages\Domain\Models\Village\Topic;
 
 use Packages\Domain\Models\Village\VillageDetails\Category\Category;
+use Packages\Domain\Services\Casts\CategoryCast;
 
 class Topic
 {

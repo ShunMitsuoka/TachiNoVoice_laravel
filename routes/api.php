@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Member\MyVillage\MyVillageApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageMemberApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillagePhaseApiController;
 use App\Http\Controllers\Api\Member\MyVillage\OpinionApiController;
+use App\Http\Controllers\Api\Member\MyVillage\RiseMemberOpinionApiController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -52,6 +53,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/my/village/{village_id}/opinions', OpinionApiController::class);
     // コアメンバー意見
     Route::apiResource('/my/village/{village_id}/core_member/opinion', CoreMemberOpinionApiController::class);
+    // ライズメンバー意見
+    Route::apiResource('/my/village/{village_id}/rise_member/opinion', RiseMemberOpinionApiController::class);
     // カテゴリー追加
     Route::apiResource('/my/village/{village_id}/category', CategoryApiController::class);
     // カテゴリー設定

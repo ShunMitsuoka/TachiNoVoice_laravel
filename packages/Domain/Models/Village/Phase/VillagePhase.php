@@ -176,6 +176,10 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         $this->phase_status = self::PHASE_STATUS_IN_PROGRESS;
     }
 
+    public function isPhaseCategorizeOpinions() : bool{
+        return $this->phase_no == self::PHASE_CATEGORIZE_OPINIONS;
+    }
+
     protected function getStartSetting(?VillagePhaseStartSetting $phase_start_setting) : VillagePhaseStartSetting{
         if(!is_null($phase_start_setting)){
             return $phase_start_setting;
