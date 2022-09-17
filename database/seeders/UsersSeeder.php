@@ -41,6 +41,25 @@ class UsersSeeder extends Seeder
             'date_of_birth' => new Carbon('1996/04/14'),
         ]);
 
+        ModelsUser::create([
+            'email' => 'test2@gmail.com',
+            'password' => Hash::make('test0000'),
+            'user_name' => 'ライズメンバー',
+            'nickname' => 'ライズメンバー',
+            'gender' => Gender::GENDER_WOMAN,
+            'date_of_birth' => new Carbon('1998/11/11'),
+        ]);
+
         ModelsUser::factory(20)->create();
+
+        ModelsUser::create([
+            'id' => 100,
+            'email' => 'test2@gmail.com',
+            'password' => Hash::make('test0000'),
+            'user_name' => 'ライズメンバー',
+            'nickname' => 'ライズメンバー',
+            'gender' => Gender::GENDER_WOMAN,
+            'date_of_birth' => new Carbon('1998/11/11'),
+        ]);
     }
 }
