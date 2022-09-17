@@ -120,7 +120,7 @@ class VillageApiResponseService
             $result_categories = self::setOpinions($village, $village->memberInfo()->riseMembers(), $result_categories);
         }
         $result['categories'] = array_values($result_categories);
-        if(!is_null($member)){
+        if(!is_null($member) && !$village->memberInfo()->isHost($member)){
             $result['my_details'] = self::setMemberDetails($village, $member);
         }
         return $result;
@@ -161,7 +161,7 @@ class VillageApiResponseService
         foreach ($member->opinions() as $opinion) {
             $opinion = OpinionCast::castOpinion($opinion);
             $category_id = $opinion->existsCategoryId() ? $opinion->categoryId()->toInt() : Category::UNCATEGORIZED_ID;
-            $opinions[$category_id][] = [
+            $opinions[] = [
                 'category_id' => $category_id,
                 'opinion_id' => $opinion->id()->toInt(),
                 'opinion' => $opinion->content(),

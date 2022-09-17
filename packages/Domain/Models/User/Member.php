@@ -124,4 +124,8 @@ class Member extends User
         }
         return $village->memberInfo()->searchFromRiseMember($this);
     }
+
+    public function isHost() : bool{
+        return $this->role_id == self::ROLE_HOST;
+    }
 }
