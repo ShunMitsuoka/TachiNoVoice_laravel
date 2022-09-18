@@ -7,6 +7,7 @@ use Packages\Domain\Models\User\VillageMember;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageDetails\Category\Category;
 use Packages\Domain\Services\Casts\CategoryCast;
+use Packages\Domain\Services\Casts\EvaluationCast;
 use Packages\Domain\Services\Casts\MemberCast;
 use Packages\Domain\Services\Casts\OpinionCast;
 use Packages\Domain\Services\VillagePhaseTaskService;
@@ -99,7 +100,7 @@ class VillageApiResponseService
 
     static public function villageDetailsResponse(
         Village $village,
-        Member $member = null,
+        Member $member,
         bool $only_coremember_opinion = false
     ) {
         $result = self::villageResponse($village, $member);
@@ -115,10 +116,12 @@ class VillageApiResponseService
                 'opinions' => []
             ];
         }
-        $result_categories = self::setOpinions($village, $village->memberInfo()->coreMembers(), $result_categories);
+        $village_members = $village->memberInfo()->coreMembers();
         if(!$only_coremember_opinion){
-            $result_categories = self::setOpinions($village, $village->memberInfo()->riseMembers(), $result_categories);
+            $village_members += $village->memberInfo()->riseMembers();
         }
+        $result_categories = self::setOpinions($village, $village_members, $result_categories);
+
         $result['categories'] = array_values($result_categories);
         if(!is_null($member) && !$village->memberInfo()->isHost($member)){
             $result['my_details'] = self::setMemberDetails($village, $member);
@@ -132,6 +135,16 @@ class VillageApiResponseService
         array $result_categories,
     ){
         $public_info = $village->publicInformation();
+        $opinons_evaluations = [];
+        foreach ($members as $member) {
+            $member = MemberCast::castVillageMember($member);
+            foreach ($member->evaluations() as $evaluation) {
+                $opinons_evaluations[$evaluation->opinionId()->toInt()][] = [
+                    'value' => $evaluation->value(),
+                    'user_id' => $member->id()->toInt(),
+                ];
+            }
+        }
         foreach ($members as $member) {
             $member = MemberCast::castVillageMember($member);
             $member_detail = [
@@ -144,10 +157,12 @@ class VillageApiResponseService
             foreach ($member->opinions() as $opinion) {
                 $opinion = OpinionCast::castOpinion($opinion);
                 $category_id = $opinion->existsCategoryId() ? $opinion->categoryId()->toInt() : Category::UNCATEGORIZED_ID;
+                $evaluations = array_key_exists($opinion->id()->toInt(), $opinons_evaluations) ? $opinons_evaluations[$opinion->id()->toInt()]  : null;
                 $result_categories[$category_id]['opinions'][] = [
                     'opinion_id' => $opinion->id()->toInt(),
                     'opinion' => $opinion->content(),
                     'member' => $member_detail,
+                    'evaluations' => $evaluations,
                 ];
             }
         }
@@ -158,6 +173,7 @@ class VillageApiResponseService
         $member = $village->getMemberDetails($member);
         $result = [];
         $opinions = [];
+
         foreach ($member->opinions() as $opinion) {
             $opinion = OpinionCast::castOpinion($opinion);
             $category_id = $opinion->existsCategoryId() ? $opinion->categoryId()->toInt() : Category::UNCATEGORIZED_ID;
@@ -167,6 +183,10 @@ class VillageApiResponseService
                 'opinion' => $opinion->content(),
             ];
         }
+
+        $result['user_id'] = $member->id()->toInt();
+        $result['role_id'] = $member->role();
+        $result['nickname'] = $member->nickname();
         $result['opinios'] = $opinions;
         return $result;
     }

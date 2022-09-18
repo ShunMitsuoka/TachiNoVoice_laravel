@@ -5,7 +5,10 @@ namespace Packages\Domain\Models\User;
 use Carbon\Carbon;
 use Package\Domain\Models\Village\VillageDetails\Review\Review;
 use Packages\Domain\Models\User\UserInfo\Gender;
+use Packages\Domain\Models\Village\VillageDetails\Evaluation\Evaluation;
+use Packages\Domain\Models\Village\VillageDetails\Opinion\OpinionId;
 use Packages\Domain\Models\Village\VillageId;
+use Packages\Domain\Services\Casts\EvaluationCast;
 
 class VillageMember extends Member
 {
@@ -86,5 +89,17 @@ class VillageMember extends Member
     public function hasReview(): bool
     {
         return !is_null($this->review);
+    }
+
+    public function evaluate(OpinionId $opinion_id, int $value){
+        for ($i=0; $i < count($this->evaluations) ; $i++) { 
+            $evaluation = EvaluationCast::castEvaluation($this->evaluations[$i]);
+            if($evaluation->opinionId()->toInt() == $opinion_id->toInt()){
+                $this->evaluations[$i] = new Evaluation($opinion_id, $value);
+                return;
+            }
+        }
+        $this->evaluations[] = new Evaluation($opinion_id, $value);
+        return;
     }
 }

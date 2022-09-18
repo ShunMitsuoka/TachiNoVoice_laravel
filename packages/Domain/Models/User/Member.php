@@ -97,18 +97,16 @@ class Member extends User
     }
 
     public function becomeVillageMember(Village $village) : VillageMember{
-        if(!$village->memberInfo()->isVillageMember($this)){
-            throw new Exception("対象ユーザーはビレッジメンバーではありません。", 1);
+        if($village->memberInfo()->isVillageMember($this)){
+            return $village->memberInfo()->searchFromVillageMember($this);
         }
-        return new VillageMember(
-            $village->id(),
-            $this->id(),
-            $this->name(),
-            $this->nickname(),
-            $this->email(),
-            $this->gender(),
-            $this->dateOfBirth()
-        );
+        if($village->memberInfo()->isRiseMember($this)){
+            return $village->memberInfo()->searchFromRiseMember($this);
+        }
+        if($village->memberInfo()->isCoreMember($this)){
+            return $village->memberInfo()->searchFromCoreMember($this);
+        }
+        throw new Exception("対象ユーザーはビレッジメンバーではありません。", 1);
     }
 
     public function becomeCoreMember(Village $village) : CoreMember{

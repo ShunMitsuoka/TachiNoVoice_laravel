@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\RegisterApiController;
 use App\Http\Controllers\Api\Auth\LoginApiController;
 use App\Http\Controllers\Api\Member\MyVillage\CategoryApiController;
 use App\Http\Controllers\Api\Member\MyVillage\CoreMemberOpinionApiController;
+use App\Http\Controllers\Api\Member\MyVillage\EvaluationApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageMemberApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillagePhaseApiController;
@@ -59,7 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/my/village/{village_id}/category', CategoryApiController::class);
     // カテゴリー設定
     Route::post('/my/village/{village_id}/opinion/set_category', [OpinionApiController::class, 'setCategory']);
-
+    // 評価登録
+    Route::apiResource('/my/village/{village_id}/evaluation', EvaluationApiController::class);
 
 });
 

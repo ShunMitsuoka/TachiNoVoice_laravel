@@ -126,6 +126,10 @@ class VillageMemberInfo
         return count($this->rise_members);
     }
 
+    public function searchFromVillageMember(Member $member) : ?VillageMember{
+        return $this->village_members[$member->id()->toInt()];
+    }
+
     public function searchFromCoreMember(Member $member) : ?CoreMember{
         return $this->core_members[$member->id()->toInt()];
     }

@@ -6,6 +6,19 @@ use Packages\Domain\Models\Village\VillageDetails\Opinion\OpinionId;
 
 class Evaluation
 {
+    /**
+     * 評価：良い
+     */
+    public const EVALUATION_GOOD = 1;
+    /**
+     * 評価：悪い
+     */
+    public const EVALUATION_BAD = 50;
+    /**
+     * 評価：不明
+     */
+    public const EVALUATION_UNCERTAIN = 100;
+
     private OpinionId $opinion_id;
     private int $value;
 
