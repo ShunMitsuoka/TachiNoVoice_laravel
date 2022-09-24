@@ -2,10 +2,8 @@
 
 namespace Packages\Domain\Models\Village\VillageDetails\Category;
 
-use Package\Domain\Models\Village\VillageDetais\Policy\Policy;
 use Packages\Domain\Models\Common\_Entity;
-
-
+use Packages\Domain\Models\Village\VillageDetails\Policy\Policy;
 
 class Category extends _Entity
 {
@@ -56,6 +54,11 @@ class Category extends _Entity
     public function policy(): Policy
     {
         return $this->policy;
+    }
+
+    public function setPolicy(Policy $policy)
+    {
+        $this->policy = $policy;
     }
 
     public function isUncategorizedCategory() : bool{

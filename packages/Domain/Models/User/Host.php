@@ -8,6 +8,7 @@ use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageDetails\Category\Category;
 use Packages\Domain\Models\Village\VillageDetails\Category\CategoryId;
 use Packages\Domain\Models\Village\VillageDetails\Opinion\OpinionId;
+use Packages\Domain\Models\Village\VillageDetails\Policy\Policy;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\Casts\MemberCast;
 use Packages\Domain\Services\Casts\OpinionCast;
@@ -46,5 +47,11 @@ class Host extends Member
                 return;
             }
         }
+    }
+
+    public function setPolicy(Village $village, CategoryId $category_id, Policy $policy)
+    {
+        $category = $village->topic()->getCategory($category_id);
+        $category->setPolicy($policy);
     }
 }

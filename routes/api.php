@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Member\MyVillage\MyVillageApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageMemberApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillagePhaseApiController;
 use App\Http\Controllers\Api\Member\MyVillage\OpinionApiController;
+use App\Http\Controllers\Api\Member\MyVillage\PolicyApiController;
 use App\Http\Controllers\Api\Member\MyVillage\RiseMemberOpinionApiController;
 /*
 |--------------------------------------------------------------------------
@@ -64,4 +65,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my/village/{village_id}/opinion/set_category', [OpinionApiController::class, 'setCategory']);
     // 評価登録
     Route::apiResource('/my/village/{village_id}/evaluation', EvaluationApiController::class);
+    // 方針登録
+    Route::apiResource('/my/village/{village_id}/policy', PolicyApiController::class);
 });
