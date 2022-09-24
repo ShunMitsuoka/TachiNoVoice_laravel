@@ -3,7 +3,7 @@
 namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
-use Package\Domain\Models\Village\VillageDetails\Review\Review;
+use Packages\Domain\Models\Village\VillageDetails\Review\Review;
 use Packages\Domain\Models\User\UserInfo\Gender;
 use Packages\Domain\Models\Village\VillageDetails\Evaluation\Evaluation;
 use Packages\Domain\Models\Village\VillageDetails\Opinion\OpinionId;

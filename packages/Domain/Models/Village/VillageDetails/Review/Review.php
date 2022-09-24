@@ -1,6 +1,6 @@
 <?php
 
-namespace Package\Domain\Models\Village\VillageDetails\Review;
+namespace Packages\Domain\Models\Village\VillageDetails\Review;
 
 class Review
 {

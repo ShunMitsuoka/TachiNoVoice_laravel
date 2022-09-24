@@ -2,7 +2,7 @@
 
 namespace Packages\Domain\Models\Village\VillageDetails\Satisfaction;
 
-use Package\Domain\Models\Village\VillageDetais\Policy\PolicyId;
+use Packages\Domain\Models\Village\VillageDetails\Policy\PolicyId;
 
 class Satisfaction
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Package\Domain\Models\Village\VillageDetais\Policy;
+namespace Packages\Domain\Models\Village\VillageDetails\Policy;
 
 use Packages\Domain\Models\Common\_Entity;
 
