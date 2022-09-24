@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\Api\BaseApiController;
+use App\Mail\TestMail;
 use App\Services\VillageApiResponseService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\Casts\MemberCast;
 use Packages\Domain\Services\VillageService;
+
 
 class MyVillageMemberApiController extends BaseApiController
 {
@@ -77,6 +81,11 @@ class MyVillageMemberApiController extends BaseApiController
             'core_members' => $core_members,
             'rise_members' => $rise_members,
         ];
+        $name = 'テスト ユーザー';
+        $email = 'dxiongtai29@gmail.com';
+        //$email = 'nikaido0829@icloud.com';
+        Mail::send(new TestMail($name, $email));
+
         return $this->makeSuccessResponse($result);
     }
 }

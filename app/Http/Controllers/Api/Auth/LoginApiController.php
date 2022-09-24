@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 
+
 class LoginApiController extends BaseApiController
 {
     public function Login(LoginRequest $request)

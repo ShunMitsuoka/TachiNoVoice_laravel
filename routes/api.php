@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/auth/register', [RegisterApiController::class, 'register']);
 // ログイン
 Route::post('/auth/login', [LoginApiController::class, 'Login']);
+
 // ログイン後
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/village', VillageApiController::class);
@@ -50,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my/village/{id}/phase/setting', [MyVillagePhaseApiController::class, 'setting']);
     // ビレッジメンバー
     Route::get('/my/village/{id}/members/', [MyVillageMemberApiController::class, 'show']);
+
     // 意見一覧
     Route::apiResource('/my/village/{village_id}/opinions', OpinionApiController::class);
     // コアメンバー意見
@@ -62,6 +64,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my/village/{village_id}/opinion/set_category', [OpinionApiController::class, 'setCategory']);
     // 評価登録
     Route::apiResource('/my/village/{village_id}/evaluation', EvaluationApiController::class);
-
 });
-
