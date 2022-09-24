@@ -115,6 +115,11 @@ class VillageApiResponseService
                 'category_id' => $category->id()->toInt(),
                 'opinions' => []
             ];
+            if($category->existsPolicy()){
+                $result_categories[$category->id()->toInt()]['policy'] = [
+                    'policy' => $category->policy()->content(),
+                ];
+            }
         }
         $village_members = $village->memberInfo()->coreMembers();
         if(!$only_coremember_opinion){
