@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\Api\BaseApiController;
+use App\Mail\TestMail;
 use App\Services\VillageApiResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\Casts\VillageCast;
@@ -42,6 +44,11 @@ class MyVillageApiController extends BaseApiController
             $village->setMemberInfo($this->village_service);
             $result[] = VillageApiResponseService::villageResponse($village, $member);
         }
+
+        $name = 'テスト ユーザー';
+        $email = $member->email();
+        Mail::send(new TestMail($name, $email));
+
         return $this->makeSuccessResponse($result);
     }
 
