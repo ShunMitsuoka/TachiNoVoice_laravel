@@ -82,8 +82,7 @@ class MyVillageMemberApiController extends BaseApiController
             'rise_members' => $rise_members,
         ];
         $name = 'テスト ユーザー';
-        $email = 'dxiongtai29@gmail.com';
-        //$email = 'nikaido0829@icloud.com';
+        $email = $member->email();
         Mail::send(new TestMail($name, $email));
 
         return $this->makeSuccessResponse($result);
