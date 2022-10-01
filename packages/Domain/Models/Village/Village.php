@@ -64,8 +64,10 @@ class Village extends _Entity
             if(!$category->isUncategorizedCategory() && $this->phase()->isPhaseCategorizeOpinions()){
                 array_unshift($categories, Category::uncategorizedCategory());
             }
+        }else{
+            array_unshift($categories, Category::uncategorizedCategory());
         }
-        return $this->categories;
+        return $categories;
     }
     public function setting(): VillageSetting
     {

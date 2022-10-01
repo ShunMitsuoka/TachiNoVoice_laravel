@@ -35,10 +35,14 @@ class VillageMembersSeeder extends Seeder
             if($i == 1){
                 continue;
             }
+            $role_Member = Member::ROLE_RISE_MEMBER;
+            if(in_array($i, [2,3,4,5,6])){
+                $role_Member = Member::ROLE_CORE_MEMBER;
+            }
             VillageMember::create([
                 'user_id' => $i,
                 'village_id' => 2,
-                'role_id' => Member::ROLE_VILLAGE_MEMBER,
+                'role_id' => $role_Member,
             ]);
         }
 

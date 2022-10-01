@@ -18,44 +18,43 @@ class PhasesSeeder extends Seeder
     {
         Phase::truncate();
         // ビレッジ1
+        $id = 1;
         Phase::create([
-            'id' => 1,
+            'id' => $id,
             'village_id' => 1,
             'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
             'm_phase_status_id' => VillagePhase::PHASE_STATUS_PREPARATION,
         ]);
+        $id++;
         // ビレッジ2
         Phase::create([
-            'id' => 2,
+            'id' => $id,
             'village_id' => 2,
             'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
-            'm_phase_status_id' => VillagePhase::PHASE_STATUS_IN_PROGRESS,
-        ]);
-        // ビレッジ3
-        Phase::create([
-            'id' => 3,
-            'village_id' => 3,
-            'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
             'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLATE,
         ]);
+        $id++;
         Phase::create([
-            'id' => 4,
-            'village_id' => 3,
+            'id' => $id,
+
+            'village_id' => 2,
             'm_phase_id' => VillagePhase::PHASE_DRAWING_CORE_MEMBER,
-            'm_phase_status_id' => VillagePhase::PHASE_STATUS_PREPARATION,
-        ]);
-        // ビレッジ4
-        Phase::create([
-            'id' => 5,
-            'village_id' => 4,
-            'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
             'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLATE,
         ]);
+        $id++;
         Phase::create([
-            'id' => 6,
-            'village_id' => 4,
+            'id' => $id,
+            'village_id' => 2,
             'm_phase_id' => VillagePhase::PHASE_DRAWING_CORE_MEMBER,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLATE,
+        ]);
+        $id++;
+        Phase::create([
+            'id' => $id,
+            'village_id' => 2,
+            'm_phase_id' => VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER,
             'm_phase_status_id' => VillagePhase::PHASE_STATUS_IN_PROGRESS,
         ]);
+        $id++;
     }
 }

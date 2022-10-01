@@ -105,7 +105,7 @@ class VillageApiResponseService
     ) {
         $result = self::villageResponse($village, $member);
 
-        $categories = $village->topic()->categories();
+        $categories = $village->categories();
 
         $result_categories = [];
         foreach ($categories as $category){
@@ -116,7 +116,8 @@ class VillageApiResponseService
                 'opinions' => []
             ];
             if($category->existsPolicy()){
-                $result_categories[$category->id()->toInt()]['policy'] = [
+                $result_categories[$category->id()->toInt()]['policy']= [
+                    'policy_id' => $category->policy()->id()->toInt(),
                     'policy' => $category->policy()->content(),
                 ];
             }

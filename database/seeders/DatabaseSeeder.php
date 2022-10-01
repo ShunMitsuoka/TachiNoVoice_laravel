@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             PhaseSettingsSeeder::class,
             HostsSeeder::class,
             VillageMembersSeeder::class,
+            OpinionSeeder::class,
+            CategorySeeder::class,
         ]);
     }
 }
