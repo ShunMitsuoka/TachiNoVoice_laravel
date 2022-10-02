@@ -61,7 +61,9 @@ class Village extends _Entity
         $categories = $this->topic()->categories();
         if(count($categories) > 0){
             $category = CategoryCast::castCategory($categories[0]);
-            if(!$category->isUncategorizedCategory() && $this->phase()->isPhaseCategorizeOpinions()){
+            if(!$category->isUncategorizedCategory() && 
+                ( $this->phase()->isPhaseAskingOpinionsOfCoreMember() || $this->phase()->isPhaseCategorizeOpinions()))
+            {
                 array_unshift($categories, Category::uncategorizedCategory());
             }
         }else{
