@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Controllers\Controller;
+use App\Services\VillageApiResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Models\Village\VillageDetails\Opinion\OpinionId;
+use Packages\Domain\Models\Village\VillageDetails\Policy\PolicyId;
+use Packages\Domain\Models\Village\VillageDetails\Review\Review;
+use Packages\Domain\Models\Village\VillageDetails\Satisfaction\Satisfaction;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\VillageDetailsService;
 use Packages\Domain\Services\VillageService;
@@ -32,9 +36,18 @@ class SatisfactionApiController extends BaseApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $village_id)
     {
-        //
+        try {
+            $member = $this->getLoginMember();
+            $village = $this->village_repository->get(new VillageId($village_id));
+            $village->setMemberInfo($this->village_service);
+            $this->village_details_service->setDetails($village);
+            $result = VillageApiResponseService::villageResultResponse($village, $member);
+            return $this->makeSuccessResponse($result);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**
@@ -45,7 +58,29 @@ class SatisfactionApiController extends BaseApiController
      */
     public function store(Request $request, $village_id)
     {
-
+        $req_comment = $request->comment;
+        $req_satisfactions = $request->satisfactions;
+        $satisfactions = [];
+        foreach ($req_satisfactions as $req_satisfaction) {
+            $satisfactions[] = new Satisfaction(new PolicyId($req_satisfaction['policy_id']), $req_satisfaction['level']);
+        }
+        $review = new Review($satisfactions, $req_comment);
+        try {
+            DB::beginTransaction();
+            $member = $this->getLoginMember();
+            $village = $this->village_repository->get(new VillageId($village_id));
+            $village->setMemberInfo($this->village_service);
+            $this->village_details_service->setDetails($village);
+            $village_member = $member->becomeVillageMember($village);
+            $village_member->setReview($review);
+            $this->village_details_service->updateDetails($village);
+            DB::commit();
+            return $this->makeSuccessResponse([]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+            return $this->makeErrorResponse([]);
+        }
     }
 
     /**

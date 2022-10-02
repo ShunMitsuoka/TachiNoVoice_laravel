@@ -10,6 +10,7 @@ use Packages\Domain\Services\Casts\CategoryCast;
 use Packages\Domain\Services\Casts\EvaluationCast;
 use Packages\Domain\Services\Casts\MemberCast;
 use Packages\Domain\Services\Casts\OpinionCast;
+use Packages\Domain\Services\Casts\SatisfactionCast;
 use Packages\Domain\Services\VillagePhaseTaskService;
 
 class VillageApiResponseService
@@ -132,6 +133,52 @@ class VillageApiResponseService
         if(!is_null($member) && !$village->memberInfo()->isHost($member)){
             $result['my_details'] = self::setMemberDetails($village, $member);
         }
+        return $result;
+    }
+
+    static public function villageResultResponse(
+        Village $village,
+        Member $member
+    ) {
+        $result = self::villageResponse($village, $member);
+        $categories = $village->categories();
+        $result_plicies = [];
+        foreach ($categories as $category){
+            $category = CategoryCast::castCategory($category);
+            $policy = $category->policy();
+            $result_plicies[$policy->id()->toInt()] = [
+                'category_name' => $category->name(),
+                'category_id' => $category->id()->toInt(),
+                'policy' => [
+                    'policy_id' => $policy->id()->toInt(),
+                    'policy' => $policy->content(),
+                ]
+            ];
+        }
+        $village_members = $village->memberInfo()->coreMembers();
+        $village_members += $village->memberInfo()->riseMembers();
+
+        $comments = [];
+
+        foreach ($village_members as $member) {
+            $member = MemberCast::castVillageMember($member);
+            if(!$member->hasReview()){
+                continue;
+            }
+            $review = $member->review();
+            $comments[] = $review->comment();
+            $satisfactions = $review->satisfactions();
+            foreach ($satisfactions as $satisfaction) {
+                $satisfaction = SatisfactionCast::castSatisfaction($satisfaction);
+                $result_plicies[$satisfaction->policyId()->toInt()]['policy']['satisfactions'][] = [
+                    'policy_id' => $satisfaction->policyId()->toInt(),
+                    'level' => $satisfaction->level(),
+                ];
+            }
+        }
+
+        $result['commnets'] = $comments;
+        $result['categories'] = array_values($result_plicies);
         return $result;
     }
 

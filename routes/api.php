@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Member\MyVillage\MyVillagePhaseApiController;
 use App\Http\Controllers\Api\Member\MyVillage\OpinionApiController;
 use App\Http\Controllers\Api\Member\MyVillage\PolicyApiController;
 use App\Http\Controllers\Api\Member\MyVillage\RiseMemberOpinionApiController;
+use App\Http\Controllers\Api\Member\MyVillage\SatisfactionApiController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -67,4 +68,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/my/village/{village_id}/evaluation', EvaluationApiController::class);
     // 方針登録
     Route::apiResource('/my/village/{village_id}/policy', PolicyApiController::class);
+    // 満足度
+    Route::apiResource('/my/village/{village_id}/satisfaction', SatisfactionApiController::class);
 });

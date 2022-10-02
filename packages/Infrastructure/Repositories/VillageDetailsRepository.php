@@ -160,16 +160,13 @@ class VillageDetailsRepository implements VillageDetailsRepositoryInterface
         }
         $member->setEvaluations($evaluations);
         // レビュー
-        $review_record = ModelReview::select(
-            'comment',
-        )
-        ->where('village_id', $village_id->toInt())
+        $review_record = ModelReview::where('village_id', $village_id->toInt())
         ->where('user_id', $user_id->toInt())
         ->first();
         if(!is_null($review_record)){
             $satisfaction_records = SatisfactionLevel::select(
                 'satisfaction_levels.id',
-                'satisfaction_level.policy_id',
+                'satisfaction_levels.policy_id',
                 'satisfaction_level',
             )
             ->where('review_id', $review_record->id)
