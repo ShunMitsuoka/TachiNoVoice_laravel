@@ -43,7 +43,7 @@ class Opinion extends _Entity
         return !is_null($this->category_id);
     }
 
-    public function setCategoryId(CategoryId $category_id)
+    public function setCategoryId(?CategoryId $category_id)
     {
         $this->category_id = $category_id;
     }

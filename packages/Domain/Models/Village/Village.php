@@ -71,6 +71,12 @@ class Village extends _Entity
         }
         return $categories;
     }
+
+    public function setCategories(array $categories)
+    {
+        $this->categories = $categories;
+    }
+
     public function setting(): VillageSetting
     {
         return $this->setting;

@@ -107,8 +107,22 @@ class CategoryApiController extends BaseApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($village_id, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $member = $this->getLoginMember();
+            $village = $this->village_repository->get(new VillageId($village_id));
+            $village->setMemberInfo($this->village_service);
+            $this->village_details_service->setDetails($village);
+            $host = $member->becomeHost($village);
+            $host->deleteCategory($village, new CategoryId($id));
+            $this->village_details_service->updateDetails($village);
+            DB::commit();
+            return $this->makeSuccessResponse([]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 }

@@ -49,6 +49,32 @@ class Host extends Member
         }
     }
 
+    public function deleteCategory(Village $village, CategoryId $category_id){
+        $result = [];
+        $categories = $village->topic()->categories();
+        foreach ($categories as $category) {
+            $category = CategoryCast::castCategory($category);
+            if($category->id()->toInt() !== $category_id->toInt()){
+                $result[] = $category;
+            }
+        }
+        $village->topic()->setCategories($result);
+        $core_members = $village->memberInfo()->coreMembers();
+        foreach ($core_members as $core_member) {
+            $core_member = MemberCast::castCoreMember($core_member);
+            $opinions = $core_member->opinions();
+            foreach ($opinions as $opinion) {
+                $opinion = OpinionCast::castOpinion($opinion);
+                if(!$opinion->existsCategoryId()){
+                    continue;
+                }
+                if($opinion->categoryId()->toInt() == $category_id->toInt() ){
+                    $opinion->setCategoryId(null);
+                }
+            }
+        }
+    }
+
     public function setCategoryToOpinion(Village $village, CategoryId $category_id, UserId $user_id , OpinionId $opinion_id){
         $core_members = $village->memberInfo()->coreMembers();
         $core_member = MemberCast::castCoreMember($core_members[$user_id->toInt()]);

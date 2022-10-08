@@ -107,6 +107,7 @@ class VillageDetailsRepository implements VillageDetailsRepositoryInterface
             ->update([
                 'deleted_flg' => true
             ]);
+
         $member_info = $village->memberInfo();
         $core_members = $member_info->coreMembers();
         $rise_members = $member_info->riseMembers();
