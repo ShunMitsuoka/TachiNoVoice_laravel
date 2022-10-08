@@ -47,11 +47,6 @@ class VillageApiResponseService
                     'label' => $village->phase()->startSettingInfo()->byManual()->label(),
                     'is_selected' => $village->phase()->startSettingInfo()->byManual()->isSelected(),
                 ],
-                'by_manual' => [
-                    'is_need' => $village->phase()->startSettingInfo()->byManual()->isNeed(),
-                    'label' => $village->phase()->startSettingInfo()->byManual()->label(),
-                    'is_selected' => $village->phase()->startSettingInfo()->byManual()->isSelected(),
-                ],
                 'by_instant' => [
                     'is_need' => $village->phase()->startSettingInfo()->byInstant()->isNeed(),
                     'label' => $village->phase()->startSettingInfo()->byInstant()->label(),
@@ -59,9 +54,9 @@ class VillageApiResponseService
                     'date' => $village->phase()->startSettingInfo()->byInstant()->date(),
                 ],
                 'by_date' => [
-                    'is_need' => $village->phase()->startSettingInfo()->byManual()->isNeed(),
-                    'label' => $village->phase()->startSettingInfo()->byManual()->label(),
-                    'is_selected' => $village->phase()->startSettingInfo()->byManual()->isSelected(),
+                    'is_need' => $village->phase()->startSettingInfo()->byDate()->isNeed(),
+                    'label' => $village->phase()->startSettingInfo()->byDate()->label(),
+                    'is_selected' => $village->phase()->startSettingInfo()->byDate()->isSelected(),
                     'date' => $village->phase()->startSettingInfo()->byDate()->date(),
                 ],
             ];
