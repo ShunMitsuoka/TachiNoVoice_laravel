@@ -46,6 +46,11 @@ class Category extends _Entity
         return $this->name;
     }
 
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
     public function existsPolicy(): bool
     {
         return !is_null($this->policy);

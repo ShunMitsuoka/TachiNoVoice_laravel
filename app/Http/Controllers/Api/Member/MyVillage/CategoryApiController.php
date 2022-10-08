@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Member\Village\AddCategoryRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
+use Packages\Domain\Models\Village\VillageDetails\Category\CategoryId;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\VillageDetailsService;
 use Packages\Domain\Services\VillageService;
@@ -81,9 +82,23 @@ class CategoryApiController extends BaseApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $village_id, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $member = $this->getLoginMember();
+            $village = $this->village_repository->get(new VillageId($village_id));
+            $village->setMemberInfo($this->village_service);
+            $this->village_details_service->setDetails($village);
+            $host = $member->becomeHost($village);
+            $host->editCategory($village, new CategoryId($id), $request->category);
+            $this->village_details_service->updateDetails($village);
+            DB::commit();
+            return $this->makeSuccessResponse([]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     /**

@@ -10,6 +10,7 @@ use Packages\Domain\Models\Village\VillageDetails\Category\CategoryId;
 use Packages\Domain\Models\Village\VillageDetails\Opinion\OpinionId;
 use Packages\Domain\Models\Village\VillageDetails\Policy\Policy;
 use Packages\Domain\Models\Village\VillageId;
+use Packages\Domain\Services\Casts\CategoryCast;
 use Packages\Domain\Services\Casts\MemberCast;
 use Packages\Domain\Services\Casts\OpinionCast;
 
@@ -35,6 +36,17 @@ class Host extends Member
         $village->topic()->addCategory(new Category(
             null, $category, null
         ));
+    }
+
+    public function editCategory(Village $village, CategoryId $category_id, string $category_name){
+        $categories = $village->topic()->categories();
+        foreach ($categories as $category) {
+            $category = CategoryCast::castCategory($category);
+            if($category->id()->toInt() == $category_id->toInt() ){
+                $category->setName($category_name);
+                break;
+            }
+        }
     }
 
     public function setCategoryToOpinion(Village $village, CategoryId $category_id, UserId $user_id , OpinionId $opinion_id){
