@@ -118,7 +118,8 @@ class VillageService{
             $this->village_repository->update($village);
             // 次フェーズに進める。
             switch ($village->phase()->phaseNo()) {
-                case VillagePhase::PHASE_CATEGORIZE_OPINIONS:
+                case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
+                case VillagePhase::PHASE_EVALUATION:
                     $village->nextPhase(VillagePhase::PHASE_STATUS_IN_PROGRESS);
                     break;
                 default:
