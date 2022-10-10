@@ -367,8 +367,9 @@ class VillageRepository implements VillageRepositoryInterface
     private function setJoiningCondition(?UserId $userId, $query)
     {
         try {
-            // ①メンバー募集フェーズかどうか
+            // ①メンバー募集フェーズかどうか(フェーズが開始されていること。)
             $query = $query->where('p.m_phase_id', VillagePhase::PHASE_RECRUITMENT_OF_MEMBER);
+            $query = $query->where('p.m_phase_status_id', VillagePhase::PHASE_STATUS_IN_PROGRESS);
 
             // ②既にメンバーかどうか
             $query = $query->whereNotIn(
