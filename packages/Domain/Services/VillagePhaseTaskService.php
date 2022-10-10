@@ -41,6 +41,12 @@ class VillagePhaseTaskService{
                     return $is_done;
                 }
                 break;
+            case VillagePhase::PHASE_SURVEYING_SATISFACTION:
+                if($role_id !== Member::ROLE_HOST){
+                    $village_member = $member->becomeVillageMember($village);
+                    return $village_member->hasReview();
+                }
+                break;
             default:
                 # code...
                 break;
