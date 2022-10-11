@@ -58,7 +58,7 @@ class SatisfactionApiController extends BaseApiController
      */
     public function store(Request $request, $village_id)
     {
-        $req_comment = $request->comment;
+        $req_comment = $request->filled('comment') ? $request->comment : null;
         $req_satisfactions = $request->satisfactions;
         $satisfactions = [];
         foreach ($req_satisfactions as $req_satisfaction) {

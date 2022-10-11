@@ -227,7 +227,7 @@ class VillageDetailsRepository implements VillageDetailsRepositoryInterface
             ],[
                 'village_id' => $village_id->toInt(),
                 'user_id' => $user_id->toInt(),
-                'comment' => $review->comment(),
+                'comment' => $review->hasComment() ? $review->comment() : null,
             ]);
             $satisfactions = $review->satisfactions();
             foreach ($satisfactions as $satisfaction) {

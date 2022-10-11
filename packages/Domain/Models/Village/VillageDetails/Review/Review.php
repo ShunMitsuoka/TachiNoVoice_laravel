@@ -24,4 +24,9 @@ class Review
     {
         return $this->comment;
     }
+
+    public function hasComment(): bool
+    {
+        return !is_null($this->comment);
+    }
 }

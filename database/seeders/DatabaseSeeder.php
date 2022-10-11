@@ -17,18 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             MPhasesSeeder::class,
             MPhaseStatusesSeeder::class,
-            // テストデータ
-            UsersSeeder::class,
-            VillagesSeeder::class,
-            VillageMemberRequirementsSeeder::class,
-            VillageSettingsSeeder::class,
-            PublicInformationsSeeder::class,
-            PhasesSeeder::class,
-            PhaseSettingsSeeder::class,
-            HostsSeeder::class,
-            VillageMembersSeeder::class,
-            OpinionSeeder::class,
-            CategorySeeder::class,
         ]);
     }
 }
