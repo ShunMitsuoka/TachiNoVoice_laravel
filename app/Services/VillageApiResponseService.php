@@ -161,7 +161,9 @@ class VillageApiResponseService
                 continue;
             }
             $review = $member->review();
-            $comments[] = $review->comment();
+            if($review->hasComment()){
+                $comments[] = $review->comment();
+            }
             $satisfactions = $review->satisfactions();
             foreach ($satisfactions as $satisfaction) {
                 $satisfaction = SatisfactionCast::castSatisfaction($satisfaction);
