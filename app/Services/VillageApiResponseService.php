@@ -174,7 +174,7 @@ class VillageApiResponseService
             }
         }
 
-        $result['commnets'] = $comments;
+        $result['comments'] = $comments;
         $result['categories'] = array_values($result_plicies);
         return $result;
     }

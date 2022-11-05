@@ -181,7 +181,8 @@ class VillageDetailsRepository implements VillageDetailsRepositoryInterface
             }
             $member->setReview(new Review(
                 $satisfactions,
-                $review_record->comment
+                $review_record->comment,
+                $review_record->comment_public_flg
             ));
         }
     }
@@ -228,6 +229,7 @@ class VillageDetailsRepository implements VillageDetailsRepositoryInterface
                 'village_id' => $village_id->toInt(),
                 'user_id' => $user_id->toInt(),
                 'comment' => $review->hasComment() ? $review->comment() : null,
+                'comment_public_flg' => $review->isCommentPublic(),
             ]);
             $satisfactions = $review->satisfactions();
             foreach ($satisfactions as $satisfaction) {

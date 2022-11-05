@@ -64,7 +64,7 @@ class SatisfactionApiController extends BaseApiController
         foreach ($req_satisfactions as $req_satisfaction) {
             $satisfactions[] = new Satisfaction(new PolicyId($req_satisfaction['policy_id']), $req_satisfaction['level']);
         }
-        $review = new Review($satisfactions, $req_comment);
+        $review = new Review($satisfactions, $req_comment, $request->comment_public_flg);
         try {
             DB::beginTransaction();
             $member = $this->getLoginMember();
