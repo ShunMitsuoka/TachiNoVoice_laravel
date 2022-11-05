@@ -35,6 +35,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 // 会員登録
 Route::post('/auth/register', [RegisterApiController::class, 'register']);
+// 本会員登録
+Route::get('/auth/mainRegister/{uuid}', [RegisterApiController::class, 'mainRegister']);
 // ログイン
 Route::post('/auth/login', [LoginApiController::class, 'Login']);
 
