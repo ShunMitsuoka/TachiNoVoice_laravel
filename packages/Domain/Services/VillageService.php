@@ -147,6 +147,9 @@ class VillageService{
             throw new \Exception("メンバー数が少ないため抽選ができません。", 1);
         }
         $core_member_keys = array_rand($village_members, $core_member_limit);
+        if($core_member_limit == 1){
+            $core_member_keys = [$core_member_keys];
+        }
         $member_info = new VillageMemberInfo(
             $village->id(),
             $village_member_info->hosts(),
