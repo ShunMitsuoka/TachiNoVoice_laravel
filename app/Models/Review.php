@@ -14,5 +14,6 @@ class Review extends Model
         'user_id',
         'village_id',
         'comment',
+        'comment_public_flg'
     ];
 }
