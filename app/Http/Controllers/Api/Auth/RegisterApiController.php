@@ -58,7 +58,11 @@ class RegisterApiController extends BaseApiController
             else{
                 return $this->makeErrorResponse([]);
             }
-            return redirect("guest/auth/registerComp"); 
+            $url = "http://localhost";
+            if (app()->isProduction()) {
+                $url = "https://tachi-no-voice.com";
+            }
+            return redirect($url."/guest/auth/registerComp"); 
         } catch (\Throwable $th) {
             return $this->makeErrorResponse([]);
         }
