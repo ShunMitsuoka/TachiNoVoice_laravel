@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->datetime('email_verified')->nullable();
-            $table->string('email_verify_uuid')->nullable();
         });
     }
 
@@ -28,7 +27,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('email_verified');
-            $table->dropColumn('email_verify_token');
         });
     }
 };
