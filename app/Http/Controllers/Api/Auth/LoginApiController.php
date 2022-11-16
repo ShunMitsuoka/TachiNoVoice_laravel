@@ -22,6 +22,7 @@ class LoginApiController extends BaseApiController
         $accessToken = $user->createToken('authToken')->plainTextToken;
         return $this->makeSuccessResponse([
             'user' => $user,
+            'is_verified' => $user->hasVerifiedEmail(),
             'access_token' => $accessToken
         ]);
     }

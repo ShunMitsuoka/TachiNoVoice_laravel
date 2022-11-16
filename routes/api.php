@@ -39,6 +39,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/auth/register', [RegisterApiController::class, 'register']);
 // 本会員登録
 Route::get('/auth/mainRegister', [RegisterApiController::class, 'mainRegister'])->name('auth.mainRegister');
+// 認証メール再送
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/email/verification-notification', [RegisterApiController::class, 'resendEmail']);
+});
 // ログイン
 Route::post('/auth/login', [LoginApiController::class, 'Login']);
 

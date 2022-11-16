@@ -56,22 +56,23 @@ class RegisterApiController extends BaseApiController
     public function mainRegister(Request $request)
     {
         try {
-            $user = User::where('deleted_flg', 0)->where('id', $request->id)->exists();
-            if ($user) {
-                User::where('id', $request->id)->update([
-                    'email_verified' => now()
-                ]);
+            $user = User::where('deleted_flg', 0)->where('id', $request->id)->first();
+            if (!is_null($user)) {
+                $user->markEmailAsVerified();
             }
-            else{
+            else
+            {
                 return $this->makeErrorResponse([]);
             }
-            $url = "http://localhost";
-            if (app()->isProduction()) {
-                $url = "https://tachi-no-voice.com";
-            }
+            $url = config('app.url');
             return redirect($url."/guest/auth/registerComp"); 
         } catch (\Throwable $th) {
             return $this->makeErrorResponse([]);
         }
+    }
+
+    public function resendEmail(Request $request){
+        $request->user()->sendEmailVerificationNotification();
+        return $this->makeSuccessResponse([]);
     }
 }
