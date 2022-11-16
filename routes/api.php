@@ -32,7 +32,6 @@ use Illuminate\Support\Facades\Auth;
 //     Route::apiResource('/member/village', VillageApiController::class);
 //     //省略
 // });
-Auth::routes(['verify' => true]);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -44,37 +43,35 @@ Route::get('/auth/mainRegister', [RegisterApiController::class, 'mainRegister'])
 Route::post('/auth/login', [LoginApiController::class, 'Login']);
 
 // ログイン後
-Route::middleware('verified')->group(function () {
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::apiResource('/village', VillageApiController::class);
-        Route::post('/village/join', [VillageApiController::class, 'join']);
-        // ビレッジ登録時バリデーション
-        Route::post('/village/register/validation/topic', [VillageValidationApiController::class, 'topic']);
-        Route::post('/village/register/validation/setting', [VillageValidationApiController::class, 'setting']);
-        // ビレッジ詳細
-        Route::apiResource('/my/village', MyVillageApiController::class);
-        // ビレッジフェーズ処理
-        Route::post('/my/village/{id}/phase/start', [MyVillagePhaseApiController::class, 'start']);
-        Route::post('/my/village/{id}/phase/next', [MyVillagePhaseApiController::class, 'next']);
-        Route::post('/my/village/{id}/phase/setting', [MyVillagePhaseApiController::class, 'setting']);
-        // ビレッジメンバー
-        Route::get('/my/village/{id}/members/', [MyVillageMemberApiController::class, 'show']);
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::apiResource('/village', VillageApiController::class);
+    Route::post('/village/join', [VillageApiController::class, 'join']);
+    // ビレッジ登録時バリデーション
+    Route::post('/village/register/validation/topic', [VillageValidationApiController::class, 'topic']);
+    Route::post('/village/register/validation/setting', [VillageValidationApiController::class, 'setting']);
+    // ビレッジ詳細
+    Route::apiResource('/my/village', MyVillageApiController::class);
+    // ビレッジフェーズ処理
+    Route::post('/my/village/{id}/phase/start', [MyVillagePhaseApiController::class, 'start']);
+    Route::post('/my/village/{id}/phase/next', [MyVillagePhaseApiController::class, 'next']);
+    Route::post('/my/village/{id}/phase/setting', [MyVillagePhaseApiController::class, 'setting']);
+    // ビレッジメンバー
+    Route::get('/my/village/{id}/members/', [MyVillageMemberApiController::class, 'show']);
 
-        // 意見一覧
-        Route::apiResource('/my/village/{village_id}/opinions', OpinionApiController::class);
-        // コアメンバー意見
-        Route::apiResource('/my/village/{village_id}/core_member/opinion', CoreMemberOpinionApiController::class);
-        // ライズメンバー意見
-        Route::apiResource('/my/village/{village_id}/rise_member/opinion', RiseMemberOpinionApiController::class);
-        // カテゴリー追加
-        Route::apiResource('/my/village/{village_id}/category', CategoryApiController::class);
-        // カテゴリー設定
-        Route::post('/my/village/{village_id}/opinion/set_category', [OpinionApiController::class, 'setCategory']);
-        // 評価登録
-        Route::apiResource('/my/village/{village_id}/evaluation', EvaluationApiController::class);
-        // 方針登録
-        Route::apiResource('/my/village/{village_id}/policy', PolicyApiController::class);
-        // 満足度
-        Route::apiResource('/my/village/{village_id}/satisfaction', SatisfactionApiController::class);
-    });
+    // 意見一覧
+    Route::apiResource('/my/village/{village_id}/opinions', OpinionApiController::class);
+    // コアメンバー意見
+    Route::apiResource('/my/village/{village_id}/core_member/opinion', CoreMemberOpinionApiController::class);
+    // ライズメンバー意見
+    Route::apiResource('/my/village/{village_id}/rise_member/opinion', RiseMemberOpinionApiController::class);
+    // カテゴリー追加
+    Route::apiResource('/my/village/{village_id}/category', CategoryApiController::class);
+    // カテゴリー設定
+    Route::post('/my/village/{village_id}/opinion/set_category', [OpinionApiController::class, 'setCategory']);
+    // 評価登録
+    Route::apiResource('/my/village/{village_id}/evaluation', EvaluationApiController::class);
+    // 方針登録
+    Route::apiResource('/my/village/{village_id}/policy', PolicyApiController::class);
+    // 満足度
+    Route::apiResource('/my/village/{village_id}/satisfaction', SatisfactionApiController::class);
 });

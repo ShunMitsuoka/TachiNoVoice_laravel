@@ -19,13 +19,7 @@ class LoginApiController extends BaseApiController
             return $this->makeErrorResponse([]);
         }
         $user = $request->user();
-
-        if (is_null($user->email_verified)) {
-            return $this->makeErrorResponse([]);
-        }
-        // $accessToken = $user->createToken('authToken')->accessToken->plainTextToken;
         $accessToken = $user->createToken('authToken')->plainTextToken;
-        //$accessToken = $user->createToken('authToken')->accessToken;
         return $this->makeSuccessResponse([
             'user' => $user,
             'access_token' => $accessToken
