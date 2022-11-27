@@ -189,10 +189,20 @@ class VillageService{
         switch ($village->phase()->phaseNo()) {
             case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
                 $this->village_details_service->setDetails($village);
-                break;
+                return $this->coreMemberOpinionTextMining($village);
+            case VillagePhase::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER:
+                $this->village_details_service->setDetails($village);
+                return $this->memberOpinionTextMining($village);
             default:
                 return;
         }
+    }
+
+    /**
+     * コアメンバー意見のテキストマイニングを行う
+     */
+    protected function coreMemberOpinionTextMining(Village $village) :string
+    {
         $village_members = $village->memberInfo()->coreMembers();
         // $village_members += $village->memberInfo()->riseMembers();
         $opinion_text = '';
@@ -207,5 +217,34 @@ class VillageService{
         $path = 'public/village/'.$village->id()->toInt().'/';
         $file_name = 'core_member';
         return $this->text_mining_service->textMining($opinion_text, $path, $file_name);
+    }
+
+    /**
+     * メンバー意見のテキストマイニングを行う
+     */
+    protected function memberOpinionTextMining(Village $village)
+    {
+        $village_members = $village->memberInfo()->coreMembers();
+        $village_members += $village->memberInfo()->riseMembers();
+        $category_opinions = [];
+        foreach ($village_members as $member) {
+            $village_member = MemberCast::castVillageMember($member);
+            $opinions = $village_member->opinions();
+            foreach ($opinions as $opinion) {
+                $opinion = OpinionCast::castOpinion($opinion);
+                $category_id = $opinion->categoryId()->toInt();
+
+                if(!array_key_exists($category_id, $category_opinions)){
+                    $category_opinions[$category_id] = '';
+                }
+                $category_opinions[$category_id] .= $opinion->content();
+            }
+        }
+        foreach ($category_opinions as $category_id => $text) {
+            $path = 'public/village/'.$village->id()->toInt().'/'.$category_id.'/';
+            $file_name = 'member_opinion';
+            $this->text_mining_service->textMining($text, $path, $file_name);
+        }
+        return;
     }
 }
