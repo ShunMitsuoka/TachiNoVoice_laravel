@@ -4,23 +4,32 @@ namespace Packages\Domain\Services;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageMemberInfoRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
+use Packages\Domain\Interfaces\Services\TextMiningServiceInterface;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Models\Village\VillageMemberInfo;
+use Packages\Domain\Services\Casts\MemberCast;
+use Packages\Domain\Services\Casts\OpinionCast;
 
 class VillageService{
 
     protected VillageRepositoryInterface $village_repository;
     protected VillageMemberInfoRepositoryInterface $village_member_info_repository;
+    protected VillageDetailsService $village_details_service;
+    protected TextMiningServiceInterface $text_mining_service;
 
     function __construct(
         VillageRepositoryInterface $village_repository,
         VillageMemberInfoRepositoryInterface $village_member_info_repository,
+        VillageDetailsService $village_details_service,
+        TextMiningServiceInterface $text_mining_service
     ) {
         $this->village_repository = $village_repository;
         $this->village_member_info_repository = $village_member_info_repository;
+        $this->village_details_service = $village_details_service;
+        $this->text_mining_service = $text_mining_service;
     }
 
     /**
@@ -116,8 +125,11 @@ class VillageService{
             // 現在のフェーズ状態を完了として一度、保存する。
             $village->phase()->completePhase();
             $this->village_repository->update($village);
+            // テキストマイニングを行う
+            $this->villageTextMining($village);
             // 次フェーズに進める。
             switch ($village->phase()->phaseNo()) {
+                // 自動でフェーズを進行中に変更
                 case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
                 case VillagePhase::PHASE_EVALUATION:
                     $village->nextPhase(VillagePhase::PHASE_STATUS_IN_PROGRESS);
@@ -167,5 +179,33 @@ class VillageService{
         $this->village_member_info_repository->update($village->id(), $member_info);
         $village->setMemberInfo($this);
         return $village;
+    }
+
+    /**
+     * テキストマイニングを行う
+     */
+    protected function villageTextMining(Village $village){
+        // テキストマイニングを行う
+        switch ($village->phase()->phaseNo()) {
+            case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
+                $this->village_details_service->setDetails($village);
+                break;
+            default:
+                return;
+        }
+        $village_members = $village->memberInfo()->coreMembers();
+        // $village_members += $village->memberInfo()->riseMembers();
+        $opinion_text = '';
+        foreach ($village_members as $member) {
+            $core_member = MemberCast::castCoreMember($member);
+            $opinions = $core_member->opinions();
+            foreach ($opinions as $opinion) {
+                $opinion = OpinionCast::castOpinion($opinion);
+                $opinion_text .= $opinion->content();
+            }
+        }
+        $path = 'public/village/'.$village->id()->toInt().'/';
+        $file_name = 'core_member';
+        return $this->text_mining_service->textMining($opinion_text, $path, $file_name);
     }
 }

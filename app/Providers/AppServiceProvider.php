@@ -9,6 +9,7 @@ use Packages\Domain\Services\VillageService;
 use Packages\Infrastructure\Repositories\VillageDetailsRepository;
 use Packages\Infrastructure\Repositories\VillageMemberInfoRepository;
 use Packages\Infrastructure\Repositories\VillageRepository;
+use Packages\Infrastructure\Services\TextMiningService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +26,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(VillageService::class, function ($app) {
             return new VillageService(
                 new VillageRepository(),
-                new VillageMemberInfoRepository()
+                new VillageMemberInfoRepository(),
+                new VillageDetailsService(
+                    new VillageDetailsRepository()
+                ),
+                new TextMiningService()
             );
         });
         $this->app->singleton(VillagePermissionService::class, function ($app) {
