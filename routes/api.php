@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Member\MyVillage\OpinionApiController;
 use App\Http\Controllers\Api\Member\MyVillage\PolicyApiController;
 use App\Http\Controllers\Api\Member\MyVillage\RiseMemberOpinionApiController;
 use App\Http\Controllers\Api\Member\MyVillage\SatisfactionApiController;
+use App\Http\Controllers\Api\Member\User\UserApiController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -48,6 +49,8 @@ Route::post('/auth/login', [LoginApiController::class, 'Login']);
 
 // ログイン後
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/user', [UserApiController::class, 'index']);
+    Route::post('/user', [UserApiController::class, 'update']);
     Route::apiResource('/village', VillageApiController::class);
     Route::post('/village/join', [VillageApiController::class, 'join']);
     // ビレッジ登録時バリデーション
