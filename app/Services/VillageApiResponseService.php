@@ -88,8 +88,9 @@ class VillageApiResponseService
         }
         if (!is_null($member)) {
             $role_id = $village->getMemberRole($member);
-            $result['role_id'] = $role_id;
             $member->setRole($role_id);
+            $result['role_id'] = $role_id;
+            $result['role_name'] = $member->getRoleName();
             $result['is_show_evaluation'] = VillagePhaseService::isShowEvaluation($village, $member);
             $result['can_evaluation'] = VillagePhaseService::canEvaluation($village, $member);
             $result['is_task_done'] = VillagePhaseTaskService::isTaskDone($village, $member);

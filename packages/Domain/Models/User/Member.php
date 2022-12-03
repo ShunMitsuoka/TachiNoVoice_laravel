@@ -26,19 +26,26 @@ class Member extends User
      * 役割:ホスト
      */
     public const ROLE_HOST  = 1;
+    public const ROLE_HOST_NAME  = "ホスト";
 
     /**
      * 役割:ビレッジメンバー
      */
     public const ROLE_VILLAGE_MEMBER  = 10;
+    public const ROLE_VILLAGE_MEMBER_NAME  = 'ビレッジメンバー';
+    
     /**
      * 役割:コアメンバー
      */
     public const ROLE_CORE_MEMBER  = 20;
+    public const ROLE_CORE_MEMBER_NAME  = 'コアメンバー';
+
     /**
      * 役割:ライズメンバー
      */
     public const ROLE_RISE_MEMBER  = 30;
+    public const ROLE_RISE_MEMBER_NAME  = 'ライズメンバー';
+
 
     function __construct(
         ?UserId $id,
@@ -129,5 +136,22 @@ class Member extends User
 
     public function isHost() : bool{
         return $this->role_id == self::ROLE_HOST;
+    }
+
+    public function getRoleName(){
+        switch ($this->role_id) {
+            case self::ROLE_HOST:
+                return self::ROLE_HOST_NAME;
+            case self::ROLE_VILLAGE_MEMBER:
+                return self::ROLE_VILLAGE_MEMBER_NAME;
+            case self::ROLE_CORE_MEMBER:
+                return self::ROLE_CORE_MEMBER_NAME;   
+            case self::ROLE_RISE_MEMBER:
+                return self::ROLE_RISE_MEMBER_NAME; 
+            default:
+                break;
+        }
+        throw new Exception("role_idが設定されていません", 1);
+        
     }
 }
