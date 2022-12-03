@@ -1,6 +1,7 @@
 <?php
 namespace Packages\Domain\Services;
 
+use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Phase\Phases\AskingOpinionsOfCoreMemberPhase;
 use Packages\Domain\Models\Village\Phase\Phases\AskingOpinionsOfRiseMemberPhase;
 use Packages\Domain\Models\Village\Phase\Phases\CategorizeOpinionsPhase;
@@ -12,7 +13,6 @@ use Packages\Domain\Models\Village\Phase\Phases\SurveyingSatisfactionPhase;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Phase\VillagePhaseEndSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
-use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
 use Packages\Domain\Models\Village\Village;
 
@@ -103,5 +103,40 @@ class VillagePhaseService{
                 throw new \Exception("存在しないPhaseです。", 1);
                 break;
         }
+    }
+
+    /**
+     * 対象ビレッジの対象ユーザに評価を表示するかどうか判定
+     */
+    static public function isShowEvaluation(Village $village, Member $member) : bool
+    {
+        switch ($village->phase()->phaseNo()) {
+            case VillagePhase::PHASE_DECIDING_POLICY:
+                if($member->isHost()){
+                    return true;
+                }
+                break;
+            case VillagePhase::PHASE_DECIDING_POLICY:
+            case VillagePhase::PHASE_SURVEYING_SATISFACTION:
+                return true;
+            default:
+        }
+        return false;
+    }
+
+    /**
+     * 対象ビレッジの対象ユーザが評価可能かどうか判断する
+     */
+    static public function canEvaluation(Village $village, Member $member) : bool
+    {
+        if($village->phase()->isReady() || $member->isHost() ){
+            return false;
+        }
+        switch ($village->phase()->phaseNo()) {
+            case VillagePhase::PHASE_EVALUATION:
+                return true;
+            default:
+        }
+        return false;
     }
 }

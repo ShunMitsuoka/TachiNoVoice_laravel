@@ -3,14 +3,13 @@
 namespace App\Services;
 
 use Packages\Domain\Models\User\Member;
-use Packages\Domain\Models\User\VillageMember;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Models\Village\VillageDetails\Category\Category;
 use Packages\Domain\Services\Casts\CategoryCast;
-use Packages\Domain\Services\Casts\EvaluationCast;
 use Packages\Domain\Services\Casts\MemberCast;
 use Packages\Domain\Services\Casts\OpinionCast;
 use Packages\Domain\Services\Casts\SatisfactionCast;
+use Packages\Domain\Services\VillagePhaseService;
 use Packages\Domain\Services\VillagePhaseTaskService;
 
 class VillageApiResponseService
@@ -88,7 +87,11 @@ class VillageApiResponseService
             $result['rise_member_count'] = $village->memberInfo()->getRiseMemberCount();
         }
         if (!is_null($member)) {
-            $result['role_id'] = $village->getMemberRole($member);
+            $role_id = $village->getMemberRole($member);
+            $result['role_id'] = $role_id;
+            $member->setRole($role_id);
+            $result['is_show_evaluation'] = VillagePhaseService::isShowEvaluation($village, $member);
+            $result['can_evaluation'] = VillagePhaseService::canEvaluation($village, $member);
             $result['is_task_done'] = VillagePhaseTaskService::isTaskDone($village, $member);
         }
         return $result;

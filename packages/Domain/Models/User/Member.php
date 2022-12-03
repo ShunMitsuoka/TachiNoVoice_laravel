@@ -123,6 +123,10 @@ class Member extends User
         return $village->memberInfo()->searchFromRiseMember($this);
     }
 
+    public function setRole($role_id){
+        $this->role_id = $role_id;
+    }
+
     public function isHost() : bool{
         return $this->role_id == self::ROLE_HOST;
     }
