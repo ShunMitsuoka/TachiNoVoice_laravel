@@ -1,4 +1,5 @@
 <?php
+
 namespace Packages\Domain\Models\User;
 
 use Carbon\Carbon;
@@ -18,6 +19,7 @@ class User extends _Entity
     protected Gender $gender;
     protected Carbon $date_of_birth;
 
+
     function __construct(
         ?UserId $id,
         string $name,
@@ -25,6 +27,7 @@ class User extends _Entity
         string $email,
         Gender $gender,
         Carbon $date_of_birth,
+
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -34,11 +37,20 @@ class User extends _Entity
         $this->date_of_birth = $date_of_birth;
     }
 
-    public function setId(int $id){
-        if(!is_null($this->id)){
+    public function setId(int $id)
+    {
+        if (!is_null($this->id)) {
             throw new \Exception('IDが既に存在しています。');
         }
         $this->id = new UserId($id);
+    }
+    public function getPassword()
+    {
+        return $this->password;
+    }
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
     }
 
     public function name(): string
