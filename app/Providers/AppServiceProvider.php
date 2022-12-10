@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Packages\Domain\Interfaces\Repositories\EvaluationRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\UserRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Services\VillageDetailsService;
 use Packages\Domain\Services\VillagePermissionService;
 use Packages\Domain\Services\VillageService;
+use Packages\Infrastructure\Repositories\EvaluationRepository;
 use Packages\Infrastructure\Repositories\UserRepository;
 use Packages\Infrastructure\Repositories\VillageDetailsRepository;
 use Packages\Infrastructure\Repositories\VillageMemberInfoRepository;
@@ -25,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(VillageRepositoryInterface::class, function ($app) {
             return new VillageRepository();
+        });
+        $this->app->singleton(EvaluationRepositoryInterface::class, function ($app) {
+            return new EvaluationRepository();
         });
         $this->app->singleton(VillageService::class, function ($app) {
             return new VillageService(
