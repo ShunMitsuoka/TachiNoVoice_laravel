@@ -234,7 +234,8 @@ class VillageRepository implements VillageRepositoryInterface
             $village->topic(),
             $village->setting(),
             $village->requirement(),
-            $village->publicInformation()
+            $village->publicInformation(),
+            $village->existsMemberInfo() ? $village->memberInfo() : null
         );
     }
 

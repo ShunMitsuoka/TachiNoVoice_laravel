@@ -29,7 +29,8 @@ class Village extends _Entity
         Topic $topic,
         VillageSetting $setting,
         VillageMemberRequirement $requirement,
-        VillagePublicInformation $public_information
+        VillagePublicInformation $public_information,
+        ?VillageMemberInfo $member_info = null
     ) {
         $this->id = $id;
         $this->phase = $phase;
@@ -37,7 +38,7 @@ class Village extends _Entity
         $this->setting = $setting;
         $this->requirement = $requirement;
         $this->public_information = $public_information;
-        $this->member_info = null;
+        $this->member_info = $member_info;
     }
 
     public function setId(int $id)

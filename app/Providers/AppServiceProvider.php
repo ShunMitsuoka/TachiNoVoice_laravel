@@ -14,6 +14,7 @@ use Packages\Infrastructure\Repositories\UserRepository;
 use Packages\Infrastructure\Repositories\VillageDetailsRepository;
 use Packages\Infrastructure\Repositories\VillageMemberInfoRepository;
 use Packages\Infrastructure\Repositories\VillageRepository;
+use Packages\Infrastructure\Services\SendNextPhaseEmailService;
 use Packages\Infrastructure\Services\TextMiningService;
 
 class AppServiceProvider extends ServiceProvider
@@ -38,7 +39,8 @@ class AppServiceProvider extends ServiceProvider
                 new VillageDetailsService(
                     new VillageDetailsRepository()
                 ),
-                new TextMiningService()
+                new TextMiningService(),
+                new SendNextPhaseEmailService()
             );
         });
         $this->app->singleton(VillagePermissionService::class, function ($app) {
