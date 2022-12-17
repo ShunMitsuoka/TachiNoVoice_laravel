@@ -4,6 +4,7 @@ namespace Packages\Domain\Services;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageMemberInfoRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
+use Packages\Domain\Interfaces\Services\SendNextPhaseEmailServiceInterface;
 use Packages\Domain\Interfaces\Services\TextMiningServiceInterface;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
@@ -19,17 +20,20 @@ class VillageService{
     protected VillageMemberInfoRepositoryInterface $village_member_info_repository;
     protected VillageDetailsService $village_details_service;
     protected TextMiningServiceInterface $text_mining_service;
+    protected SendNextPhaseEmailServiceInterface $send_next_phase_email_service;
 
     function __construct(
         VillageRepositoryInterface $village_repository,
         VillageMemberInfoRepositoryInterface $village_member_info_repository,
         VillageDetailsService $village_details_service,
-        TextMiningServiceInterface $text_mining_service
+        TextMiningServiceInterface $text_mining_service,
+        SendNextPhaseEmailServiceInterface $send_next_phase_email_service
     ) {
         $this->village_repository = $village_repository;
         $this->village_member_info_repository = $village_member_info_repository;
         $this->village_details_service = $village_details_service;
         $this->text_mining_service = $text_mining_service;
+        $this->send_next_phase_email_service = $send_next_phase_email_service;
     }
 
     /**
@@ -139,6 +143,7 @@ class VillageService{
                     break;
             }
             $updated_village = $this->village_repository->update($village);
+            $this->send_next_phase_email_service->sendNextPhaseEmail($updated_village);
             DB::commit();
             return $updated_village;
         } catch (\Throwable $th) {

@@ -111,7 +111,8 @@ class VillagePhaseService{
     static public function isShowEvaluation(Village $village, Member $member) : bool
     {
         switch ($village->phase()->phaseNo()) {
-            case VillagePhase::PHASE_DECIDING_POLICY:
+            
+            case VillagePhase::PHASE_EVALUATION:
                 if($member->isHost()){
                     return true;
                 }
