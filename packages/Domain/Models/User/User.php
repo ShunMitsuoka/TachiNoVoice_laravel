@@ -16,6 +16,7 @@ class User extends _Entity
     protected string $name;
     protected ?string $nickname;
     protected string $email;
+    protected ?string $password;
     protected Gender $gender;
     protected Carbon $date_of_birth;
 
@@ -35,6 +36,7 @@ class User extends _Entity
         $this->email = $email;
         $this->gender = $gender;
         $this->date_of_birth = $date_of_birth;
+        $this->password = null;
     }
 
     public function setId(int $id)
@@ -51,6 +53,10 @@ class User extends _Entity
     public function setPassword(string $password)
     {
         $this->password = $password;
+    }
+    public function hasPassword()
+    {
+        return (!is_null($this->password) && $this->password !== '');
     }
 
     public function name(): string
@@ -79,6 +85,21 @@ class User extends _Entity
     public function dateOfBirth(): Carbon
     {
         return $this->date_of_birth;
+    }
+
+    public function birthYear(): int
+    {
+        return $this->date_of_birth->year;
+    }
+
+    public function birthMonth(): int
+    {
+        return $this->date_of_birth->month;
+    }
+
+    public function birthDay(): int
+    {
+        return $this->date_of_birth->day;
     }
 
     public function age(): int

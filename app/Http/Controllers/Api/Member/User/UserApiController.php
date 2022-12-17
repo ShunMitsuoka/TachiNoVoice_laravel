@@ -29,8 +29,17 @@ class UserApiController extends BaseApiController
     //  */
     public function index(Request $request)
     {
-        $user = Auth::user();
-        return $this->makeSuccessResponse([$user]);
+        $member = $this->getLoginMember();
+        return $this->makeSuccessResponse([
+            'user_id' => $member->id()->toInt(),
+            'user_name' => $member->name(),
+            'nickname' => $member->nickname(),
+            'email' => $member->email(),
+            'gender' => $member->gender()->id(),
+            'birthyear' => $member->birthYear(),
+            'birthmonth' => $member->birthMonth(),
+            'birthday' => $member->birthDay(),
+        ]);
     }
 
     /**
@@ -68,9 +77,11 @@ class UserApiController extends BaseApiController
         );
         if ($formData->password != '') {
             $user->setPassword($formData->password);
-        } else {
-            $user->setPassword('');
         }
-        $this->user_repository->update($user);
+        if ($this->user_repository->update($user)) {
+            return $this->makeSuccessResponse([]);
+        } else {
+            return $this->makeErrorResponse([]);
+        }
     }
 }
