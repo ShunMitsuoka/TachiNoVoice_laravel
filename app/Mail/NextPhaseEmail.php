@@ -53,7 +53,7 @@ class NextPhaseEmail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'emails.next_phase_email',
+            markdown: 'emails.next_phase_email',
             with: [
                 'Name' => $this->member->name(),
                 'next_phase_name' => $this->village->phase()->phaseName(),
