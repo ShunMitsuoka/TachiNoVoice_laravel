@@ -40,7 +40,7 @@ class NextPhaseEmail extends Mailable
     {
         return new Envelope(
             subject: '【Tachi-No-Voice】'.$this->village->phase()->phaseName().'フェーズが開始しました。',
-            from: 'foo@example.net',
+            from: 'info@mail.tachi-no-voice.com',
             to: $this->member->email(),
         );
     }

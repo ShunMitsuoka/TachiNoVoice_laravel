@@ -40,7 +40,7 @@ class EndPhaseEmail extends Mailable
     {
         return new Envelope(
             subject: '【Tachi-No-Voice】'.$this->end_phase_name.'フェーズが終了しました',
-            from: 'foo@example.net',
+            from: 'info@mail.tachi-no-voice.com',
             to: $this->member->email(),
         );
     }
