@@ -289,7 +289,8 @@ class VillageRepository implements VillageRepositoryInterface
             ->joinSub($phseSubQuery, 'p', 'p.village_id', 'v.id')
             ->join('village_member_requirements as vmr', 'vmr.village_id', 'v.id')
             ->join('village_settings as vs', 'vs.village_id', 'v.id')
-            ->join('public_informations as pi', 'pi.village_id', 'v.id');
+            ->join('public_informations as pi', 'pi.village_id', 'v.id')
+            ->orderBy('v.updated_at', 'DESC');
         return $query;
     }
 
