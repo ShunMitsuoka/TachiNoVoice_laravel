@@ -33,14 +33,6 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
-            'permissions' => [ // permissions 設定値を追記
-                'dir' => [
-                    'public'  => 0775, // public なディレクトリは775で作成 
-                ],
-                'file' => [
-                    'public' => 0664, // public なファイルは664で作成
-                ],
-            ],
             'throw' => false,
         ],
 
@@ -50,6 +42,14 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
+            'permissions' => [ // permissions 設定値を追記
+                'dir' => [
+                    'village'  => 0775, // public なディレクトリは775で作成 
+                ],
+                'file' => [
+                    'village' => 0664, // public なファイルは664で作成
+                ],
+            ],
         ],
 
         's3' => [
