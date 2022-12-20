@@ -10,6 +10,11 @@ class TextMiningService implements TextMiningServiceInterface
 {
     public function textMining(string $text, string $path, string $file_name) : string
     {
+        $abs_path = storage_path('app/'.$path);
+        if(!file_exists($abs_path)) {
+            mkdir($abs_path, 0774, true);
+        }
+
         $base64_image = PythonApi::getTextMiningBase64Image($text);
         Log::info($base64_image);
         preg_match('/data:image\/(\w+);base64,/', $base64_image, $matches);
