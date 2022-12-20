@@ -19,7 +19,7 @@ class TextMiningService implements TextMiningServiceInterface
         $file = base64_decode($img);
         $file_name = $file_name.'.'.$extension;
         $file_path = $path.$file_name;
-        Storage::put($file_path, $file);
+        Storage::put($file_path, $file, 'public');
         return $file_path;
     }
 }
