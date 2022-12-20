@@ -32,21 +32,25 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                     break;
 
                 case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
-                    //コア、ライズメンバーにメンバー抽選が終わったメール送信
-                    $end_phase_name = VillagePhase::PHASE_DRAWING_CORE_MEMBER_NAME;
-                    foreach ($core_member_array as $core_member) {
-                        $core_member = MemberCast::castCoreMember($core_member);
-                        Mail::send(new EndPhaseEmail($core_member, $end_phase_name, $village, $url));
-                    }
-                    foreach ($rise_member_array as $rise_member) {
-                        $rise_member = MemberCast::castRiseMember($rise_member);
-                        Mail::send(new EndPhaseEmail($rise_member, $end_phase_name, $village, $url));
+                    if ($village->phase()->phaseStatus() == 1) {
+                        //コア、ライズメンバーにメンバー抽選が終わったメール送信
+                        $end_phase_name = VillagePhase::PHASE_DRAWING_CORE_MEMBER_NAME;
+                        foreach ($core_member_array as $core_member) {
+                            $core_member = MemberCast::castCoreMember($core_member);
+                            Mail::send(new EndPhaseEmail($core_member, $end_phase_name, $village, $url));
+                        }
+                        foreach ($rise_member_array as $rise_member) {
+                            $rise_member = MemberCast::castRiseMember($rise_member);
+                            Mail::send(new EndPhaseEmail($rise_member, $end_phase_name, $village, $url));
+                        }
                     }
                     
-                    //コアメンバーにコア意見募集が始まったメール送信
-                    foreach ($core_member_array as $core_member) {
-                        $core_member = MemberCast::castCoreMember($core_member);
-                        Mail::send(new NextPhaseEmail($core_member, $village, $url));
+                    if ($village->phase()->phaseStatus() == 100) {
+                        //コアメンバーにコア意見募集が始まったメール送信
+                        foreach ($core_member_array as $core_member) {
+                            $core_member = MemberCast::castCoreMember($core_member);
+                            Mail::send(new NextPhaseEmail($core_member, $village, $url));
+                        }
                     }
                     break;
 
