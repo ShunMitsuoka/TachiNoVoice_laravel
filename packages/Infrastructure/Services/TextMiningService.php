@@ -12,7 +12,7 @@ class TextMiningService implements TextMiningServiceInterface
     {
         $abs_path = storage_path('app/'.$path);
         if(!file_exists($abs_path)) {
-            mkdir($abs_path, 0774, true);
+            mkdir($abs_path, 0775, true);
         }
 
         $base64_image = PythonApi::getTextMiningBase64Image($text);
