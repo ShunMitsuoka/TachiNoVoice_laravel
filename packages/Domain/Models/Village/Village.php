@@ -115,6 +115,10 @@ class Village extends _Entity
             $members = $this->member_info->riseMembers();
             return $members[$member->id()->toInt()];
         }
+        if($this->member_info->isVillageMember($member)){
+            $members = $this->member_info->villageMembers();
+            return $members[$member->id()->toInt()];
+        }
         throw new \Exception('メンバー情報が存在しません。');
     }
 
