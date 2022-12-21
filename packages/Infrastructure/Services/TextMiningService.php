@@ -1,7 +1,6 @@
 <?php
 namespace Packages\Infrastructure\Services;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Packages\Domain\Interfaces\Services\TextMiningServiceInterface;
 use Packages\Infrastructure\Apis\PythonApi;
@@ -16,7 +15,6 @@ class TextMiningService implements TextMiningServiceInterface
         }
 
         $base64_image = PythonApi::getTextMiningBase64Image($text);
-        Log::info($base64_image);
         preg_match('/data:image\/(\w+);base64,/', $base64_image, $matches);
         $extension = $matches[1];
         $img = preg_replace('/^data:image.*base64,/', '', $base64_image);
