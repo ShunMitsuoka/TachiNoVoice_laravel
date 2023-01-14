@@ -73,11 +73,6 @@ class Village extends _Entity
         return $categories;
     }
 
-    public function setCategories(array $categories)
-    {
-        $this->categories = $categories;
-    }
-
     public function setting(): VillageSetting
     {
         return $this->setting;
@@ -148,12 +143,48 @@ class Village extends _Entity
         throw new \Exception('メンバーに役割が設定されていません。');
     }
 
-    public function nextPhase(int $phase_statis = VillagePhase::PHASE_STATUS_PREPARATION)
+    /**
+     * 現在のフェーズを次のフェーズに進める
+     */
+    public function nextPhase()
     {
+
+        $next_phase = $this->phase->phaseNo();
+        $phase_status = VillagePhase::PHASE_STATUS_PREPARATION;
+        switch ($this->phase->phaseNo()) {
+            case VillagePhase::PHASE_RECRUITMENT_OF_MEMBER:
+                $next_phase = VillagePhase::PHASE_DRAWING_CORE_MEMBER;
+                break;
+            case VillagePhase::PHASE_DRAWING_CORE_MEMBER:
+                $next_phase = VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER;
+                break;
+            case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
+                $next_phase = VillagePhase::PHASE_CATEGORIZE_OPINIONS;
+                $phase_status = VillagePhase::PHASE_STATUS_IN_PROGRESS;
+                break;
+            case VillagePhase::PHASE_CATEGORIZE_OPINIONS:
+                $next_phase = VillagePhase::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER;
+                break;
+            case VillagePhase::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER:
+                $next_phase = VillagePhase::PHASE_EVALUATION;
+                break;
+            case VillagePhase::PHASE_EVALUATION:
+                $next_phase = VillagePhase::PHASE_DECIDING_POLICY;
+                $phase_status = VillagePhase::PHASE_STATUS_IN_PROGRESS;
+                break;
+            case VillagePhase::PHASE_DECIDING_POLICY:
+                $next_phase = VillagePhase::PHASE_SURVEYING_SATISFACTION;
+                break;
+            case VillagePhase::PHASE_SURVEYING_SATISFACTION:
+                // 満足度調査は最終フェーズのため次へは行かない
+                throw new \Exception('満足度調査は最終フェーズのため次フェーズは存在しません');
+            default:
+                throw new \Exception('存在しないフェーズが設定されています。');
+        }
         $this->phase = VillagePhaseService::getVillagePhase(
             null,
-            $this->phase->phaseNo() + 1,
-            $phase_statis,
+            $next_phase,
+            $phase_status,
             null,
             null
         );

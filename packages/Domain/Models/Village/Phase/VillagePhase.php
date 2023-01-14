@@ -184,6 +184,10 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         return $this->phase_no == self::PHASE_CATEGORIZE_OPINIONS;
     }
 
+    public function isLastPhase() : bool{
+        return $this->phase_no == self::PHASE_SURVEYING_SATISFACTION;
+    }
+
     protected function getStartSetting(?VillagePhaseStartSetting $phase_start_setting) : VillagePhaseStartSetting{
         if(!is_null($phase_start_setting)){
             return $phase_start_setting;

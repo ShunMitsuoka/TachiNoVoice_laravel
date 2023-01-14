@@ -132,17 +132,10 @@ class VillageService{
             // テキストマイニングを行う
             $this->villageTextMining($village);
             // 次フェーズに進める。
-            switch ($village->phase()->phaseNo()) {
-                // 自動でフェーズを進行中に変更
-                case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
-                case VillagePhase::PHASE_EVALUATION:
-                    $village->nextPhase(VillagePhase::PHASE_STATUS_IN_PROGRESS);
-                    break;
-                default:
-                    $village->nextPhase();
-                    break;
+            if(!$village->phase()->isLastPhase()){
+                $village->nextPhase();
+                $updated_village = $this->village_repository->update($village);
             }
-            $updated_village = $this->village_repository->update($village);
             $this->send_next_phase_email_service->sendNextPhaseEmail($updated_village);
             DB::commit();
             return $updated_village;
