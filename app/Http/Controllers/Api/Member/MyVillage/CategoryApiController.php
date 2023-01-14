@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Requests\Api\Member\Village\AddCategoryRequest;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
@@ -51,6 +52,9 @@ class CategoryApiController extends BaseApiController
             DB::beginTransaction();
             $member = $this->getLoginMember();
             $village = $this->village_repository->get(new VillageId($village_id));
+            if (!$village->phase()->isPhaseCategorizeOpinions()) {
+                throw new Exception('意見カテゴリー分けフェーズではありません', 558);
+            }
             $village->setMemberInfo($this->village_service);
             $this->village_details_service->setDetails($village);
             $host = $member->becomeHost($village);
@@ -60,7 +64,8 @@ class CategoryApiController extends BaseApiController
             return $this->makeSuccessResponse([]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            throw $th;
+            logs()->error($th->getMessage());
+            return $this->makeErrorResponse([$th->getMessage()], $th->getCode());
         }
     }
 
@@ -88,6 +93,9 @@ class CategoryApiController extends BaseApiController
             DB::beginTransaction();
             $member = $this->getLoginMember();
             $village = $this->village_repository->get(new VillageId($village_id));
+            if (!$village->phase()->isPhaseCategorizeOpinions()) {
+                throw new Exception('意見カテゴリー分けフェーズではありません', 558);
+            }
             $village->setMemberInfo($this->village_service);
             $this->village_details_service->setDetails($village);
             $host = $member->becomeHost($village);
@@ -97,7 +105,8 @@ class CategoryApiController extends BaseApiController
             return $this->makeSuccessResponse([]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            throw $th;
+            logs()->error($th->getMessage());
+            return $this->makeErrorResponse([$th->getMessage()], $th->getCode());
         }
     }
 
@@ -113,6 +122,9 @@ class CategoryApiController extends BaseApiController
             DB::beginTransaction();
             $member = $this->getLoginMember();
             $village = $this->village_repository->get(new VillageId($village_id));
+            if (!$village->phase()->isPhaseCategorizeOpinions()) {
+                throw new Exception('意見カテゴリー分けフェーズではありません', 558);
+            }
             $village->setMemberInfo($this->village_service);
             $this->village_details_service->setDetails($village);
             $host = $member->becomeHost($village);
@@ -122,7 +134,8 @@ class CategoryApiController extends BaseApiController
             return $this->makeSuccessResponse([]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            throw $th;
+            logs()->error($th->getMessage());
+            return $this->makeErrorResponse([$th->getMessage()], $th->getCode());
         }
     }
 }

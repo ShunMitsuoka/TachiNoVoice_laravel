@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Member\MyVillage;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Controllers\Controller;
 use App\Services\VillageApiResponseService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
@@ -69,6 +70,9 @@ class SatisfactionApiController extends BaseApiController
             DB::beginTransaction();
             $member = $this->getLoginMember();
             $village = $this->village_repository->get(new VillageId($village_id));
+            if (!$village->phase()->isPhaseSurveyingSatisfaction()) {
+                throw new Exception("満足度調査フェーズではありません", 558);
+            }
             $village->setMemberInfo($this->village_service);
             $this->village_details_service->setDetails($village);
             $village_member = $member->becomeVillageMember($village);
@@ -79,7 +83,8 @@ class SatisfactionApiController extends BaseApiController
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;
-            return $this->makeErrorResponse([]);
+            logs()->error($th->getMessage());
+            return $this->makeErrorResponse([$th->getMessage()], $th->getCode());
         }
     }
 

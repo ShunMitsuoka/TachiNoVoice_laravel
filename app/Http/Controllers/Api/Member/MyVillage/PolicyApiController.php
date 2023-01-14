@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\Api\BaseApiController;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
@@ -50,6 +51,9 @@ class PolicyApiController extends BaseApiController
             DB::beginTransaction();
             $member = $this->getLoginMember();
             $village = $this->village_repository->get(new VillageId($village_id));
+            if (!$village->phase()->isPhaseDicidingPolicy()) {
+                throw new Exception("方針決定フェーズではありません", 558);
+            }
             $village->setMemberInfo($this->village_service);
             $this->village_details_service->setDetails($village);
             $host = $member->becomeHost($village);
@@ -59,7 +63,8 @@ class PolicyApiController extends BaseApiController
             return $this->makeSuccessResponse([]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            throw $th;
+            logs()->error($th->getMessage());
+            return $this->makeErrorResponse([$th->getMessage()], $th->getCode());
         }
     }
 

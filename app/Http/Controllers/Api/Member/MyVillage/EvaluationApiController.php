@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\EvaluationRepositoryInterface;
@@ -72,6 +73,9 @@ class EvaluationApiController extends BaseApiController
             DB::beginTransaction();
             $member = $this->getLoginMember();
             $village = $this->village_repository->get(new VillageId($village_id));
+            if (!$village->phase()->isPhaseEvaluation()) {
+                throw new Exception("意見評価フェーズではありません", 558);
+            }
             $village->setMemberInfo($this->village_service);
             // メンバーの参加確認
             $village_member = $member->becomeVillageMember($village);
@@ -82,7 +86,8 @@ class EvaluationApiController extends BaseApiController
             return $this->makeSuccessResponse([]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            throw $th;
+            logs()->error($th->getMessage());
+            return $this->makeErrorResponse([$th->getMessage()], $th->getCode());
         }
     }
 

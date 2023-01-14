@@ -180,8 +180,24 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         return $this->phase_no == self::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER;
     }
 
+    public function isPhaseAskingOpinionOfRizeMenber() : bool{
+        return $this->phase_no == self::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER;
+    }
+
     public function isPhaseCategorizeOpinions() : bool{
         return $this->phase_no == self::PHASE_CATEGORIZE_OPINIONS;
+    }
+
+    public function isPhaseEvaluation() : bool {
+        return $this->phase_no == self::PHASE_EVALUATION;
+    }
+
+    public function isPhaseDicidingPolicy() : bool {
+        return $this->phase_no == self::PHASE_DECIDING_POLICY;
+    }
+
+    public function isPhaseSurveyingSatisfaction() : bool {
+        return $this->phase_no == self::PHASE_SURVEYING_SATISFACTION;
     }
 
     public function isLastPhase() : bool{

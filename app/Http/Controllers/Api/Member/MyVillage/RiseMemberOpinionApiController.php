@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\Api\BaseApiController;
 use App\Services\VillageApiResponseService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
@@ -58,6 +59,9 @@ class RiseMemberOpinionApiController extends BaseApiController
             DB::beginTransaction();
             $member = $this->getLoginMember();
             $village = $this->village_repository->get(new VillageId($village_id));
+            if (!$village->phase()->isPhaseAskingOpinionOfRizeMenber()) {
+                throw new Exception("ライズメンバー意見募集フェーズではありません", 558);
+            }
             $village->setMemberInfo($this->village_service);
             $this->village_details_service->setDetails($village);
             $rise_member = $member->becomeRiseMember($village);
@@ -67,7 +71,8 @@ class RiseMemberOpinionApiController extends BaseApiController
             return $this->makeSuccessResponse([]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            throw $th;
+            logs()->error($th->getMessage());
+            return $this->makeErrorResponse([$th->getMessage()], $th->getCode());
         }
     }
 }
