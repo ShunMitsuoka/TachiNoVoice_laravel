@@ -9,7 +9,7 @@ class SetSettingRequest extends BaseApiRequest
     public function rules()
     {
         return [
-            'village_member_limit' => 'required|integer|min:1|max:500',
+            'village_member_limit' => 'required|integer|min:1|max:500|gt:core_member_limit',
             'core_member_limit' => 'required|integer|min:1|max:100',
             'requirement' => 'max:5000'
         ];
