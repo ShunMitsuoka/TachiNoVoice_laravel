@@ -128,7 +128,7 @@ class VillageService{
             DB::beginTransaction();
             // 現在のフェーズ状態を完了として一度、保存する。
             $village->phase()->completePhase();
-            $this->village_repository->update($village);
+            $updated_village = $this->village_repository->update($village);
             // テキストマイニングを行う
             $this->villageTextMining($village);
             // 次フェーズに進める。
