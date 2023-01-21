@@ -3,14 +3,11 @@ namespace Packages\Infrastructure\Services;
 
 use App\Mail\EndPhaseEmail;
 use App\Mail\NextPhaseEmail;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Packages\Domain\Interfaces\Services\SendNextPhaseEmailServiceInterface;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Village;
 use Packages\Domain\Services\Casts\MemberCast;
-use Packages\Infrastructure\Apis\PythonApi;
 
 class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
 {
@@ -27,39 +24,43 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
             switch ($village->phase()->phaseNo()) {
                 case VillagePhase::PHASE_DRAWING_CORE_MEMBER:
                     //ホストにメンバー募集が終了したメール送信
-                    $end_phase_name = VillagePhase::PHASE_RECRUITMENT_OF_MEMBER_NAME;
-                    foreach ($host_array as $host) {
-                        $host = MemberCast::castHost($host);
-                        Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
-                    }
+                    // $end_phase_name = VillagePhase::PHASE_RECRUITMENT_OF_MEMBER_NAME;
+                    // foreach ($host_array as $host) {
+                    //     $host = MemberCast::castHost($host);
+                    //     Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
+                    // }
                     break;
 
                 case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
-                    //ホスト、コア、ライズメンバーにメンバー抽選が終わったメール送信
-                    $end_phase_name = VillagePhase::PHASE_DRAWING_CORE_MEMBER_NAME;
-                    foreach ($host_array as $host) {
-                        $host = MemberCast::castHost($host);
-                        Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
-                    }
-                    foreach ($village_member_array as $village_member) {
-                        $village_member = MemberCast::castVillageMember($village_member);
-                        Mail::send(new EndPhaseEmail($village_member, $end_phase_name, $village, $url));
+                    if ($village->phase()->phaseStatus() == 1) {
+                        //コア、ライズメンバーにメンバー抽選が終わったメール送信
+                        $end_phase_name = VillagePhase::PHASE_DRAWING_CORE_MEMBER_NAME;
+                        foreach ($core_member_array as $core_member) {
+                            $core_member = MemberCast::castCoreMember($core_member);
+                            Mail::send(new EndPhaseEmail($core_member, $end_phase_name, $village, $url));
+                        }
+                        foreach ($rise_member_array as $rise_member) {
+                            $rise_member = MemberCast::castRiseMember($rise_member);
+                            Mail::send(new EndPhaseEmail($rise_member, $end_phase_name, $village, $url));
+                        }
                     }
                     
-                    //コアメンバーにコア意見募集が始まったメール送信
-                    foreach ($core_member_array as $core_member) {
-                        $core_member = MemberCast::castCoreMember($core_member);
-                        Mail::send(new NextPhaseEmail($core_member, $village, $url));
+                    if ($village->phase()->phaseStatus() == 100) {
+                        //コアメンバーにコア意見募集が始まったメール送信
+                        foreach ($core_member_array as $core_member) {
+                            $core_member = MemberCast::castCoreMember($core_member);
+                            Mail::send(new NextPhaseEmail($core_member, $village, $url));
+                        }
                     }
                     break;
 
                 case VillagePhase::PHASE_CATEGORIZE_OPINIONS:
                     //ホストにコア意見募集が終了したメール送信
-                    $end_phase_name = VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER_NAME;
-                    foreach ($host_array as $host) {
-                        $host = MemberCast::castHost($host);
-                        Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
-                    }
+                    // $end_phase_name = VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER_NAME;
+                    // foreach ($host_array as $host) {
+                    //     $host = MemberCast::castHost($host);
+                    //     Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
+                    // }
                     break;
                 
                 case VillagePhase::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER:
@@ -72,11 +73,11 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
 
                 case VillagePhase::PHASE_EVALUATION:
                     //ホストにライズ意見募集が終了したメール送信
-                    $end_phase_name = VillagePhase::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER_NAME;
-                    foreach ($host_array as $host) {
-                        $host = MemberCast::castHost($host);
-                        Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
-                    }
+                    // $end_phase_name = VillagePhase::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER_NAME;
+                    // foreach ($host_array as $host) {
+                    //     $host = MemberCast::castHost($host);
+                    //     Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
+                    // }
                     //コア、ライズメンバーに意見評価が始まったメール送信
                     foreach ($core_member_array as $core_member) {
                         $core_member = MemberCast::castCoreMember($core_member);
@@ -89,12 +90,12 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                     break;
 
                 case VillagePhase::PHASE_DECIDING_POLICY:
-                    //ホストに意見評価が終了したメール送信
-                    $end_phase_name = VillagePhase::PHASE_EVALUATION_NAME;
-                    foreach ($host_array as $host) {
-                        $host = MemberCast::castHost($host);
-                        Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
-                    }
+                //     //ホストに意見評価が終了したメール送信
+                //     $end_phase_name = VillagePhase::PHASE_EVALUATION_NAME;
+                //     foreach ($host_array as $host) {
+                //         $host = MemberCast::castHost($host);
+                //         Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
+                //     }
                     break;
 
                 case VillagePhase::PHASE_SURVEYING_SATISFACTION:

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\RegisterApiController;
 use App\Http\Controllers\Api\Auth\LoginApiController;
+use App\Http\Controllers\Api\Auth\PasswordResetApiController;
 use App\Http\Controllers\Api\Member\MyVillage\CategoryApiController;
 use App\Http\Controllers\Api\Member\MyVillage\CoreMemberOpinionApiController;
 use App\Http\Controllers\Api\Member\MyVillage\EvaluationApiController;
@@ -46,6 +47,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 // ログイン
 Route::post('/auth/login', [LoginApiController::class, 'Login']);
+/**
+ * パスワード関連
+ */
+Route::post('/password/forgot', [PasswordResetApiController::class, 'forgotPassword']);
+Route::post('/password/reset', [PasswordResetApiController::class, 'reset']);
 
 // ログイン後
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
