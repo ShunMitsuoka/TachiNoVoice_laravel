@@ -67,8 +67,8 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
     /**
      * ステータス：完了
      */
-    public const PHASE_STATUS_COMPLATE = 200;
-    public const PHASE_STATUS_COMPLATE_NAME = '完了';
+    public const PHASE_STATUS_COMPLETE = 200;
+    public const PHASE_STATUS_COMPLETE_NAME = '完了';
 
     protected ?VillagePhaseId $id;
     protected int $phase_no;
@@ -154,14 +154,18 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
         return $this->phase_status == self::PHASE_STATUS_PREPARATION;
     }
 
+    public function isComplete() : bool{
+        return $this->phase_status == self::PHASE_STATUS_COMPLETE;
+    }
+
     public function getPhaseStatusName():string{
         switch ($this->phase_status) {
             case self::PHASE_STATUS_PREPARATION:
                 return self::PHASE_STATUS_PREPARATION_NAME;
             case self::PHASE_STATUS_IN_PROGRESS:
                 return self::PHASE_STATUS_IN_PROGRESS_NAME;
-            case self::PHASE_STATUS_COMPLATE:
-                return self::PHASE_STATUS_COMPLATE_NAME;
+            case self::PHASE_STATUS_COMPLETE:
+                return self::PHASE_STATUS_COMPLETE_NAME;
             default:
                 throw new \Exception("存在しないPhaseStatusです。", 1);
                 break;
@@ -169,7 +173,7 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
     }
 
     public function completePhase(){
-        $this->phase_status = self::PHASE_STATUS_COMPLATE;
+        $this->phase_status = self::PHASE_STATUS_COMPLETE;
     }
 
     public function startPhase(){

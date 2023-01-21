@@ -193,4 +193,8 @@ class Village extends _Entity
             null
         );
     }
+
+    public function isFinished() : bool{
+        return $this->phase()->isLastPhase() && $this->phase()->isComplete();
+    }
 }

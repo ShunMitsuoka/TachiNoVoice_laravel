@@ -24,6 +24,7 @@ class VillageApiResponseService
             'phase_no' => $village->phase()->phaseNo(),
             'phase_name' => $village->phase()->phaseName(),
             'phase_status' => $village->phase()->phaseStatus(),
+            'is_finished' => $village->isFinished(),
             'title' => $village->topic()->title(),
             'content' => $village->topic()->content(),
             'note' => $village->topic()->note(),

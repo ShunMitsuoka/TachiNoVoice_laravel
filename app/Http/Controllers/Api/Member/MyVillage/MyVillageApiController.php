@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\Member\MyVillage;
 
 use App\Http\Controllers\Api\BaseApiController;
+use App\Services\PagenationService;
 use App\Services\VillageApiResponseService;
 use Illuminate\Http\Request;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
+use Packages\Domain\Models\Filter\JoinningVillageFilter;
 use Packages\Domain\Models\Village\VillageId;
 use Packages\Domain\Services\Casts\VillageCast;
 use Packages\Domain\Services\VillageDetailsService;
@@ -32,16 +34,18 @@ class MyVillageApiController extends BaseApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $result = [];
+        $data = [];
         $member = $this->getLoginMember();
-        $joining_villages = $this->village_repository->getAllJoiningVillage($member->id());
-        foreach ($joining_villages as $village) {
+        $filter = new JoinningVillageFilter($request->recordNum, $request->finishedFlg == 'true');
+        $joining_village_collection = $this->village_repository->getAllJoiningVillage($member->id(), $filter);
+        foreach ($joining_village_collection->items() as $village) {
             $village = VillageCast::castVillage($village);
             $village->setMemberInfo($this->village_service);
-            $result[] = VillageApiResponseService::villageResponse($village, $member);
+            $data[] = VillageApiResponseService::villageResponse($village, $member);
         }
+        $result = PagenationService::makePagenationResponse($data, $joining_village_collection);
         return $this->makeSuccessResponse($result);
     }
 

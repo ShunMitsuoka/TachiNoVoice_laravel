@@ -12,6 +12,8 @@ use App\Models\VillageMember as ModelVillageMember;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
+use Packages\Domain\Models\Collections\BaseCollection;
+use Packages\Domain\Models\Filter\JoinningVillageFilter;
 use Packages\Domain\Models\Filter\SearchVillageFilter;
 use Packages\Domain\Models\User\Member;
 use Packages\Domain\Models\User\UserId;
@@ -27,7 +29,7 @@ use Packages\Domain\Models\Village\VillagePublicInformation;
 use Packages\Domain\Models\Village\VillageSetting;
 use Packages\Domain\Services\VillagePhaseService;
 
-class VillageRepository implements VillageRepositoryInterface
+class VillageRepository extends LaravelRepository implements VillageRepositoryInterface
 {
 
     public function get(VillageId $village_id): Village
@@ -58,25 +60,39 @@ class VillageRepository implements VillageRepositoryInterface
         return $result;
     }
 
-    public function getAllJoiningVillage(UserId $userId): array
+    public function getAllJoiningVillage(UserId $userId, JoinningVillageFilter $filter) : BaseCollection
     {
         $result = [];
-        $village_records = $this->queryVillageInfo()
-            ->whereIn(
-                'v.id',
-                function ($query) use ($userId) {
-                    $village_members = ModelVillageMember::select('village_id')->where('user_id', $userId->toInt());
-                    $query->select('village_id')
-                        ->from('hosts')
-                        ->union($village_members)
-                        ->where('user_id', $userId->toInt());
-                }
-            )
-            ->get();
+        $query = $this->queryVillageInfo()
+        ->whereIn(
+            'v.id',
+            function ($query) use ($userId) {
+                $village_members = ModelVillageMember::select('village_id')->where('user_id', $userId->toInt());
+                $query->select('village_id')
+                    ->from('hosts')
+                    ->union($village_members)
+                    ->where('user_id', $userId->toInt());
+            }
+        );
+
+        if($filter->finished_flg){
+            $query = $query->where(function($query) {
+                $query->where('p.m_phase_id', VillagePhase::PHASE_SURVEYING_SATISFACTION)
+                      ->where('p.m_phase_status_id', VillagePhase::PHASE_STATUS_COMPLETE);
+            });
+        }else{
+            $query = $query->where(function($query) {
+                $query->where('p.m_phase_id', '!=', VillagePhase::PHASE_SURVEYING_SATISFACTION)
+                      ->orWhere('p.m_phase_status_id', '!=', VillagePhase::PHASE_STATUS_COMPLETE);
+            });
+        }
+        
+        $village_records = $query->paginate($filter->record_number);
+
         foreach ($village_records as $record) {
             $result[] = $this->getVillageFromRecord($record);
         }
-        return $result;
+        return $this->makeBaseCollection($result, $village_records);
     }
 
     public function save(Village $village): Village

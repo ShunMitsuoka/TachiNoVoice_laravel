@@ -27,8 +27,8 @@ class MPhaseStatusesSeeder extends Seeder
             'status_name' => VillagePhase::PHASE_STATUS_IN_PROGRESS_NAME,
         ]);
         MPhasesStatus::create([
-            'id' => VillagePhase::PHASE_STATUS_COMPLATE,
-            'status_name' => VillagePhase::PHASE_STATUS_COMPLATE_NAME,
+            'id' => VillagePhase::PHASE_STATUS_COMPLETE,
+            'status_name' => VillagePhase::PHASE_STATUS_COMPLETE_NAME,
         ]);
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use Mockery\Matcher\Any;
-
 class ApiResponseService{
     static public function makeResponse(
         int $status_code,

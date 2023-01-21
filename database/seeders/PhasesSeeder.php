@@ -31,7 +31,7 @@ class PhasesSeeder extends Seeder
             'id' => $id,
             'village_id' => 2,
             'm_phase_id' => VillagePhase::PHASE_RECRUITMENT_OF_MEMBER,
-            'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLATE,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLETE,
         ]);
         $id++;
         Phase::create([
@@ -39,14 +39,14 @@ class PhasesSeeder extends Seeder
 
             'village_id' => 2,
             'm_phase_id' => VillagePhase::PHASE_DRAWING_CORE_MEMBER,
-            'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLATE,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLETE,
         ]);
         $id++;
         Phase::create([
             'id' => $id,
             'village_id' => 2,
             'm_phase_id' => VillagePhase::PHASE_DRAWING_CORE_MEMBER,
-            'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLATE,
+            'm_phase_status_id' => VillagePhase::PHASE_STATUS_COMPLETE,
         ]);
         $id++;
         Phase::create([

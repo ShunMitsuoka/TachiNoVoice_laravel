@@ -73,6 +73,9 @@ class SatisfactionApiController extends BaseApiController
             if (!$village->phase()->isPhaseSurveyingSatisfaction()) {
                 throw new Exception("満足度調査フェーズではありません", 558);
             }
+            if ($village->isFinished()) {
+                throw new Exception("既にこのビレッジは終了しています", 558);
+            }
             $village->setMemberInfo($this->village_service);
             $this->village_details_service->setDetails($village);
             $village_member = $member->becomeVillageMember($village);
