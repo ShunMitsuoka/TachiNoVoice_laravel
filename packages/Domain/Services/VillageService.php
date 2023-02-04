@@ -136,8 +136,8 @@ class VillageService{
             if(!$village->phase()->isLastPhase()){
                 $village->nextPhase();
                 $updated_village = $this->village_repository->update($village);
+                $this->send_next_phase_email_service->sendNextPhaseEmail($updated_village);
             }
-            $this->send_next_phase_email_service->sendNextPhaseEmail($updated_village);
             DB::commit();
             return $updated_village;
         } catch (\Throwable $th) {
