@@ -25,10 +25,11 @@ class VillagePhaseService{
         VillagePhaseStartSetting $phase_start_setting,
         VillagePhaseEndSetting $phase_end_setting,
     ) : VillagePhase{
+        $phase_status = $phase_start_setting->byInstantFlg() ? VillagePhase::PHASE_STATUS_IN_PROGRESS : VillagePhase::PHASE_STATUS_PREPARATION;
         return new RecruitmentOfMemberPhase(
             null,
             VillagePhase::PHASE_RECRUITMENT_OF_MEMBER, 
-            VillagePhase::PHASE_STATUS_PREPARATION,
+            $phase_status,
             $phase_start_setting,
             $phase_end_setting,
         );

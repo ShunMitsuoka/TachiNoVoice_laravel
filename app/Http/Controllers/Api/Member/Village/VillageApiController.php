@@ -73,8 +73,8 @@ class VillageApiController extends BaseApiController
         $setting = new VillageSetting($request->village_member_limit, $request->core_member_limit);
         $requirement = new VillageMemberRequirement($request->requirement);
         $public_info = new VillagePublicInformation(true, $request->gender_flg, $request->age_flg);
-        $phase_start_setting = new VillagePhaseStartSetting(true, false, true, null);
-        $phase_end_setting = new VillagePhaseEndSetting(true, true, false, null);
+        $phase_start_setting = new VillagePhaseStartSetting(true, $request->start_by_date_flg, $request->start_by_instant_flg, null);
+        $phase_end_setting = new VillagePhaseEndSetting(true, $request->end_by_limit_flg, $request->end_by_date_flg, null);
         // ビレッジ登録
         $village = $member->registerVillage(
             $this->village_service,
