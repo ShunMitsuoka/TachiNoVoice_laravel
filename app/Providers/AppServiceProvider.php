@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Packages\Domain\Interfaces\Repositories\EvaluationRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\UserRepositoryInterface;
+use Packages\Domain\Interfaces\Repositories\VillageNoticeRepositoryInterface;
 use Packages\Domain\Interfaces\Repositories\VillageRepositoryInterface;
 use Packages\Domain\Services\VillageDetailsService;
 use Packages\Domain\Services\VillagePermissionService;
@@ -13,6 +14,7 @@ use Packages\Infrastructure\Repositories\EvaluationRepository;
 use Packages\Infrastructure\Repositories\UserRepository;
 use Packages\Infrastructure\Repositories\VillageDetailsRepository;
 use Packages\Infrastructure\Repositories\VillageMemberInfoRepository;
+use Packages\Infrastructure\Repositories\VillageNoticeRepository;
 use Packages\Infrastructure\Repositories\VillageRepository;
 use Packages\Infrastructure\Services\SendNextPhaseEmailService;
 use Packages\Infrastructure\Services\TextMiningService;
@@ -40,7 +42,9 @@ class AppServiceProvider extends ServiceProvider
                     new VillageDetailsRepository()
                 ),
                 new TextMiningService(),
-                new SendNextPhaseEmailService()
+                new SendNextPhaseEmailService(
+                    new VillageNoticeRepository()
+                )
             );
         });
         $this->app->singleton(VillagePermissionService::class, function ($app) {
@@ -55,6 +59,9 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->singleton(UserRepositoryInterface::class, function ($app) {
             return new UserRepository();
+        });
+        $this->app->singleton(VillageNoticeRepositoryInterface::class, function ($app) {
+            return new VillageNoticeRepository();
         });
     }
 

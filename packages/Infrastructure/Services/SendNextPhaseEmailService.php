@@ -3,7 +3,9 @@ namespace Packages\Infrastructure\Services;
 
 use App\Mail\EndPhaseEmail;
 use App\Mail\NextPhaseEmail;
+use App\Models\VillageNotice;
 use Illuminate\Support\Facades\Mail;
+use Packages\Domain\Interfaces\Repositories\VillageNoticeRepositoryInterface;
 use Packages\Domain\Interfaces\Services\SendNextPhaseEmailServiceInterface;
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Village;
@@ -11,6 +13,15 @@ use Packages\Domain\Services\Casts\MemberCast;
 
 class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
 {
+
+    protected VillageNoticeRepositoryInterface $village_notice_repository;
+
+    function __construct(
+        VillageNoticeRepositoryInterface $village_notice_repository,
+    ) {
+        $this->village_notice_repository = $village_notice_repository;
+    }
+
     public function sendNextPhaseEmail(Village $village) : bool
     {
         if ($village->existsMemberInfo()) {
@@ -38,10 +49,14 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                         foreach ($core_member_array as $core_member) {
                             $core_member = MemberCast::castCoreMember($core_member);
                             Mail::send(new EndPhaseEmail($core_member, $end_phase_name, $village, $url));
+                            $content = "【". $village->topic()->title()."】メンバー抽選が終了しました。";
+                            $this->village_notice_repository->save($village, $content);
                         }
                         foreach ($rise_member_array as $rise_member) {
                             $rise_member = MemberCast::castRiseMember($rise_member);
                             Mail::send(new EndPhaseEmail($rise_member, $end_phase_name, $village, $url));
+                            $content = "【". $village->topic()->title()."】メンバー抽選が終了しました。";
+                            $this->village_notice_repository->save($village, $content);
                         }
                     }
                     
@@ -50,6 +65,8 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                         foreach ($core_member_array as $core_member) {
                             $core_member = MemberCast::castCoreMember($core_member);
                             Mail::send(new NextPhaseEmail($core_member, $village, $url));
+                            $content = "【". $village->topic()->title()."】コア意見募集が開始しました。";
+                            $this->village_notice_repository->save($village, $content);
                         }
                     }
                     break;
@@ -68,6 +85,8 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                     foreach ($rise_member_array as $rise_member) {
                         $rise_member = MemberCast::castRiseMember($rise_member);
                         Mail::send(new NextPhaseEmail($rise_member, $village, $url));
+                        $content = "【". $village->topic()->title()."】コア意見募集が開始しました。";
+                        $this->village_notice_repository->save($village, $content);
                     }
                     break;
 
@@ -82,10 +101,14 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                     foreach ($core_member_array as $core_member) {
                         $core_member = MemberCast::castCoreMember($core_member);
                         Mail::send(new NextPhaseEmail($core_member, $village, $url));
+                        $content = "【". $village->topic()->title()."】意見評価が開始しました。";
+                        $this->village_notice_repository->save($village, $content);
                     }
                     foreach ($rise_member_array as $rise_member) {
                         $rise_member = MemberCast::castRiseMember($rise_member);
                         Mail::send(new NextPhaseEmail($rise_member, $village, $url));
+                        $content = "【". $village->topic()->title()."】意見評価が開始しました。";
+                        $this->village_notice_repository->save($village, $content);
                     }
                     break;
 
@@ -103,10 +126,13 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                     foreach ($core_member_array as $core_member) {
                         $core_member = MemberCast::castCoreMember($core_member);
                         Mail::send(new NextPhaseEmail($core_member, $village, $url));
+                        $content = "【". $village->topic()->title()."】満足度調査が開始しました。";
+                        $this->village_notice_repository->save($village, $content);
                     }
                     foreach ($rise_member_array as $rise_member) {
                         $rise_member = MemberCast::castRiseMember($rise_member);
                         Mail::send(new NextPhaseEmail($rise_member, $village, $url));
+                        $content = "【". $village->topic()->title()."】満足度調査が開始しました。";
                     }
                     break;
             }

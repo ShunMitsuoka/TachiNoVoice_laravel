@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Member\MyVillage\CoreMemberOpinionApiController;
 use App\Http\Controllers\Api\Member\MyVillage\EvaluationApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillageMemberApiController;
+use App\Http\Controllers\Api\Member\MyVillage\MyVillageNoticeApiController;
 use App\Http\Controllers\Api\Member\MyVillage\MyVillagePhaseApiController;
 use App\Http\Controllers\Api\Member\MyVillage\OpinionApiController;
 use App\Http\Controllers\Api\Member\MyVillage\PolicyApiController;
@@ -62,6 +63,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // ビレッジ登録時バリデーション
     Route::post('/village/register/validation/topic', [VillageValidationApiController::class, 'topic']);
     Route::post('/village/register/validation/setting', [VillageValidationApiController::class, 'setting']);
+    // ビレッジお知らせ
+    Route::apiResource('/my/village/notice', MyVillageNoticeApiController::class);
     // ビレッジ詳細
     Route::apiResource('/my/village', MyVillageApiController::class);
     // ビレッジフェーズ処理
