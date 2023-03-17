@@ -45,28 +45,26 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                 case VillagePhase::PHASE_ASKING_OPINIONS_OF_CORE_MEMBER:
                     if ($village->phase()->phaseStatus() == 1) {
                         //コア、ライズメンバーにメンバー抽選が終わったメール送信
+                        $content = "【". $village->topic()->title()."】メンバー抽選が終了しました。";
+                        $this->village_notice_repository->save($village, $content);
                         $end_phase_name = VillagePhase::PHASE_DRAWING_CORE_MEMBER_NAME;
                         foreach ($core_member_array as $core_member) {
                             $core_member = MemberCast::castCoreMember($core_member);
                             Mail::send(new EndPhaseEmail($core_member, $end_phase_name, $village, $url));
-                            $content = "【". $village->topic()->title()."】メンバー抽選が終了しました。";
-                            $this->village_notice_repository->save($village, $content);
                         }
                         foreach ($rise_member_array as $rise_member) {
                             $rise_member = MemberCast::castRiseMember($rise_member);
                             Mail::send(new EndPhaseEmail($rise_member, $end_phase_name, $village, $url));
-                            $content = "【". $village->topic()->title()."】メンバー抽選が終了しました。";
-                            $this->village_notice_repository->save($village, $content);
                         }
                     }
                     
                     if ($village->phase()->phaseStatus() == 100) {
                         //コアメンバーにコア意見募集が始まったメール送信
+                        $content = "【". $village->topic()->title()."】コア意見募集が開始しました。";
+                        $this->village_notice_repository->save($village, $content);
                         foreach ($core_member_array as $core_member) {
                             $core_member = MemberCast::castCoreMember($core_member);
                             Mail::send(new NextPhaseEmail($core_member, $village, $url));
-                            $content = "【". $village->topic()->title()."】コア意見募集が開始しました。";
-                            $this->village_notice_repository->save($village, $content);
                         }
                     }
                     break;
@@ -82,11 +80,11 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                 
                 case VillagePhase::PHASE_ASKING_OPINIONS_OF_RIZE_MEMBER:
                     //ライズメンバーにコア意見募集が始まったメール送信
+                    $content = "【". $village->topic()->title()."】コア意見募集が開始しました。";
+                    $this->village_notice_repository->save($village, $content);
                     foreach ($rise_member_array as $rise_member) {
                         $rise_member = MemberCast::castRiseMember($rise_member);
                         Mail::send(new NextPhaseEmail($rise_member, $village, $url));
-                        $content = "【". $village->topic()->title()."】コア意見募集が開始しました。";
-                        $this->village_notice_repository->save($village, $content);
                     }
                     break;
 
@@ -98,17 +96,15 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
                     //     Mail::send(new EndPhaseEmail($host, $end_phase_name, $village, $url));
                     // }
                     //コア、ライズメンバーに意見評価が始まったメール送信
+                    $content = "【". $village->topic()->title()."】意見評価が開始しました。";
+                    $this->village_notice_repository->save($village, $content);
                     foreach ($core_member_array as $core_member) {
                         $core_member = MemberCast::castCoreMember($core_member);
                         Mail::send(new NextPhaseEmail($core_member, $village, $url));
-                        $content = "【". $village->topic()->title()."】意見評価が開始しました。";
-                        $this->village_notice_repository->save($village, $content);
                     }
                     foreach ($rise_member_array as $rise_member) {
                         $rise_member = MemberCast::castRiseMember($rise_member);
                         Mail::send(new NextPhaseEmail($rise_member, $village, $url));
-                        $content = "【". $village->topic()->title()."】意見評価が開始しました。";
-                        $this->village_notice_repository->save($village, $content);
                     }
                     break;
 
@@ -123,16 +119,15 @@ class SendNextPhaseEmailService implements SendNextPhaseEmailServiceInterface
 
                 case VillagePhase::PHASE_SURVEYING_SATISFACTION:
                     //コア、ライズメンバーに満足度調査が始まったメール送信
+                    $content = "【". $village->topic()->title()."】満足度調査が開始しました。";
+                    $this->village_notice_repository->save($village, $content);
                     foreach ($core_member_array as $core_member) {
                         $core_member = MemberCast::castCoreMember($core_member);
                         Mail::send(new NextPhaseEmail($core_member, $village, $url));
-                        $content = "【". $village->topic()->title()."】満足度調査が開始しました。";
-                        $this->village_notice_repository->save($village, $content);
                     }
                     foreach ($rise_member_array as $rise_member) {
                         $rise_member = MemberCast::castRiseMember($rise_member);
                         Mail::send(new NextPhaseEmail($rise_member, $village, $url));
-                        $content = "【". $village->topic()->title()."】満足度調査が開始しました。";
                     }
                     break;
             }
