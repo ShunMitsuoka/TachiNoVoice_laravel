@@ -16,14 +16,16 @@ abstract class LaravelRepository
     public function getPaganationInfo(LengthAwarePaginator $pagenator): array
     {
         return [
-            'current_page' => $pagenator->currentPage(),
-            'last_page' => $pagenator->lastPage(),
-            'per_page' => $pagenator->perPage(),
+            'currentPage' => $pagenator->currentPage(),
+            'lastPage' => $pagenator->lastPage(),
+            'perPage' => $pagenator->perPage(),
             'total' => $pagenator->total(),
-            'has_pages' => $pagenator->hasPages(),
+            'hasPages' => $pagenator->hasPages(),
+            'hasNextPage' => !is_null($pagenator->nextPageUrl()),
             'next_url' => $pagenator->nextPageUrl(),
-            'previous_url' => $pagenator->previousPageUrl(),
-            'page_name' => $pagenator->getPageName(),
+            'hasPreviousPage' => !is_null($pagenator->previousPageUrl()),
+            'previousUrl' => $pagenator->previousPageUrl(),
+            'pageName' => $pagenator->getPageName(),
         ];
     }
 }

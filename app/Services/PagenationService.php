@@ -11,7 +11,7 @@ class PagenationService{
         BaseCollection $collection,
     ){
         $result['data'] = $data;
-        $result['page_info'] = $collection->info();
+        $result['pageInfo'] = $collection->info();
         return $result;
     }
 
