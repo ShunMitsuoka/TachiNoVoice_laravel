@@ -80,6 +80,10 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
     protected StartSettingInfo $start_setting_info;
     protected EndSettingInfo $end_setting_info;
 
+    // フェーズ開始・終了条件の設定の必要有無
+    protected bool $is_necessary_to_set_phase_start_setting = false;
+    protected bool $is_necessary_to_set_phase_end_setting = false;
+
     function __construct(
         ?VillagePhaseId $id,
         int $phase_no,
@@ -220,5 +224,16 @@ abstract class VillagePhase extends _Entity implements VillagePhaseInterface
             return $phase_end_setting;
         }
         return VillagePhaseEndSetting::defaultSetting();
+    }
+
+    public function isNecessaryToSetPhaseSetting() : bool{
+        return false;
+        // return $this->is_necessary_to_set_phase_start_setting || $this->is_necessary_to_set_phase_end_setting;
+    }
+    public function isNecessaryToSetPhaseStartSetting() : bool{
+        return $this->is_necessary_to_set_phase_start_setting;
+    }
+    public function isNecessaryToSetPhaseEndSetting() : bool{
+        return $this->is_necessary_to_set_phase_end_setting;
     }
 }

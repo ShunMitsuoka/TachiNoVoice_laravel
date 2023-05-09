@@ -9,6 +9,9 @@ use Packages\Domain\Models\Village\Phase\VillagePhaseSettingItem;
 
 class AskingOpinionsOfCoreMemberPhase extends VillagePhase
 {
+    protected bool $is_necessary_to_set_phase_start_setting = false;
+    protected bool $is_necessary_to_set_phase_end_setting = true;
+
     function __construct(
         ?VillagePhaseId $id,
         int $phase_no,
@@ -31,15 +34,5 @@ class AskingOpinionsOfCoreMemberPhase extends VillagePhase
                 true, '全員が意見した場合終了する。', $this->getEndSetting($phase_end_setting)->byLimitFlg()
             )
         );
-    }
-
-    public function isNecessaryToSetPhaseSetting() : bool{
-        return true;
-    }
-    public function isNecessaryToSetPhaseStartSetting() : bool{
-        return false;
-    }
-    public function isNecessaryToSetPhaseEndSetting() : bool{
-        return true;
     }
 }

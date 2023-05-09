@@ -11,6 +11,9 @@ use Packages\Domain\Models\Village\Phase\VillagePhaseStartSetting;
 
 class RecruitmentOfMemberPhase extends VillagePhase
 {
+    protected bool $is_necessary_to_set_phase_start_setting = true;
+    protected bool $is_necessary_to_set_phase_end_setting = true;
+
     function __construct(
         ?VillagePhaseId $id,
         int $phase_no,
@@ -47,15 +50,5 @@ class RecruitmentOfMemberPhase extends VillagePhase
                 true, '定員になり次第終了する。', $this->getEndSetting($phase_end_setting)->byLimitFlg()
             )
         );
-    }
-
-    public function isNecessaryToSetPhaseSetting() : bool{
-        return true;
-    }
-    public function isNecessaryToSetPhaseStartSetting() : bool{
-        return true;
-    }
-    public function isNecessaryToSetPhaseEndSetting() : bool{
-        return true;
     }
 }

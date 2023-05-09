@@ -3,10 +3,12 @@ namespace Packages\Domain\Models\Village\Phase\Phases;
 
 use Packages\Domain\Models\Village\Phase\VillagePhase;
 use Packages\Domain\Models\Village\Phase\VillagePhaseId;
-use Packages\Domain\Models\Village\Phase\VillagePhaseSetting;
 
 class DrawingCoreMemberPhase extends VillagePhase
 {
+    protected bool $is_necessary_to_set_phase_start_setting = false;
+    protected bool $is_necessary_to_set_phase_end_setting = false;
+
     function __construct(
         ?VillagePhaseId $id,
         int $phase_no,
@@ -17,15 +19,5 @@ class DrawingCoreMemberPhase extends VillagePhase
         }
         parent::__construct($id, $phase_no, $phase_status);
         $this->phase_name = self::PHASE_DRAWING_CORE_MEMBER_NAME;
-    }
-
-    public function isNecessaryToSetPhaseSetting() : bool{
-        return false;
-    }
-    public function isNecessaryToSetPhaseStartSetting() : bool{
-        return false;
-    }
-    public function isNecessaryToSetPhaseEndSetting() : bool{
-        return false;
     }
 }
